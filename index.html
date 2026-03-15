@@ -607,36 +607,58 @@ function exportLN(){
   const html=`<!DOCTYPE html><html lang="de"><head><meta charset="UTF-8">
   <title>Leistungsnachweis ${MN[parseInt(mm)-1]} ${jj}</title>
   <style>
-    body{font-family:Arial,sans-serif;font-size:11px;margin:20px;color:#000}
-    h2{font-size:13px;margin-bottom:4px}
-    .info{margin-bottom:10px;line-height:1.6}
-    table{width:100%;border-collapse:collapse;margin-top:8px}
-    th,td{border:1px solid #000;padding:4px 6px;font-size:10px}
-    th{background:#f0f0f0;font-weight:700;text-align:center}
-    td{min-height:18px}
-    .footer{margin-top:16px;font-size:10px}
-    .sig{display:flex;justify-content:space-between;margin-top:40px}
-    .sig-line{border-top:1px solid #000;width:45%;text-align:center;padding-top:4px}
-    @media print{body{margin:10px}}
+    *{box-sizing:border-box}
+    body{font-family:Arial,sans-serif;font-size:10px;color:#000;margin:0;padding:0}
+    .page{width:210mm;min-height:297mm;padding:12mm 12mm 10mm 12mm;margin:0 auto}
+    h2{font-size:12px;font-weight:bold;margin:0 0 6px 0}
+    .info{margin-bottom:8px;line-height:1.6;font-size:10px}
+    table{width:100%;border-collapse:collapse;margin-top:6px;table-layout:fixed}
+    th{border:1px solid #000;padding:3px 4px;font-size:9px;font-weight:700;text-align:center;background:#f0f0f0;white-space:nowrap}
+    td{border:1px solid #000;padding:2px 4px;font-size:9px;height:16px;vertical-align:middle;overflow:hidden}
+    .col-tag{width:22px;text-align:center}
+    .col-uhr{width:68px}
+    .col-km{width:44px;text-align:center}
+    .col-dauer{width:44px;text-align:center}
+    .col-bem{width:auto}
+    .col-unt{width:60px}
+    .footer{margin-top:8px;font-size:10px;font-weight:bold}
+    .sig{display:flex;justify-content:space-between;margin-top:20mm}
+    .sig-line{width:30%;border-top:1px solid #000;text-align:center;padding-top:3px;font-size:9px}
+    .print-btn{position:fixed;bottom:20px;right:20px;background:#d4703a;color:#fff;border:none;border-radius:10px;padding:12px 24px;font-size:14px;font-weight:bold;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,.3)}
+    @media print{
+      .print-btn{display:none}
+      body{margin:0;padding:0}
+      .page{padding:10mm;margin:0}
+      @page{size:A4 portrait;margin:0}
+    }
   </style></head><body>
+  <div class="page">
   <h2>Leistungsnachweis ${MN[parseInt(mm)-1]} ${jj}</h2>
   <div class="info">
     <strong>Versicherte Person:</strong> ${k.name}${k.geburt?", geb. am "+fd(k.geburt):""}<br>
     ${k.adresse?`<strong>Adresse:</strong> ${k.adresse}<br>`:""}
     ${k.kk?`<strong>Krankenkasse:</strong> ${k.kk}${k.vnr?", Vers.-Nr.: "+k.vnr:""}<br>`:""}
-    ${k.pflege?`<strong>Pflegegrad:</strong> ${k.pflege}<br>`:""}
+    ${k.pflege?`<strong>Pflegegrad:</strong> ${k.pflege}`:""}
   </div>
   <table>
-    <thead><tr><th style="width:40px">Tag</th><th style="width:90px">Uhrzeit</th><th style="width:60px">Strecke (km)</th><th style="width:60px">Dauer (h)</th><th>Bemerkung / Art der Leistung</th><th style="width:80px">Unterschrift</th></tr></thead>
+    <thead><tr>
+      <th class="col-tag">Tag</th>
+      <th class="col-uhr">Uhrzeit</th>
+      <th class="col-km">Strecke (km)</th>
+      <th class="col-dauer">Dauer (h)</th>
+      <th class="col-bem">Art der Leistung / Bemerkung</th>
+      <th class="col-unt">Unterschrift</th>
+    </tr></thead>
     <tbody>${rows}</tbody>
   </table>
-  <div class="footer">
-    <strong>Gesamtstunden: ${gesStd.toFixed(2)} h</strong>
-  </div>
+  <div class="footer">Gesamtstunden: ${gesStd.toFixed(2)} h</div>
   <div class="sig">
+    <div class="sig-line">Ort, Datum</div>
     <div class="sig-line">Mitarbeiterin/Mitarbeiter</div>
     <div class="sig-line">Kundin/Kunde</div>
   </div>
+  </div>
+  <button class="print-btn" onclick="window.print()">🖨️ Drucken / Als PDF speichern</button>
   </body></html>`;
 
   const blob=new Blob([html],{type:"text/html;charset=utf-8"});
