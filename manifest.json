@@ -1,19 +1,11 @@
 {
-  "name": "Alltagshilfe Budget",
-  "short_name": "AlltagsBudget",
-  "description": "Professionelle Verwaltung des Entlastungsbetrags nach 45b SGB XI fuer ambulante Alltagsbegleiter",
-  "id": "alltagshilfe-budget",
-  "start_url": "https://christin123456.github.io/Alltsgshilfe-/index.html",
-  "scope": "https://christin123456.github.io/Alltsgshilfe-/",
-  "display": "standalone",
   "background_color": "#fdf6ee",
-  "theme_color": "#e8944a",
-  "orientation": "portrait-primary",
-  "lang": "de",
-  "icons": [
-    { "src": "https://christin123456.github.io/Alltsgshilfe-/icon-32.png", "sizes": "32x32", "type": "image/png" },
-    { "src": "https://christin123456.github.io/Alltsgshilfe-/icon-180.png", "sizes": "180x180", "type": "image/png" },
-    { "src": "https://christin123456.github.io/Alltsgshilfe-/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
-    { "src": "https://christin123456.github.io/Alltsgshilfe-/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
-  ]
-}
+  "dir": "ltr",
+  "display": "standalone",
+  "name": "AlltagshilfeBudget",
+  "orientation": "any",
+  "scope": "/",
+  "short_name": "AlltagsBudget",
+  "start_url": "/",
+  "theme_color": "#e48653",
+  "id": "alltagshilfe-budget"
