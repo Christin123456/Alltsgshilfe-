@@ -56,10 +56,10 @@ body{font-family:-apple-system,'Helvetica Neue',Arial,sans-serif;background:var(
 .abc-btn.inaktiv{opacity:.3;pointer-events:none}
 
 /* TABS */
-.tabs{display:flex;background:#fff;border-bottom:1px solid var(--brd);flex-shrink:0;overflow-x:auto;scrollbar-width:none}
+.tabs{display:flex;gap:8px;padding:12px 16px;background:#fff;border-bottom:1px solid var(--brd);flex-shrink:0;overflow-x:auto;scrollbar-width:none}
 .tabs::-webkit-scrollbar{display:none}
-.tab{flex:1;padding:13px 4px;text-align:center;font-size:.8rem;font-weight:700;color:var(--muted);cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap;min-width:75px}
-.tab.on{color:var(--acc-dark);border-bottom-color:var(--acc)}
+.tab{flex:1;padding:10px 8px;text-align:center;font-size:.78rem;font-weight:700;color:var(--muted);cursor:pointer;border-radius:12px;background:var(--bg);border:1.5px solid var(--brd);white-space:nowrap;min-width:70px;transition:all .15s}
+.tab.on{color:#fff;background:var(--acc);border-color:var(--acc);box-shadow:0 2px 8px rgba(232,148,74,.35)}
 
 .scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}
 .pad{padding:16px 16px calc(var(--safe-b)+24px)}
@@ -467,40 +467,32 @@ function rl(){
     if(!istRestVerfallen(k)&&r>0&&restTageBisVerfall()<=60)alerts+=`<div class="alert-box alert-warn">⏰ Restbudget verfällt in ${restTageBisVerfall()} Tagen!</div>`;
     if(k.geburt){const gb=k.geburt.split("-");if(parseInt(gb[1])===heu.getMonth()+1&&parseInt(gb[2])===heu.getDate())alerts+=`<div class="alert-box alert-bday">🎂 Heute Geburtstag!</div>`;}
     return `<div class="kcard">
-      <div class="kbody">
-        <div class="ktop">
-          <div class="kavatar">${getInitial(k.name)}</div>
-          <div class="ktop-info">
-            <div class="kname">${k.name}</div>
-            <div class="ksub">${k.geburt?'geb. '+fd(k.geburt)+(k.pflege?' · ':' '):''}${k.pflege?'PG '+k.pflege+' · ':''}§ 45b SGB XI</div>
+      <div class="kcard-hero">
+        <div class="kcard-hero-top">
+          <div class="kcard-avatar">${getInitial(k.name)}</div>
+          <div class="kcard-info">
+            <div class="kcard-name">${k.name}</div>
+            <div class="kcard-sub">${k.geburt?'geb. '+fd(k.geburt)+(k.pflege?' · ':' '):''}${k.pflege?'PG '+k.pflege+' · ':''}§ 45b SGB XI</div>
+          </div>
+          ${progressRing(k,'rgba(255,255,255,.9)')}
+        </div>
+        <div class="kcard-budgets">
+          <div class="kcard-budget-pill">
+            <div class="kcard-bl">Restbudget</div>
+            <div class="kcard-bv">${fm(r)} €</div>
+          </div>
+          <div class="kcard-budget-pill">
+            <div class="kcard-bl">Laufend</div>
+            <div class="kcard-bv">${fm(l)} €</div>
           </div>
         </div>
-        ${alerts}
-        <div class="kbudget-main">
-          <div class="kbudget-item">
-            <div class="kbi-icon" style="background:var(--acc-bg)">🔴</div>
-            <div class="kbi-info">
-              <div class="kbi-label">Restbudget</div>
-              <div class="kbi-val" style="color:var(--acc-dark)">${fm(r)} €</div>
-            </div>
-          </div>
-          <div class="kbudget-item">
-            <div class="kbi-icon" style="background:var(--grn-bg)">🟢</div>
-            <div class="kbi-info">
-              <div class="kbi-label">Laufendes Budget</div>
-              <div class="kbi-val" style="color:var(--grn)">${fm(l)} €</div>
-            </div>
-          </div>
-        </div>
-        <div class="kstunden">
-          <span>⏱</span>
-          <span><strong>${fm(tot/R1)} Std</strong> à 42,45 € &nbsp;·&nbsp; <strong>${fm(tot/R2)} Std</strong> à 38,11 €</span>
-        </div>
-        <div class="kbtns">
-          <button class="btn-o" onclick="sd(${ri})">Öffnen</button>
-          <button class="btn-e" onclick="openKM(event,${ri})">✏️ Bearbeiten</button>
-          <button class="btn-d" onclick="dk(event,${ri})">🗑️</button>
-        </div>
+        <div class="kcard-stunden">⏱ ${fm(tot/R1)} Std (42,45€) · ${fm(tot/R2)} Std (38,11€)</div>
+      </div>
+      ${alerts?'<div style="padding:0 14px 8px">'+alerts+'</div>':''}
+      <div class="kcard-btns">
+        <button class="kcard-btn-o" onclick="sd(${ri})">Öffnen</button>
+        <button class="kcard-btn-e" onclick="openKM(event,${ri})">✏️</button>
+        <button class="kcard-btn-d" onclick="dk(event,${ri})">🗑️</button>
       </div>
     </div>`;
   }).join("");
