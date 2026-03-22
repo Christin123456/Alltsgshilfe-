@@ -67,7 +67,7 @@ body{font-family:-apple-system,'Helvetica Neue',Arial,sans-serif;background:var(
 .view.on{display:flex}
 
 /* KLIENT CARDS */
-.kcard{background:#fff;border-radius:20px;overflow:hidden;margin-bottom:14px;box-shadow:var(--shadow);border:1px solid var(--brd)}
+.kcard{background:#fff;border-radius:20px;overflow:hidden;margin-bottom:16px;box-shadow:0 4px 16px rgba(0,0,0,.12);border:1px solid var(--brd)}
 .kcard:active{transform:scale(.98);opacity:.9}
 .kbody{padding:16px}
 .ktop{display:flex;align-items:center;gap:14px;margin-bottom:14px}
@@ -117,8 +117,8 @@ body{font-family:-apple-system,'Helvetica Neue',Arial,sans-serif;background:var(
 .kcard-bl{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:rgba(255,255,255,.75);margin-bottom:4px}
 .kcard-bv{font-size:1.05rem;font-weight:800;color:#fff}
 .kcard-stunden{background:rgba(255,255,255,.15);border-radius:10px;padding:8px 12px;font-size:.78rem;color:rgba(255,255,255,.9);text-align:center;font-weight:600;margin-bottom:0}
-.kcard-btns{display:flex;gap:8px;padding:12px 14px}
-.kcard-btn-o{flex:1;padding:12px;border-radius:12px;border:none;font-size:.9rem;font-weight:800;cursor:pointer;background:var(--acc);color:#fff;box-shadow:0 2px 8px rgba(232,148,74,.35)}
+.kcard-btns{display:flex;gap:8px;padding:12px 14px;border-top:1px solid var(--brd);background:#fff}
+.kcard-btn-o{flex:1;padding:12px;border-radius:12px;border:none;font-size:.9rem;font-weight:800;cursor:pointer;background:linear-gradient(135deg,var(--acc),var(--acc-dark));color:#fff;box-shadow:0 3px 10px rgba(232,148,74,.45)}
 .kcard-btn-e{padding:12px 14px;border-radius:12px;border:1px solid var(--blue-brd);font-size:.9rem;cursor:pointer;background:var(--blue-bg);color:var(--blue)}
 .kcard-btn-d{padding:12px 14px;border-radius:12px;border:1px solid var(--red-brd);font-size:.9rem;cursor:pointer;background:var(--red-bg);color:var(--red)}
 .empty{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 20px;gap:14px;color:var(--muted);text-align:center}
@@ -439,13 +439,14 @@ function progressRing(k,color){
   const euros=rv>=1000?(rv/1000).toFixed(1)+"k":Math.round(rv)+"";
   const c=2*Math.PI*36;
   const offset=rv<=0?c:c*0.1;
-  const ringColor=rv<=0?"rgba(0,0,0,.1)":color;
+  const ringColor=rv<=0?"rgba(255,255,255,.2)":color;
   return `<div class="progress-ring-wrap">
     <svg width="88" height="88" viewBox="0 0 88 88">
-      <circle fill="none" stroke="rgba(0,0,0,.1)" stroke-width="7" cx="44" cy="44" r="36"/>
+      <circle fill="rgba(0,0,0,.15)" stroke="none" cx="44" cy="44" r="40"/>
+      <circle fill="none" stroke="rgba(255,255,255,.2)" stroke-width="7" cx="44" cy="44" r="36"/>
       <circle fill="none" stroke="${ringColor}" stroke-width="7" stroke-linecap="round" cx="44" cy="44" r="36" stroke-dasharray="${c.toFixed(1)}" stroke-dashoffset="${offset.toFixed(1)}"/>
     </svg>
-    <div class="progress-ring-text">${rv>0?euros+"":"–"}<span>${rv>0?"€ Rest":""}</span><span style="font-size:.55rem;opacity:.85">${rv>0?std+" Std":""}</span></div>
+    <div class="progress-ring-text" style="color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.4)">${rv>0?euros+"":"–"}<span style="color:rgba(255,255,255,.85)">${rv>0?"€ Rest":""}</span><span style="font-size:.55rem;color:rgba(255,255,255,.75)">${rv>0?std+" Std":""}</span></div>
   </div>`;
 }
 
