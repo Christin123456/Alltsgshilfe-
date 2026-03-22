@@ -106,6 +106,21 @@ body{font-family:-apple-system,'Helvetica Neue',Arial,sans-serif;background:var(
 .btn-e{background:var(--blue-bg);color:var(--blue);border:1px solid var(--blue-brd);flex:0 0 44px!important}
 .btn-d{background:var(--red-bg);color:var(--red);border:1px solid var(--red-brd);flex:0 0 44px!important}
 
+.kcard-hero{background:linear-gradient(135deg,var(--acc),var(--acc-dark));padding:16px;border-radius:20px 20px 0 0}
+.kcard-hero-top{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.kcard-avatar{width:52px;height:52px;border-radius:50%;background:rgba(255,255,255,.25);border:2px solid rgba(255,255,255,.4);display:flex;align-items:center;justify-content:center;font-size:1.4rem;font-weight:800;color:#fff;flex-shrink:0}
+.kcard-info{flex:1;min-width:0}
+.kcard-name{font-size:1.1rem;font-weight:800;color:#fff;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kcard-sub{font-size:.75rem;color:rgba(255,255,255,.8);line-height:1.4}
+.kcard-budgets{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+.kcard-budget-pill{background:rgba(255,255,255,.2);border-radius:12px;padding:10px 12px;text-align:center}
+.kcard-bl{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:rgba(255,255,255,.75);margin-bottom:4px}
+.kcard-bv{font-size:1.05rem;font-weight:800;color:#fff}
+.kcard-stunden{background:rgba(255,255,255,.15);border-radius:10px;padding:8px 12px;font-size:.78rem;color:rgba(255,255,255,.9);text-align:center;font-weight:600;margin-bottom:0}
+.kcard-btns{display:flex;gap:8px;padding:12px 14px}
+.kcard-btn-o{flex:1;padding:12px;border-radius:12px;border:none;font-size:.9rem;font-weight:800;cursor:pointer;background:var(--acc);color:#fff;box-shadow:0 2px 8px rgba(232,148,74,.35)}
+.kcard-btn-e{padding:12px 14px;border-radius:12px;border:1px solid var(--blue-brd);font-size:.9rem;cursor:pointer;background:var(--blue-bg);color:var(--blue)}
+.kcard-btn-d{padding:12px 14px;border-radius:12px;border:1px solid var(--red-brd);font-size:.9rem;cursor:pointer;background:var(--red-bg);color:var(--red)}
 .empty{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 20px;gap:14px;color:var(--muted);text-align:center}
 .empty-ico{font-size:4rem;opacity:.4}
 .empty h3{font-size:1.1rem;color:var(--dim);font-weight:700}
@@ -488,7 +503,7 @@ function rl(){
         </div>
         <div class="kcard-stunden">⏱ ${fm(tot/R1)} Std (42,45€) · ${fm(tot/R2)} Std (38,11€)</div>
       </div>
-      ${alerts?'<div style="padding:0 14px 8px">'+alerts+'</div>':''}
+      ${alerts?`<div style="padding:0 14px 8px">${alerts}</div>`:''}
       <div class="kcard-btns">
         <button class="kcard-btn-o" onclick="sd(${ri})">Öffnen</button>
         <button class="kcard-btn-e" onclick="openKM(event,${ri})">✏️</button>
