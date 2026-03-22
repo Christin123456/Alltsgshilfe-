@@ -472,19 +472,33 @@ function rl(){
           <div class="kavatar">${getInitial(k.name)}</div>
           <div class="ktop-info">
             <div class="kname">${k.name}</div>
-            <div class="ksub">${k.geburt?'geb. '+fd(k.geburt)+(k.pflege?' · ':' '):''}${k.pflege?'Pflegegrad '+k.pflege:''}${(k.geburt||k.pflege)?'<br>':''}§ 45b SGB XI · 42,45 / 38,11 €/Std</div>
+            <div class="ksub">${k.geburt?'geb. '+fd(k.geburt)+(k.pflege?' · ':' '):''}${k.pflege?'PG '+k.pflege+' · ':''}§ 45b SGB XI</div>
           </div>
-          ${progressRing(k,'rgba(255,255,255,.9)')}
         </div>
         ${alerts}
-        <div class="budget-row">
-          <div class="bpill r"><span class="bl">Restbudget</span><span class="bv">${fm(r)} €</span></div>
-          <div class="bpill l"><span class="bl">Laufendes Budget</span><span class="bv">${fm(l)} €</span></div>
-          <div class="bpill w"><span class="bl">⏱ Verbl. Stunden (Betreuung / Haushalt)</span><span class="bv">${fm(tot/R1)} Std / ${fm(tot/R2)} Std</span></div>
+        <div class="kbudget-main">
+          <div class="kbudget-item">
+            <div class="kbi-icon" style="background:var(--acc-bg)">🔴</div>
+            <div class="kbi-info">
+              <div class="kbi-label">Restbudget</div>
+              <div class="kbi-val" style="color:var(--acc-dark)">${fm(r)} €</div>
+            </div>
+          </div>
+          <div class="kbudget-item">
+            <div class="kbi-icon" style="background:var(--grn-bg)">🟢</div>
+            <div class="kbi-info">
+              <div class="kbi-label">Laufendes Budget</div>
+              <div class="kbi-val" style="color:var(--grn)">${fm(l)} €</div>
+            </div>
+          </div>
+        </div>
+        <div class="kstunden">
+          <span>⏱</span>
+          <span><strong>${fm(tot/R1)} Std</strong> à 42,45 € &nbsp;·&nbsp; <strong>${fm(tot/R2)} Std</strong> à 38,11 €</span>
         </div>
         <div class="kbtns">
           <button class="btn-o" onclick="sd(${ri})">Öffnen</button>
-          <button class="btn-e" onclick="openKM(event,${ri})">✏️</button>
+          <button class="btn-e" onclick="openKM(event,${ri})">✏️ Bearbeiten</button>
           <button class="btn-d" onclick="dk(event,${ri})">🗑️</button>
         </div>
       </div>
