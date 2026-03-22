@@ -237,6 +237,21 @@ body{font-family:-apple-system,'Helvetica Neue',Arial,sans-serif;background:var(
 .bs{background:var(--acc);color:#fff;box-shadow:0 3px 12px rgba(232,148,74,.4)}
 .sec{font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--dim);margin:18px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--brd)}
 .sec:first-child{margin-top:0}
+/* ONBOARDING */
+.onboard{position:fixed;inset:0;background:var(--bg);z-index:999;display:flex;flex-direction:column;overflow-y:auto;padding:calc(var(--safe-t)+20px) 24px calc(var(--safe-b)+24px)}
+.ob-logo{width:80px;height:80px;background:linear-gradient(135deg,var(--acc),var(--acc-dark));border-radius:24px;display:flex;align-items:center;justify-content:center;font-size:2.5rem;margin:20px auto 24px;box-shadow:0 4px 20px rgba(232,148,74,.4)}
+.ob-title{font-size:1.6rem;font-weight:800;text-align:center;margin-bottom:8px;color:var(--txt)}
+.ob-sub{font-size:.95rem;color:var(--muted);text-align:center;margin-bottom:32px;line-height:1.6}
+.ob-box{background:#fff;border:1px solid var(--brd);border-radius:16px;padding:16px;margin-bottom:14px;box-shadow:0 1px 4px rgba(0,0,0,.05)}
+.ob-box h3{font-size:.95rem;font-weight:800;margin-bottom:8px;color:var(--txt)}
+.ob-box p{font-size:.85rem;color:var(--muted);line-height:1.6}
+.ob-check{display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid var(--brd)}
+.ob-check:last-child{border-bottom:none}
+.ob-check input[type=checkbox]{width:20px;height:20px;margin-top:2px;flex-shrink:0;accent-color:var(--acc)}
+.ob-check label{font-size:.88rem;color:var(--txt);line-height:1.5;cursor:pointer}
+.ob-check a{color:var(--acc-dark);font-weight:700}
+.ob-btn{background:var(--acc);color:#fff;border:none;border-radius:14px;padding:16px;font-size:1rem;font-weight:800;cursor:pointer;width:100%;margin-top:20px;box-shadow:0 3px 12px rgba(232,148,74,.4)}
+.ob-btn:disabled{background:var(--dim);box-shadow:none;cursor:not-allowed}
 </style>
 </head>
 <body>
@@ -347,6 +362,40 @@ body{font-family:-apple-system,'Helvetica Neue',Arial,sans-serif;background:var(
     <div class="lprev" id="lPr"></div>
     <div class="sact"><button class="bc" onclick="cs('oL')">Abbrechen</button><button class="bs" id="lBtn" onclick="saveL()">Eintragen</button></div>
   </div>
+</div>
+
+<!-- ONBOARDING -->
+<div class="onboard" id="onboard" style="display:none">
+  <div class="ob-logo">🏠</div>
+  <div class="ob-title">Alltagshilfe Budget</div>
+  <div class="ob-sub">Professionelle Verwaltung des Entlastungsbetrags nach § 45b SGB XI</div>
+  <div class="ob-box">
+    <h3>📱 Wie werden Daten gespeichert?</h3>
+    <p>Alle Klientendaten werden <strong>ausschließlich lokal</strong> auf deinem Gerät gespeichert. Es werden <strong>keine Daten</strong> an Server oder Dritte übertragen.</p>
+  </div>
+  <div class="ob-box">
+    <h3>⚠️ Deine Pflichten als Nutzer</h3>
+    <p>Du bist verantwortlich für die datenschutzkonforme Nutzung. Hole von jedem Klienten eine schriftliche Einwilligung ein und schütze dein Gerät mit einem Passwort.</p>
+  </div>
+  <div class="ob-box" id="ob-checks">
+    <div class="ob-check">
+      <input type="checkbox" id="cb1" onchange="checkOB()">
+      <label for="cb1">Ich habe die <a href="https://christin123456.github.io/Alltsgshilfe-/datenschutz.html" target="_blank">Datenschutzerklärung</a> gelesen und akzeptiere sie.</label>
+    </div>
+    <div class="ob-check">
+      <input type="checkbox" id="cb2" onchange="checkOB()">
+      <label for="cb2">Ich habe die <a href="https://christin123456.github.io/Alltsgshilfe-/nutzungsbedingungen.html" target="_blank">Nutzungsbedingungen</a> gelesen und akzeptiere sie.</label>
+    </div>
+    <div class="ob-check">
+      <input type="checkbox" id="cb3" onchange="checkOB()">
+      <label for="cb3">Ich werde von jedem Klienten eine schriftliche Datenschutz-Einwilligung einholen.</label>
+    </div>
+    <div class="ob-check">
+      <input type="checkbox" id="cb4" onchange="checkOB()">
+      <label for="cb4">Ich schütze mein Gerät mit einem Passwort/PIN und bin für die Datensicherheit verantwortlich.</label>
+    </div>
+  </div>
+  <button class="ob-btn" id="obBtn" onclick="acceptOB()" disabled>Zustimmen & App starten</button>
 </div>
 
 <input type="file" id="fotoInput" accept="image/*" style="display:none" onchange="handleFoto(event)">
@@ -761,6 +810,22 @@ function importBackup(e){
   reader.readAsText(file);e.target.value="";
 }
 
+function checkOB(){
+  const ok=document.getElementById("cb1").checked&&document.getElementById("cb2").checked&&document.getElementById("cb3").checked&&document.getElementById("cb4").checked;
+  document.getElementById("obBtn").disabled=!ok;
+}
+
+function acceptOB(){
+  localStorage.setItem("ob_accepted","1");
+  document.getElementById("onboard").style.display="none";
+}
+
+function checkOnboarding(){
+  if(!localStorage.getItem("ob_accepted")){
+    document.getElementById("onboard").style.display="flex";
+  }
+}
+
 function checkJahreswechsel(){
   const aktJahr=new Date().getFullYear();let geaendert=false,namen=[];
   K.forEach(k=>{
@@ -785,6 +850,7 @@ function checkJahreswechsel(){
 }
 
 if("serviceWorker"in navigator)navigator.serviceWorker.register("./sw.js").catch(()=>{});
+checkOnboarding();
 checkJahreswechsel();
 rl();
 </script>
