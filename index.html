@@ -356,8 +356,8 @@ body{font-family:-apple-system,'Helvetica Neue',Arial,sans-serif;background:var(
     <div class="fld"><label>Datum</label><input id="lD" type="date"></div>
     <div class="fld"><label>Art der Leistung</label>
       <select id="lA" onchange="updP()">
-        <option value="Betreuung / Kombinierte Dienstleistung" data-rate="42.45">Betreuung / Komb. Dienstleistung – 42,45 €/Std</option>
         <option value="Haushaltsnahe Dienstleistung" data-rate="38.11">Haushaltsnahe Dienstleistung – 38,11 €/Std</option>
+        <option value="Betreuung / Kombinierte Dienstleistung" data-rate="42.45">Betreuung / Komb. Dienstleistung – 42,45 €/Std</option>
       </select>
     </div>
     <div class="frow">
@@ -366,10 +366,8 @@ body{font-family:-apple-system,'Helvetica Neue',Arial,sans-serif;background:var(
     </div>
     <div class="frow">
       <div class="fld"><label>Stunden</label><input id="lH" type="number" placeholder="0" min="0" step="0.5" oninput="updP()"></div>
-      <div class="fld"><label>Minuten</label>
-        <select id="lM" onchange="updP()">
-          <option value="0">0 Min</option><option value="15">15 Min</option><option value="30">30 Min</option><option value="45">45 Min</option>
-        </select>
+      <div class="fld"><label>Minuten (0-59)</label>
+        <input id="lM" type="number" placeholder="0" min="0" max="59" step="1" value="0" oninput="updP()">
       </div>
     </div>
     <div class="fld"><label>Strecke (km)</label><input id="lKm" type="number" placeholder="0" min="0" step="0.1"></div>
@@ -430,8 +428,34 @@ function fmo(s){if(!s)return"–";const p=s.split("-");return MN[parseInt(p[1])-
 
 function istRestVerfallen(k){const j=new Date();return j>new Date(j.getFullYear(),5,30);}
 function restTageBisVerfall(){const j=new Date(),v=new Date(j.getFullYear(),5,30);if(j>v)return 0;return Math.ceil((v-j)/(1000*60*60*24));}
-function gR(k){if(istRestVerfallen(k))return 0;return Math.max(0,k.restBudget-(k.leistungen||[]).filter(l=>l.q==="rest").reduce((s,l)=>s+l.b,0));}
-function gL(k){const j=new Date(),s=new Date((k.budgetStart||k.erstelltAm.substring(0,7))+"-01");const m=(j.getFullYear()-s.getFullYear())*12+(j.getMonth()-s.getMonth());return Math.max(0,Math.max(1,m+1)*MO-(k.lfdV||0)-(k.leistungen||[]).filter(l=>l.q==="lfd").reduce((s,l)=>s+l.b,0));}
+
+function recalcQ(k){
+  // Recalculate q for all Leistungen dynamically
+  // Restbudget first, then laufend
+  const verfallen=istRestVerfallen(k);
+  let restVerfuegbar=verfallen?0:k.restBudget;
+  const j=new Date(),s=new Date((k.budgetStart||k.erstelltAm.substring(0,7))+"-01");
+  const m=(j.getFullYear()-s.getFullYear())*12+(j.getMonth()-s.getMonth());
+  let lfdVerfuegbar=Math.max(1,m+1)*MO-(k.lfdV||0);
+  // Sort by date
+  const sorted=[...(k.leistungen||[])].sort((a,b)=>new Date(a.datum)-new Date(b.datum));
+  sorted.forEach(l=>{
+    if(restVerfuegbar>=l.b){l.q="rest";restVerfuegbar-=l.b;}
+    else{l.q="lfd";lfdVerfuegbar-=l.b;}
+  });
+}
+
+function gR(k){
+  recalcQ(k);
+  if(istRestVerfallen(k))return 0;
+  return Math.max(0,k.restBudget-(k.leistungen||[]).filter(l=>l.q==="rest").reduce((s,l)=>s+l.b,0));
+}
+function gL(k){
+  recalcQ(k);
+  const j=new Date(),s=new Date((k.budgetStart||k.erstelltAm.substring(0,7))+"-01");
+  const m=(j.getFullYear()-s.getFullYear())*12+(j.getMonth()-s.getMonth());
+  return Math.max(0,Math.max(1,m+1)*MO-(k.lfdV||0)-(k.leistungen||[]).filter(l=>l.q==="lfd").reduce((s,l)=>s+l.b,0));
+}
 
 function progressRing(k,color){
   const rv=gR(k);
@@ -758,14 +782,14 @@ function openEditL(idx){
   const sel=document.getElementById("lA");for(let i=0;i<sel.options.length;i++){if(sel.options[i].value===le.art){sel.selectedIndex=i;break;}}
   document.getElementById("lVon").value=le.von||"";document.getElementById("lBis").value=le.bis||"";
   const h=Math.floor(le.stunden),m=Math.round((le.stunden-h)*60);
-  document.getElementById("lH").value=h;const mOpts=[0,15,30,45];document.getElementById("lM").value=mOpts.includes(m)?m:0;
+  document.getElementById("lH").value=h;document.getElementById("lM").value=m;
   document.getElementById("lKm").value=le.km||"";document.getElementById("lBem").value=le.bemerkung||"";document.getElementById("lPr").style.display="none";
   document.getElementById("oL").classList.add("on");
 }
 
 function calcZeit(){
   const von=document.getElementById("lVon").value,bis=document.getElementById("lBis").value;
-  if(von&&bis){const[vh,vm]=von.split(":").map(Number),[bh,bm]=bis.split(":").map(Number);let diff=(bh*60+bm)-(vh*60+vm);if(diff<0)diff+=1440;const h=Math.floor(diff/60),m=diff%60;document.getElementById("lH").value=h;const mOpts=[0,15,30,45];document.getElementById("lM").value=mOpts.reduce((a,b)=>Math.abs(b-m)<Math.abs(a-m)?b:a);}
+  if(von&&bis){const[vh,vm]=von.split(":").map(Number),[bh,bm]=bis.split(":").map(Number);let diff=(bh*60+bm)-(vh*60+vm);if(diff<0)diff+=1440;const h=Math.floor(diff/60),m=diff%60;document.getElementById("lH").value=h;const mOpts=[0,15,30,45];document.getElementById("lM").value=m;}
   updP();
 }
 
