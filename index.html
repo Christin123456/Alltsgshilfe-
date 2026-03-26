@@ -254,6 +254,45 @@ body{font-family:-apple-system,'Helvetica Neue',Arial,sans-serif;background:var(
 .sec{font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--dim);margin:18px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--brd)}
 .sec:first-child{margin-top:0}
 
+
+/* FOTO BUTTONS */
+.foto-btns{display:flex;gap:8px;margin-top:10px}
+.foto-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:7px;padding:11px;border-radius:12px;border:none;font-size:.85rem;font-weight:700;cursor:pointer}
+.foto-btn-cam{background:var(--acc-bg);color:var(--acc-dark);border:1px solid var(--acc-brd)}
+.foto-btn-gal{background:var(--blue-bg);color:var(--blue);border:1px solid var(--blue-brd)}
+
+/* TERMIN ITEMS */
+.titem{display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:14px;background:#fff;border:1px solid var(--brd);margin-bottom:8px;box-shadow:0 1px 4px rgba(0,0,0,.05)}
+.titem-color{width:6px;border-radius:3px;align-self:stretch;flex-shrink:0;min-height:36px}
+.titem-mid{flex:1;min-width:0}
+.titem-name{font-size:.88rem;font-weight:700;color:var(--txt);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.titem-zeit{font-size:.75rem;color:var(--muted);margin-top:2px}
+.titem-bem{font-size:.75rem;color:var(--muted);margin-top:1px;font-style:italic;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.titem-btns{display:flex;gap:4px;flex-shrink:0}
+
+/* TAGESPLAN KALENDER */
+.tagplan{background:#fff;border-radius:16px;overflow:hidden;border:1px solid var(--brd);box-shadow:var(--shadow)}
+.tagplan-row{display:flex;min-height:30px;border-bottom:1px solid var(--brd);position:relative}
+.tagplan-row:last-child{border-bottom:none}
+.tagplan-row.hstunde{border-bottom:1px solid var(--brd2)}
+.tagplan-zeit{width:48px;flex-shrink:0;font-size:.68rem;font-weight:700;color:var(--dim);padding:6px 6px 0;text-align:right;line-height:1}
+.tagplan-slot{flex:1;position:relative;min-height:30px}
+.tagplan-block{position:absolute;left:4px;right:4px;border-radius:8px;padding:4px 7px;font-size:.72rem;font-weight:700;overflow:hidden;cursor:pointer;z-index:1;line-height:1.3}
+.tagplan-block:active{opacity:.7}
+
+/* GESAMTKALENDER NAV */
+.gkal-nav{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:#fff;border-bottom:1px solid var(--brd);flex-shrink:0}
+.gkal-datum{font-size:1rem;font-weight:800;color:var(--txt)}
+.gkal-arrows{display:flex;gap:6px}
+.gkal-arrow{background:var(--bg);border:1px solid var(--brd);color:var(--muted);border-radius:9px;padding:8px 14px;font-size:.9rem;cursor:pointer;font-weight:700}
+.gkal-today{background:var(--acc);color:#fff;border:none;border-radius:9px;padding:8px 14px;font-size:.82rem;cursor:pointer;font-weight:700}
+.gkal-legende{display:flex;flex-wrap:wrap;gap:6px;padding:8px 16px;background:#fff;border-bottom:1px solid var(--brd);flex-shrink:0}
+.gkal-leg-item{display:flex;align-items:center;gap:5px;font-size:.72rem;font-weight:700;color:var(--txt)}
+.gkal-leg-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+
+/* TERMIN MODAL */
+.termin-add-btn{display:flex;align-items:center;justify-content:center;gap:8px;background:var(--teal);color:#fff;border:none;border-radius:14px;padding:14px;font-size:.9rem;font-weight:700;cursor:pointer;width:100%;margin-top:8px;box-shadow:0 3px 12px rgba(24,168,152,.4)}
+
 /* WIEDERHOLUNG TOGGLE */
 .wtoggle{display:flex;align-items:center;gap:12px;padding:13px 15px;background:var(--teal-bg);border:1.5px solid var(--teal-brd);border-radius:13px;cursor:pointer;margin-bottom:12px}
 .wtoggle input[type=checkbox]{width:20px;height:20px;accent-color:var(--teal);flex-shrink:0;cursor:pointer}
@@ -308,6 +347,7 @@ body{font-family:-apple-system,'Helvetica Neue',Arial,sans-serif;background:var(
 <div class="view on" id="vL">
   <div class="hdr">
     <div class="hdr-title"><h1>Alltagshilfe Budget</h1><p id="kCnt">–</p></div>
+    <button class="hdr-btn" onclick="showGKal()">📅</button>
     <button class="hdr-btn" onclick="openKM(null)">+ Neu</button>
     <button class="menu-btn" onclick="openMenu()">☰</button>
   </div>
@@ -332,6 +372,7 @@ body{font-family:-apple-system,'Helvetica Neue',Arial,sans-serif;background:var(
     <div class="tab" id="t1" onclick="tab(1)">📅 Kalender</div>
     <div class="tab" id="t2" onclick="tab(2)">📊 Auswertung</div>
     <div class="tab" id="t3" onclick="tab(3)">👤 Stammdaten</div>
+    <div class="tab" id="t4" onclick="tab(4)">🗓️ Termine</div>
   </div>
   <div class="scroll"><div class="pad" id="dC"></div></div>
 </div>
@@ -427,6 +468,23 @@ body{font-family:-apple-system,'Helvetica Neue',Arial,sans-serif;background:var(
   </div>
 </div>
 
+
+<!-- MODAL: Termin -->
+<div class="overlay" id="oT" onclick="cs('oT')">
+  <div class="sheet" onclick="event.stopPropagation()">
+    <div class="shandle"></div>
+    <div class="stit" id="tTit">Termin eintragen</div>
+    <div class="ssub" id="tSub">–</div>
+    <div class="fld"><label>Datum</label><input id="tD" type="date"></div>
+    <div class="frow">
+      <div class="fld"><label>Von</label><input id="tVon" type="time"></div>
+      <div class="fld"><label>Bis</label><input id="tBis" type="time"></div>
+    </div>
+    <div class="fld"><label>Bemerkung</label><input id="tBem" type="text" placeholder="z.B. Arzt, Spaziergang…"></div>
+    <div class="sact"><button class="bc" onclick="cs('oT')">Abbrechen</button><button class="bs" id="tBtn" onclick="saveTermin()">Speichern</button></div>
+  </div>
+</div>
+
 <!-- ONBOARDING -->
 <div class="onboard" id="onboard" style="display:none">
   <div class="ob-logo">🏠</div>
@@ -459,6 +517,26 @@ body{font-family:-apple-system,'Helvetica Neue',Arial,sans-serif;background:var(
     </div>
   </div>
   <button class="ob-btn" id="obBtn" onclick="acceptOB()" disabled>Zustimmen & App starten</button>
+</div>
+
+
+<!-- GESAMTKALENDER -->
+<div class="view" id="vGKal">
+  <div class="hdr">
+    <button class="hdr-back" onclick="showL()">‹</button>
+    <div class="hdr-title"><h1>Tagesplan</h1><p id="gkalSub">Alle Klienten</p></div>
+    <button class="hdr-btn" onclick="openTerminNeu()">+ Termin</button>
+  </div>
+  <div class="gkal-nav">
+    <div class="gkal-arrows">
+      <button class="gkal-arrow" onclick="gkalVor()">‹</button>
+      <button class="gkal-arrow" onclick="gkalNaech()">›</button>
+    </div>
+    <div class="gkal-datum" id="gkalDatum">–</div>
+    <button class="gkal-today" onclick="gkalHeute()">Heute</button>
+  </div>
+  <div class="gkal-legende" id="gkalLegende"></div>
+  <div class="scroll"><div class="pad" id="gkalC"></div></div>
 </div>
 
 <!-- MENU OVERLAY -->
@@ -526,7 +604,9 @@ body{font-family:-apple-system,'Helvetica Neue',Arial,sans-serif;background:var(
 </div>
 
 <!-- ✅ FIX: capture="environment" für Mobile-Kamera, ai-Check in handleFoto -->
-<input type="file" id="fotoInput" accept="image/*" capture="environment" style="display:none" onchange="handleFoto(event)">
+<input type="file" id="fotoInput" accept="image/*" style="display:none" onchange="handleFoto(event)">
+<input type="file" id="fotoInputGal" accept="image/*" style="display:none" onchange="handleFoto(event)">
+<input type="file" id="fotoInputCam" accept="image/*" capture="environment" style="display:none" onchange="handleFoto(event)">
 
 <script>
 const MO=131,R1=42.45,R2=38.11;
@@ -589,7 +669,7 @@ function progressRing(k,color){
 function getInitial(name){return name.trim()[0].toUpperCase();}
 
 // ── LISTE ──
-function showL(){document.getElementById("vD").classList.remove("on");document.getElementById("vTag").classList.remove("on");document.getElementById("vL").classList.add("on");ai=null;rl();}
+function showL(){document.getElementById("vD").classList.remove("on");document.getElementById("vTag").classList.remove("on");document.getElementById("vGKal").classList.remove("on");document.getElementById("vStats").classList.remove("on");document.getElementById("vL").classList.add("on");ai=null;rl();}
 
 function renderABC(){
   const bar=document.getElementById("abcBar");if(!bar)return;
@@ -644,12 +724,12 @@ function rl(){
 
 // ── DETAIL ──
 function sd(i){ai=i;am=new Date().getMonth();aj=new Date().getFullYear();at=0;document.getElementById("vL").classList.remove("on");document.getElementById("vD").classList.add("on");rd();}
-function tab(t){at=t;[0,1,2,3].forEach(i=>document.getElementById("t"+i).classList.toggle("on",i===t));rd();}
+function tab(t){at=t;[0,1,2,3,4].forEach(i=>document.getElementById("t"+i).classList.toggle("on",i===t));rd();}
 function rd(){
   const k=K[ai];
   document.getElementById("dN").textContent=k.name;
   document.getElementById("dS").textContent=(k.pflege?"PG "+k.pflege+" · ":"")+"Budget seit "+fmo(k.budgetStart);
-  if(at===0)rU();else if(at===1)rCal();else if(at===2)rAW();else rS();
+  if(at===0)rU();else if(at===1)rCal();else if(at===2)rAW();else if(at===3)rS();else rTermine();
 }
 
 function lHTML(le,idx){
@@ -678,7 +758,7 @@ function rU(){
   const fotos=k.fotos||[];
   let fotoGrid=fotos.map((f,i)=>`<img class="foto-thumb" src="${f}" onclick="openFoto(${i})">`).join("");
   // ✅ FIX: onclick triggert fotoInput mit korrektem ai-Kontext
-  fotoGrid+=`<div class="foto-add" onclick="triggerFoto()"><span style="font-size:1.6rem">📷</span><span style="font-size:.72rem;font-weight:700">Foto hinzufügen</span></div>`;
+  fotoGrid+=`<div class="foto-btns"><button class="foto-btn foto-btn-cam" onclick="triggerFotoCam()">📷 Foto schießen</button><button class="foto-btn foto-btn-gal" onclick="triggerFotoGal()">🖼️ Galerie</button></div>`;
   let h=`<div class="hero">
     <div class="hero-top">
       <div class="hero-avatar">${getInitial(k.name)}</div>
@@ -708,9 +788,13 @@ function rU(){
 }
 
 // ✅ FIX: Foto-Trigger mit ai-Sicherheitsprüfung
-function triggerFoto(){
+function triggerFotoCam(){
   if(ai===null){alert("Bitte zuerst einen Klienten öffnen.");return;}
-  document.getElementById("fotoInput").click();
+  document.getElementById("fotoInputCam").click();
+}
+function triggerFotoGal(){
+  if(ai===null){alert("Bitte zuerst einen Klienten öffnen.");return;}
+  document.getElementById("fotoInputGal").click();
 }
 
 function saveNotiz(){K[ai].notiz=document.getElementById("notizTA").value;sv();alert("Notiz gespeichert ✓");}
@@ -1171,6 +1255,273 @@ function checkJahreswechsel(){
     namen.push(k.name+" ("+fm(neuesRest)+" €)");geaendert=true;
   });
   if(geaendert){sv();setTimeout(()=>alert("🎉 Jahreswechsel "+new Date().getFullYear()+" durchgeführt!\n\nNeues Restbudget:\n"+namen.join("\n")+"\n\nBitte prüfe die Budgets!"),600);}
+}
+
+
+// ─── KLIENT FARBEN ───
+const KFARBEN=[
+  {bg:'#fff0e8',border:'#f0b080',text:'#c4622d',dot:'#e8944a'},
+  {bg:'#e8f0ff',border:'#90b8f0',text:'#1858a8',dot:'#2878c8'},
+  {bg:'#eafaf3',border:'#80d8a8',text:'#1a8a50',dot:'#2aaa6a'},
+  {bg:'#f4f0fe',border:'#c090e8',text:'#5828a8',dot:'#7848c8'},
+  {bg:'#eafaf8',border:'#80d8d0',text:'#0e8878',dot:'#18a898'},
+  {bg:'#fefae8',border:'#f0d880',text:'#a47800',dot:'#d4a000'},
+  {bg:'#fef0f0',border:'#f0a0a0',text:'#c02020',dot:'#e04040'},
+  {bg:'#f0f8ff',border:'#a0c8f0',text:'#0858a0',dot:'#1878c8'},
+];
+function kFarbe(ki){return KFARBEN[ki%KFARBEN.length];}
+
+// ─── TERMIN FUNKTIONEN ───
+let editTIdx=null,gkalDatum=new Date().toISOString().split('T')[0];
+
+function openTerminNeu(){
+  editTIdx=null;
+  const k=ai!==null?K[ai]:null;
+  document.getElementById('tTit').textContent='Termin eintragen';
+  document.getElementById('tBtn').textContent='Speichern';
+  document.getElementById('tSub').textContent=k?k.name:'Klient wählen';
+  document.getElementById('tD').value=akTag||gkalDatum||new Date().toISOString().split('T')[0];
+  document.getElementById('tVon').value='';
+  document.getElementById('tBis').value='';
+  document.getElementById('tBem').value='';
+  document.getElementById('oT').classList.add('on');
+}
+
+function openTerminEdit(ki,ti){
+  editTIdx={ki,ti};
+  const k=K[ki],t=k.termine[ti];
+  document.getElementById('tTit').textContent='Termin bearbeiten';
+  document.getElementById('tBtn').textContent='Speichern';
+  document.getElementById('tSub').textContent=k.name;
+  document.getElementById('tD').value=t.datum;
+  document.getElementById('tVon').value=t.von||'';
+  document.getElementById('tBis').value=t.bis||'';
+  document.getElementById('tBem').value=t.bem||'';
+  document.getElementById('oT').classList.add('on');
+}
+
+function saveTermin(){
+  const datum=document.getElementById('tD').value;
+  const von=document.getElementById('tVon').value;
+  const bis=document.getElementById('tBis').value;
+  const bem=document.getElementById('tBem').value.trim();
+  if(!datum||!von){alert('Bitte Datum und Startzeit angeben.');return;}
+  const t={datum,von,bis,bem,id:'t'+Date.now()};
+  if(editTIdx!==null){
+    K[editTIdx.ki].termine[editTIdx.ti]=t;
+  } else {
+    const ki=ai!==null?ai:null;
+    if(ki===null){alert('Bitte zuerst einen Klienten öffnen.');return;}
+    if(!K[ki].termine)K[ki].termine=[];
+    K[ki].termine.push(t);
+  }
+  sv();cs('oT');
+  if(at===4)rTermine();
+  if(document.getElementById('vGKal').classList.contains('on'))renderGKal();
+  editTIdx=null;
+}
+
+function delTermin(ki,ti){
+  if(!confirm('Termin löschen?'))return;
+  K[ki].termine.splice(ti,1);
+  sv();
+  if(at===4)rTermine();
+  if(document.getElementById('vGKal').classList.contains('on'))renderGKal();
+}
+
+// ─── KLIENT TERMINE TAB ───
+function rTermine(){
+  const k=K[ai];
+  if(!k.termine)k.termine=[];
+  const heute=new Date().toISOString().split('T')[0];
+  const kommend=k.termine.filter(t=>t.datum>=heute).sort((a,b)=>a.datum.localeCompare(b.datum)||a.von.localeCompare(b.von));
+  const vergangen=k.termine.filter(t=>t.datum<heute).sort((a,b)=>b.datum.localeCompare(a.datum)||b.von.localeCompare(a.von));
+  const farbe=kFarbe(ai);
+  let h=`<button class="termin-add-btn" onclick="openTerminNeu()">+ Neuer Termin</button>`;
+  if(kommend.length){
+    h+=`<div class="sec" style="margin-top:16px">Kommende Termine</div>`;
+    h+=kommend.map((t,i)=>{
+      const ri=k.termine.indexOf(t);
+      const d=new Date(t.datum);
+      const wt=["So","Mo","Di","Mi","Do","Fr","Sa"];
+      return `<div class="titem">
+        <div class="titem-color" style="background:${farbe.dot}"></div>
+        <div class="titem-mid">
+          <div class="titem-name">${wt[d.getDay()]} ${d.getDate()}.${d.getMonth()+1}.${d.getFullYear()}</div>
+          <div class="titem-zeit">🕐 ${t.von||'–'}${t.bis?' – '+t.bis:''} Uhr</div>
+          ${t.bem?`<div class="titem-bem">📝 ${t.bem}</div>`:''}
+        </div>
+        <div class="titem-btns">
+          <button class="ledit" onclick="openTerminEdit(${ai},${ri})">✏️</button>
+          <button class="ldel" onclick="delTermin(${ai},${ri})">🗑️</button>
+        </div>
+      </div>`;
+    }).join('');
+  }
+  if(vergangen.length){
+    h+=`<div class="sec" style="margin-top:16px;opacity:.6">Vergangene Termine</div>`;
+    h+=vergangen.slice(0,10).map(t=>{
+      const ri=k.termine.indexOf(t);
+      const d=new Date(t.datum);
+      const wt=["So","Mo","Di","Mi","Do","Fr","Sa"];
+      return `<div class="titem" style="opacity:.6">
+        <div class="titem-color" style="background:${farbe.dot}"></div>
+        <div class="titem-mid">
+          <div class="titem-name">${wt[d.getDay()]} ${d.getDate()}.${d.getMonth()+1}.${d.getFullYear()}</div>
+          <div class="titem-zeit">🕐 ${t.von||'–'}${t.bis?' – '+t.bis:''} Uhr</div>
+          ${t.bem?`<div class="titem-bem">📝 ${t.bem}</div>`:''}
+        </div>
+        <div class="titem-btns">
+          <button class="ledit" onclick="openTerminEdit(${ai},${ri})">✏️</button>
+          <button class="ldel" onclick="delTermin(${ai},${ri})">🗑️</button>
+        </div>
+      </div>`;
+    }).join('');
+  }
+  if(!k.termine.length){
+    h+=`<div class="empty" style="padding:40px 20px"><div class="empty-ico">🗓️</div><h3>Keine Termine</h3><p>Tippe auf "+ Neuer Termin"</p></div>`;
+  }
+  document.getElementById('dC').innerHTML=h;
+}
+
+// ─── GESAMTKALENDER ───
+function showGKal(){
+  document.getElementById('vL').classList.remove('on');
+  document.getElementById('vGKal').classList.add('on');
+  renderGKal();
+}
+
+function gkalVor(){
+  const d=new Date(gkalDatum);d.setDate(d.getDate()-1);
+  gkalDatum=d.toISOString().split('T')[0];renderGKal();
+}
+function gkalNaech(){
+  const d=new Date(gkalDatum);d.setDate(d.getDate()+1);
+  gkalDatum=d.toISOString().split('T')[0];renderGKal();
+}
+function gkalHeute(){gkalDatum=new Date().toISOString().split('T')[0];renderGKal();}
+
+function renderGKal(){
+  const MNk=["Januar","Februar","März","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"];
+  const WTk=["Sonntag","Montag","Dienstag","Mittwoch","Donnerstag","Freitag","Samstag"];
+  const d=new Date(gkalDatum);
+  document.getElementById('gkalDatum').textContent=WTk[d.getDay()]+', '+d.getDate()+'. '+MNk[d.getMonth()]+' '+d.getFullYear();
+  document.getElementById('gkalSub').textContent=d.getDate()+'.'+( d.getMonth()+1)+'.'+d.getFullYear();
+
+  // Legende
+  const leg=document.getElementById('gkalLegende');
+  leg.innerHTML=K.map((k,ki)=>{
+    const f=kFarbe(ki);
+    return `<div class="gkal-leg-item"><div class="gkal-leg-dot" style="background:${f.dot}"></div>${k.name.split(',')[0]}</div>`;
+  }).join('');
+
+  // Alle Termine des Tages sammeln
+  const alleTermine=[];
+  K.forEach((k,ki)=>{
+    (k.termine||[]).forEach((t,ti)=>{
+      if(t.datum===gkalDatum) alleTermine.push({k,ki,t,ti});
+    });
+    // Auch Leistungen des Tages anzeigen
+    (k.leistungen||[]).forEach((l,li)=>{
+      if(l.datum===gkalDatum&&l.von&&l.bis) alleTermine.push({k,ki,t:{datum:l.datum,von:l.von,bis:l.bis,bem:l.art,isLeistung:true},ti:li,isLeistung:true});
+    });
+  });
+
+  // Zeitraster 7:30–17:00 in 15min-Schritten
+  const START=7*60+30; // 7:30
+  const END=17*60;     // 17:00
+  const SLOT=15;
+  const slots=[];
+  for(let m=START;m<END;m+=SLOT) slots.push(m);
+
+  function timeToMin(s){if(!s)return null;const[h,min]=s.split(':').map(Number);return h*60+min;}
+  function minToStr(m){const h=Math.floor(m/60),min=m%60;return String(h).padStart(2,'0')+':'+String(min).padStart(2,'0');}
+
+  // Tagesplan aufbauen
+  const SLOT_H=32; // px pro 15min
+  const totalH=(END-START)/SLOT*SLOT_H;
+
+  // Termine als Blöcke positionieren
+  let blocks='';
+  alleTermine.forEach(({k,ki,t,isLeistung})=>{
+    const startMin=timeToMin(t.von);
+    const endMin=t.bis?timeToMin(t.bis):startMin+60;
+    if(startMin===null)return;
+    if(endMin<=START||startMin>=END)return;
+    const clampStart=Math.max(startMin,START);
+    const clampEnd=Math.min(endMin,END);
+    const top=(clampStart-START)/SLOT*SLOT_H;
+    const height=Math.max((clampEnd-clampStart)/SLOT*SLOT_H,SLOT_H);
+    const f=kFarbe(ki);
+    const label=isLeistung?t.bem.substring(0,18):(t.bem||k.name.split(',')[0]);
+    const nameShort=k.name.split(',')[0];
+    blocks+=`<div class="tagplan-block" style="top:${top}px;height:${height}px;background:${f.bg};border-left:3px solid ${f.dot};color:${f.text};" onclick="openTerminEdit(${ki},${K[ki].termine?(K[ki].termine.indexOf(t)):0})">
+      <div style="font-weight:800;font-size:.72rem">${nameShort}</div>
+      <div style="font-size:.65rem;opacity:.85">${t.von}${t.bis?'–'+t.bis:''}</div>
+      ${label&&label!==nameShort?`<div style="font-size:.62rem;opacity:.75;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${label}</div>`:''}
+    </div>`;
+  });
+
+  // Zeitraster HTML
+  let raster='';
+  for(let m=START;m<END;m+=SLOT){
+    const isHalfHour=m%30===0;
+    const isHour=m%60===0;
+    const zeitLabel=isHalfHour?minToStr(m):'';
+    raster+=`<div class="tagplan-row ${isHour?'hstunde':''}" style="height:${SLOT_H}px">
+      <div class="tagplan-zeit">${zeitLabel}</div>
+      <div class="tagplan-slot" style="border-left:1px solid ${isHour?'var(--brd2)':'var(--brd)'}"></div>
+    </div>`;
+  }
+
+  let noTermine=alleTermine.length===0?`<div class="empty" style="padding:30px 20px;position:absolute;inset:0;pointer-events:none"><div class="empty-ico" style="font-size:2.5rem">🗓️</div><h3 style="font-size:.95rem">Keine Termine heute</h3></div>`:'';
+
+  let c=`<div class="tagplan" style="position:relative">
+    ${raster}
+    <div style="position:absolute;top:0;left:48px;right:0;bottom:0;pointer-events:none">
+      ${blocks}
+      ${noTermine}
+    </div>
+  </div>`;
+
+  // Termin-Liste unten
+  const nurTermine=alleTermine.filter(x=>!x.isLeistung);
+  if(nurTermine.length){
+    c+=`<div class="sec" style="margin-top:16px">Termine</div>`;
+    c+=nurTermine.map(({k,ki,t,ti})=>{
+      const f=kFarbe(ki);
+      return `<div class="titem">
+        <div class="titem-color" style="background:${f.dot}"></div>
+        <div class="titem-mid">
+          <div class="titem-name" style="color:${f.text}">${k.name}</div>
+          <div class="titem-zeit">🕐 ${t.von||'–'}${t.bis?' – '+t.bis:''} Uhr</div>
+          ${t.bem?`<div class="titem-bem">📝 ${t.bem}</div>`:''}
+        </div>
+        <div class="titem-btns">
+          <button class="ledit" onclick="openTerminEdit(${ki},${ti})">✏️</button>
+          <button class="ldel" onclick="delTermin(${ki},${ti})">🗑️</button>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  const nurLeistungen=alleTermine.filter(x=>x.isLeistung);
+  if(nurLeistungen.length){
+    c+=`<div class="sec" style="margin-top:16px">Leistungen</div>`;
+    c+=nurLeistungen.map(({k,ki,t})=>{
+      const f=kFarbe(ki);
+      return `<div class="titem">
+        <div class="titem-color" style="background:${f.dot}"></div>
+        <div class="titem-mid">
+          <div class="titem-name" style="color:${f.text}">${k.name}</div>
+          <div class="titem-zeit">🕐 ${t.von||'–'}${t.bis?' – '+t.bis:''} Uhr</div>
+          <div class="titem-bem">📋 ${t.bem}</div>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  document.getElementById('gkalC').innerHTML=c;
 }
 
 if("serviceWorker"in navigator)navigator.serviceWorker.register("./sw.js").catch(()=>{});
