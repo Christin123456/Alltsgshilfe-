@@ -183,6 +183,7 @@ body{font-family:-apple-system,'Helvetica Neue',Arial,sans-serif;background:var(
 .lbetrag{font-size:1rem;font-weight:800;color:var(--acc-dark)}
 .lq{font-size:.65rem;padding:2px 8px;border-radius:20px;font-weight:700;margin-top:3px;display:inline-block}
 .lq.rest{background:var(--acc-bg);color:var(--acc-dark)}.lq.lfd{background:var(--grn-bg);color:var(--grn)}
+.lq.serie{background:var(--teal-bg);color:var(--teal);margin-left:3px}
 .ldel{background:none;border:none;color:var(--red);font-size:1rem;cursor:pointer;padding:4px;flex-shrink:0}
 .ledit{background:none;border:none;color:var(--blue);font-size:1rem;cursor:pointer;padding:4px;flex-shrink:0}
 
@@ -252,6 +253,15 @@ body{font-family:-apple-system,'Helvetica Neue',Arial,sans-serif;background:var(
 .bs{background:var(--acc);color:#fff;box-shadow:0 3px 12px rgba(232,148,74,.4)}
 .sec{font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--dim);margin:18px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--brd)}
 .sec:first-child{margin-top:0}
+
+/* WIEDERHOLUNG TOGGLE */
+.wtoggle{display:flex;align-items:center;gap:12px;padding:13px 15px;background:var(--teal-bg);border:1.5px solid var(--teal-brd);border-radius:13px;cursor:pointer;margin-bottom:12px}
+.wtoggle input[type=checkbox]{width:20px;height:20px;accent-color:var(--teal);flex-shrink:0;cursor:pointer}
+.wtoggle span{font-size:.95rem;color:var(--teal);font-weight:700}
+.wserie{display:none;padding:14px;background:var(--teal-bg);border:1.5px solid var(--teal-brd);border-radius:13px;margin-bottom:15px}
+.wserie.on{display:block}
+.wvorschau{font-size:.82rem;color:var(--teal);margin-top:8px;line-height:1.7;font-weight:600}
+
 /* ONBOARDING */
 .onboard{position:fixed;inset:0;background:var(--bg);z-index:999;display:flex;flex-direction:column;overflow-y:auto;padding:calc(var(--safe-t)+20px) 24px calc(var(--safe-b)+24px)}
 .ob-logo{width:80px;height:80px;background:linear-gradient(135deg,var(--acc),var(--acc-dark));border-radius:24px;display:flex;align-items:center;justify-content:center;font-size:2.5rem;margin:20px auto 24px;box-shadow:0 4px 20px rgba(232,148,74,.4)}
@@ -377,7 +387,7 @@ body{font-family:-apple-system,'Helvetica Neue',Arial,sans-serif;background:var(
     <div class="shandle"></div>
     <div class="stit" id="lTit">Leistung eintragen</div>
     <div class="ssub" id="lSub">–</div>
-    <div class="fld"><label>Datum</label><input id="lD" type="date"></div>
+    <div class="fld"><label>Datum</label><input id="lD" type="date" oninput="updateWVorschau()"></div>
     <div class="fld"><label>Art der Leistung</label>
       <select id="lA" onchange="updP()">
         <option value="Haushaltsnahe Dienstleistung" data-rate="38.11">Haushaltsnahe Dienstleistung – 38,11 €/Std</option>
@@ -397,6 +407,22 @@ body{font-family:-apple-system,'Helvetica Neue',Arial,sans-serif;background:var(
     <div class="fld"><label>Strecke (km)</label><input id="lKm" type="number" placeholder="0" min="0" step="0.1"></div>
     <div class="fld"><label>Bemerkung</label><input id="lBem" type="text" placeholder="Optional…"></div>
     <div class="lprev" id="lPr"></div>
+
+    <!-- WIEDERHOLUNG (nur beim Neu-Eintragen, nicht beim Bearbeiten) -->
+    <div id="wToggleWrap">
+      <label class="wtoggle">
+        <input type="checkbox" id="lWiederhole" onchange="toggleWiederholung()">
+        <span>🔁 Wiederholungstermin</span>
+      </label>
+      <div class="wserie" id="wSerie">
+        <div class="frow">
+          <div class="fld"><label>Alle X Tage</label><input id="lInterval" type="number" placeholder="7" min="1" max="365" value="7" oninput="updateWVorschau()"></div>
+          <div class="fld"><label>Anzahl Termine</label><input id="lAnzahl" type="number" placeholder="4" min="1" max="52" value="4" oninput="updateWVorschau()"></div>
+        </div>
+        <div class="wvorschau" id="wVorschau"></div>
+      </div>
+    </div>
+
     <div class="sact"><button class="bc" onclick="cs('oL')">Abbrechen</button><button class="bs" id="lBtn" onclick="saveL()">Eintragen</button></div>
   </div>
 </div>
@@ -434,7 +460,6 @@ body{font-family:-apple-system,'Helvetica Neue',Arial,sans-serif;background:var(
   </div>
   <button class="ob-btn" id="obBtn" onclick="acceptOB()" disabled>Zustimmen & App starten</button>
 </div>
-
 
 <!-- MENU OVERLAY -->
 <div class="menu-overlay" id="mOverlay" onclick="closeMenu()"></div>
@@ -500,7 +525,8 @@ body{font-family:-apple-system,'Helvetica Neue',Arial,sans-serif;background:var(
   <div class="scroll"><div class="pad" id="statsC"></div></div>
 </div>
 
-<input type="file" id="fotoInput" accept="image/*" style="display:none" onchange="handleFoto(event)">
+<!-- ✅ FIX: capture="environment" für Mobile-Kamera, ai-Check in handleFoto -->
+<input type="file" id="fotoInput" accept="image/*" capture="environment" style="display:none" onchange="handleFoto(event)">
 
 <script>
 const MO=131,R1=42.45,R2=38.11;
@@ -519,14 +545,11 @@ function istRestVerfallen(k){const j=new Date();return j>new Date(j.getFullYear(
 function restTageBisVerfall(){const j=new Date(),v=new Date(j.getFullYear(),5,30);if(j>v)return 0;return Math.ceil((v-j)/(1000*60*60*24));}
 
 function recalcQ(k){
-  // Recalculate q for all Leistungen dynamically
-  // Restbudget first, then laufend
   const verfallen=istRestVerfallen(k);
   let restVerfuegbar=verfallen?0:k.restBudget;
   const j=new Date(),s=new Date((k.budgetStart||k.erstelltAm.substring(0,7))+"-01");
   const m=(j.getFullYear()-s.getFullYear())*12+(j.getMonth()-s.getMonth());
   let lfdVerfuegbar=Math.max(1,m+1)*MO-(k.lfdV||0);
-  // Sort by date
   const sorted=[...(k.leistungen||[])].sort((a,b)=>new Date(a.datum)-new Date(b.datum));
   sorted.forEach(l=>{
     if(restVerfuegbar>=l.b){l.q="rest";restVerfuegbar-=l.b;}
@@ -588,8 +611,6 @@ function rl(){
   g.innerHTML=fl.map(k=>{
     const ri=K.indexOf(k);
     const r=gR(k),l=gL(k),tot=r+l;
-    const maxBudget=Math.max(k.restBudget+12*MO,1);
-    const pct=Math.min(100,Math.round(tot/maxBudget*100));
     let alerts='';
     if(tot<50)alerts+=`<div class="alert-box alert-danger">🚨 Budget fast aufgebraucht! Noch ${fm(tot)} €</div>`;
     else if(tot<150)alerts+=`<div class="alert-box alert-warn">⚠️ Budget wird knapp – noch ${fm(tot)} €</div>`;
@@ -606,14 +627,8 @@ function rl(){
           ${progressRing(k,'rgba(255,255,255,.9)')}
         </div>
         <div class="kcard-budgets">
-          <div class="kcard-budget-pill">
-            <div class="kcard-bl">Restbudget</div>
-            <div class="kcard-bv">${fm(r)} €</div>
-          </div>
-          <div class="kcard-budget-pill">
-            <div class="kcard-bl">Laufend</div>
-            <div class="kcard-bv">${fm(l)} €</div>
-          </div>
+          <div class="kcard-budget-pill"><div class="kcard-bl">Restbudget</div><div class="kcard-bv">${fm(r)} €</div></div>
+          <div class="kcard-budget-pill"><div class="kcard-bl">Laufend</div><div class="kcard-bv">${fm(l)} €</div></div>
         </div>
         <div class="kcard-stunden">⏱ ${fm(tot/R1)} Std (42,45€) · ${fm(tot/R2)} Std (38,11€)</div>
       </div>
@@ -641,11 +656,12 @@ function lHTML(le,idx){
   const d=new Date(le.datum);
   const zt=le.von&&le.bis?`${le.von}–${le.bis} Uhr`:(le.stunden%1===0?le.stunden+" Std":le.stunden.toFixed(2)+" Std");
   const isH=le.art.includes("Haushalt");
+  const serieBadge=le.serieId?`<span class="lq serie">🔁</span>`:'';
   return `<div class="litem">
     <div class="licon ${isH?'haushalt':'betreuung'}">${isH?'🏠':'💙'}</div>
     <div class="ldate">${d.getDate()}.<br><span style="font-size:.65rem;color:var(--dim)">${MN[d.getMonth()].substring(0,3)}</span></div>
     <div class="lmid"><div class="lart">${le.art}</div><div class="lzeit">${zt}${le.km?' · '+le.km+' km':''}${le.bemerkung?' · '+le.bemerkung:''}</div></div>
-    <div class="lright"><div class="lbetrag">${fm(le.b)} €</div><span class="lq ${le.q}">${le.q==="rest"?"Restb.":"Lfd."}</span></div>
+    <div class="lright"><div class="lbetrag">${fm(le.b)} €</div><span class="lq ${le.q}">${le.q==="rest"?"Restb.":"Lfd."}</span>${serieBadge}</div>
     <button class="ledit" onclick="openEditL(${idx})">✏️</button>
     <button class="ldel" onclick="delL(${idx})">🗑️</button>
   </div>`;
@@ -653,7 +669,6 @@ function lHTML(le,idx){
 
 function rU(){
   const k=K[ai],r=gR(k),l=gL(k),tot=r+l;
-  const maxB=Math.max(k.restBudget+12*MO,1),pct=Math.min(100,Math.round(tot/maxB*100));
   let warn='';
   if(tot<50)warn+=`<div class="alert-box alert-danger" style="margin-bottom:12px">🚨 Budget fast aufgebraucht!</div>`;
   else if(tot<150)warn+=`<div class="alert-box alert-warn" style="margin-bottom:12px">⚠️ Budget wird knapp</div>`;
@@ -662,7 +677,8 @@ function rU(){
   const alle=(k.leistungen||[]).slice().sort((a,b)=>new Date(b.datum)-new Date(a.datum)).slice(0,15);
   const fotos=k.fotos||[];
   let fotoGrid=fotos.map((f,i)=>`<img class="foto-thumb" src="${f}" onclick="openFoto(${i})">`).join("");
-  fotoGrid+=`<div class="foto-add" onclick="document.getElementById('fotoInput').click()"><span style="font-size:1.6rem">📷</span><span style="font-size:.72rem;font-weight:700">Foto hinzufügen</span></div>`;
+  // ✅ FIX: onclick triggert fotoInput mit korrektem ai-Kontext
+  fotoGrid+=`<div class="foto-add" onclick="triggerFoto()"><span style="font-size:1.6rem">📷</span><span style="font-size:.72rem;font-weight:700">Foto hinzufügen</span></div>`;
   let h=`<div class="hero">
     <div class="hero-top">
       <div class="hero-avatar">${getInitial(k.name)}</div>
@@ -691,8 +707,29 @@ function rU(){
   document.getElementById("dC").innerHTML=h;
 }
 
+// ✅ FIX: Foto-Trigger mit ai-Sicherheitsprüfung
+function triggerFoto(){
+  if(ai===null){alert("Bitte zuerst einen Klienten öffnen.");return;}
+  document.getElementById("fotoInput").click();
+}
+
 function saveNotiz(){K[ai].notiz=document.getElementById("notizTA").value;sv();alert("Notiz gespeichert ✓");}
-function handleFoto(e){const file=e.target.files[0];if(!file)return;const reader=new FileReader();reader.onload=ev=>{if(!K[ai].fotos)K[ai].fotos=[];K[ai].fotos.push(ev.target.result);sv();rU();};reader.readAsDataURL(file);e.target.value="";}
+
+// ✅ FIX: ai-Prüfung vor FileReader
+function handleFoto(e){
+  const file=e.target.files[0];
+  if(!file)return;
+  if(ai===null){alert("Kein Klient geöffnet.");e.target.value="";return;}
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    if(!K[ai].fotos)K[ai].fotos=[];
+    K[ai].fotos.push(ev.target.result);
+    sv();rU();
+  };
+  reader.readAsDataURL(file);
+  e.target.value="";
+}
+
 function openFoto(i){viewFotoIdx=i;document.getElementById("fViewerImg").src=K[ai].fotos[i];document.getElementById("fViewer").classList.add("on");}
 function closeFoto(){document.getElementById("fViewer").classList.remove("on");viewFotoIdx=null;}
 function delFoto(){if(viewFotoIdx===null)return;if(!confirm("Foto löschen?"))return;K[ai].fotos.splice(viewFotoIdx,1);sv();closeFoto();rU();}
@@ -752,8 +789,9 @@ function renderTag(){
   tagL.forEach(le=>{
     const idx=(k.leistungen||[]).indexOf(le);
     const zt=le.von&&le.bis?`${le.von} – ${le.bis} Uhr`:(le.stunden%1===0?le.stunden+" Std":le.stunden.toFixed(2)+" Std");
+    const serieBadge=le.serieId?`<span class="lq serie" style="margin-left:6px">🔁 Serie</span>`:'';
     h+=`<div class="day-litem">
-      <div class="day-litem-top"><div class="day-litem-art">${le.art}</div><div class="day-litem-btns"><button class="ledit" onclick="openEditL(${idx})">✏️</button><button class="ldel" onclick="delLTag(${idx})">🗑️</button></div></div>
+      <div class="day-litem-top"><div class="day-litem-art">${le.art}${serieBadge}</div><div class="day-litem-btns"><button class="ledit" onclick="openEditL(${idx})">✏️</button><button class="ldel" onclick="delLTag(${idx})">🗑️</button></div></div>
       <div class="day-litem-info">
         <div class="day-info-pill"><div class="dip-l">Uhrzeit</div><div class="dip-v">${zt}</div></div>
         <div class="day-info-pill"><div class="dip-l">Betrag</div><div class="dip-v">${fm(le.b)} €</div></div>
@@ -766,7 +804,20 @@ function renderTag(){
   h+=`<button class="day-add-btn" onclick="oLMTag()">+ Leistung hinzufügen</button>`;
   document.getElementById("tagC").innerHTML=h;
 }
-function delLTag(idx){if(!confirm("Leistung löschen?"))return;K[ai].leistungen.splice(idx,1);sv();renderTag();}
+
+// ✅ Serie löschen: Nur dieser Termin ODER ganze Serie
+function delLTag(idx){
+  const le=K[ai].leistungen[idx];
+  if(le.serieId){
+    const serieAnzahl=K[ai].leistungen.filter(l=>l.serieId===le.serieId).length;
+    if(serieAnzahl>1){
+      const w=confirm("🔁 Diese Leistung ist Teil einer Serie ("+serieAnzahl+" Einträge).\n\nOK = Ganze Serie löschen\nAbbrechen = Nur diesen Termin");
+      if(w){K[ai].leistungen=K[ai].leistungen.filter(l=>l.serieId!==le.serieId);}
+      else{K[ai].leistungen.splice(idx,1);}
+    }else{K[ai].leistungen.splice(idx,1);}
+  }else{if(!confirm("Leistung löschen?"))return;K[ai].leistungen.splice(idx,1);}
+  sv();renderTag();
+}
 
 function rAW(){
   const k=K[ai];
@@ -839,30 +890,7 @@ function exportLN(){
     if(tL.length){tL.forEach((l,i)=>{const uhr=l.von&&l.bis?`${l.von}–${l.bis}`:"";rows+=`<tr><td style="text-align:center;font-weight:${i===0?700:400}">${i===0?t:""}</td><td>${uhr}</td><td style="text-align:center">${l.km||""}</td><td style="text-align:center">${l.stunden.toFixed(2)}</td><td>${l.art.includes("Haushalt")?"Haushaltsnahe Dienstleistung":"Betreuung/Komb. Dienstleistung"}${l.bemerkung?" – "+l.bemerkung:""}</td><td></td></tr>`;});}
     else rows+=`<tr><td style="text-align:center">${t}</td><td></td><td></td><td></td><td></td><td></td></tr>`;
   }
-  const html=`<!DOCTYPE html><html lang="de"><head><meta charset="UTF-8"><title>Leistungsnachweis ${MN[parseInt(mm)-1]} ${jj}</title><style>*{box-sizing:border-box}body{font-family:Arial,sans-serif;font-size:10px;color:#000;margin:0;padding:0}.page{width:210mm;min-height:297mm;padding:12mm}h2{font-size:12px;font-weight:bold;margin:0 0 6px}.info{margin-bottom:8px;line-height:1.6;font-size:10px}table{width:100%;border-collapse:collapse;table-layout:fixed}th{border:1px solid #000;padding:3px 4px;font-size:9px;font-weight:700;text-align:center;background:#f0f0f0}td{border:1px solid #000;padding:2px 4px;font-size:9px;height:16px;vertical-align:middle}.footer{margin-top:8px;font-size:10px;font-weight:bold}.sig{display:flex;justify-content:space-between;margin-top:20mm}.sig-line{width:30%;border-top:1px solid #000;text-align:center;padding-top:3px;font-size:9px}.print-btn{position:fixed;bottom:20px;right:20px;background:#e8944a;color:#fff;border:none;border-radius:10px;padding:12px 24px;font-size:14px;font-weight:bold;cursor:pointer}@media print{.print-btn{display:none}@page{size:A4 portrait;margin:0}}
-.menu-btn{width:40px;height:40px;background:rgba(255,255,255,.25);border:none;border-radius:11px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:1.2rem;color:#fff;flex-shrink:0}
-.menu-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:300;display:none;backdrop-filter:blur(4px)}
-.menu-overlay.on{display:block}
-.menu-drawer{position:fixed;top:0;right:-320px;width:300px;height:100%;background:#fff;z-index:301;transition:right .25s ease;box-shadow:-4px 0 24px rgba(0,0,0,.15);display:flex;flex-direction:column}
-.menu-drawer.on{right:0}
-.menu-hdr{background:linear-gradient(135deg,var(--acc),var(--acc-dark));padding:calc(var(--safe-t)+20px) 20px 20px;color:#fff;position:relative}
-.menu-hdr h2{font-size:1.1rem;font-weight:800;margin-bottom:3px}
-.menu-hdr p{font-size:.78rem;opacity:.85}
-.menu-close{position:absolute;top:calc(var(--safe-t)+12px);right:12px;width:34px;height:34px;background:rgba(255,255,255,.2);border:none;border-radius:50%;color:#fff;font-size:1rem;cursor:pointer}
-.menu-body{flex:1;overflow-y:auto;padding:16px}
-.msect{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--dim);margin:16px 0 8px;padding-bottom:5px;border-bottom:1px solid var(--brd)}
-.msect:first-child{margin-top:0}
-.mitem{display:flex;align-items:center;gap:12px;padding:12px 13px;border-radius:12px;background:var(--bg);border:1px solid var(--brd);margin-bottom:7px;cursor:pointer;text-decoration:none;color:var(--txt)}
-.mitem:active{opacity:.7}
-.micon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0}
-.minfo{flex:1}
-.mtitle{font-size:.9rem;font-weight:700}
-.msub{font-size:.72rem;color:var(--muted);margin-top:2px}
-.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
-.stat-card{background:#fff;border:1px solid var(--brd);border-radius:14px;padding:14px;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,.05)}
-.stat-val{font-size:1.35rem;font-weight:800;color:var(--acc-dark);margin-bottom:3px}
-.stat-lbl{font-size:.68rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.05em}
-</style></head><body><div class="page"><h2>Leistungsnachweis ${MN[parseInt(mm)-1]} ${jj}</h2><div class="info"><strong>Versicherte Person:</strong> ${k.name}${k.geburt?", geb. am "+fd(k.geburt):""}<br>${k.adresse?`<strong>Adresse:</strong> ${k.adresse}<br>`:""} ${k.kk?`<strong>Krankenkasse:</strong> ${k.kk}${k.vnr?", Vers.-Nr.: "+k.vnr:""}<br>`:""} ${k.pflege?`<strong>Pflegegrad:</strong> ${k.pflege}`:""}</div><table><thead><tr><th style="width:22px">Tag</th><th style="width:68px">Uhrzeit</th><th style="width:44px">Strecke(km)</th><th style="width:44px">Dauer(h)</th><th>Art der Leistung / Bemerkung</th><th style="width:60px">Unterschrift</th></tr></thead><tbody>${rows}</tbody></table><div class="footer">Gesamtstunden: ${gesStd.toFixed(2)} h</div><div class="sig"><div class="sig-line">Ort, Datum</div><div class="sig-line">Mitarbeiterin</div><div class="sig-line">Kundin/Kunde</div></div></div><button class="print-btn" onclick="window.print()">🖨️ Drucken</button></body></html>`;
+  const html=`<!DOCTYPE html><html lang="de"><head><meta charset="UTF-8"><title>Leistungsnachweis ${MN[parseInt(mm)-1]} ${jj}</title><style>*{box-sizing:border-box}body{font-family:Arial,sans-serif;font-size:10px;color:#000;margin:0;padding:0}.page{width:210mm;min-height:297mm;padding:12mm}h2{font-size:12px;font-weight:bold;margin:0 0 6px}.info{margin-bottom:8px;line-height:1.6;font-size:10px}table{width:100%;border-collapse:collapse;table-layout:fixed}th{border:1px solid #000;padding:3px 4px;font-size:9px;font-weight:700;text-align:center;background:#f0f0f0}td{border:1px solid #000;padding:2px 4px;font-size:9px;height:16px;vertical-align:middle}.footer{margin-top:8px;font-size:10px;font-weight:bold}.sig{display:flex;justify-content:space-between;margin-top:20mm}.sig-line{width:30%;border-top:1px solid #000;text-align:center;padding-top:3px;font-size:9px}.print-btn{position:fixed;bottom:20px;right:20px;background:#e8944a;color:#fff;border:none;border-radius:10px;padding:12px 24px;font-size:14px;font-weight:bold;cursor:pointer}@media print{.print-btn{display:none}@page{size:A4 portrait;margin:0}}</style></head><body><div class="page"><h2>Leistungsnachweis ${MN[parseInt(mm)-1]} ${jj}</h2><div class="info"><strong>Versicherte Person:</strong> ${k.name}${k.geburt?", geb. am "+fd(k.geburt):""}<br>${k.adresse?`<strong>Adresse:</strong> ${k.adresse}<br>`:""} ${k.kk?`<strong>Krankenkasse:</strong> ${k.kk}${k.vnr?", Vers.-Nr.: "+k.vnr:""}<br>`:""} ${k.pflege?`<strong>Pflegegrad:</strong> ${k.pflege}`:""}</div><table><thead><tr><th style="width:22px">Tag</th><th style="width:68px">Uhrzeit</th><th style="width:44px">Strecke(km)</th><th style="width:44px">Dauer(h)</th><th>Art der Leistung / Bemerkung</th><th style="width:60px">Unterschrift</th></tr></thead><tbody>${rows}</tbody></table><div class="footer">Gesamtstunden: ${gesStd.toFixed(2)} h</div><div class="sig"><div class="sig-line">Ort, Datum</div><div class="sig-line">Mitarbeiterin</div><div class="sig-line">Kundin/Kunde</div></div></div><button class="print-btn" onclick="window.print()">🖨️ Drucken</button></body></html>`;
   const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([html],{type:"text/html;charset=utf-8"}));a.download=`Leistungsnachweis_${k.name.replace(/[^a-zA-Z0-9]/g,"_")}_${jj}_${mm}.html`;a.click();
 }
 
@@ -884,24 +912,75 @@ function openKM(e,i=null){
 
 function oLMTag(){
   editLIdx=null;
-  document.getElementById("lTit").textContent="Leistung eintragen";document.getElementById("lBtn").textContent="Eintragen";document.getElementById("lSub").textContent=K[ai].name;document.getElementById("lD").value=akTag;document.getElementById("lA").selectedIndex=0;document.getElementById("lVon").value="";document.getElementById("lBis").value="";document.getElementById("lH").value="";document.getElementById("lM").value="0";document.getElementById("lKm").value="";document.getElementById("lBem").value="";document.getElementById("lPr").style.display="none";
+  document.getElementById("lTit").textContent="Leistung eintragen";
+  document.getElementById("lBtn").textContent="Eintragen";
+  document.getElementById("lSub").textContent=K[ai].name;
+  document.getElementById("lD").value=akTag;
+  document.getElementById("lA").selectedIndex=0;
+  document.getElementById("lVon").value="";
+  document.getElementById("lBis").value="";
+  document.getElementById("lH").value="";
+  document.getElementById("lM").value="0";
+  document.getElementById("lKm").value="";
+  document.getElementById("lBem").value="";
+  document.getElementById("lPr").style.display="none";
+  // Wiederholung zurücksetzen
+  document.getElementById("lWiederhole").checked=false;
+  document.getElementById("wSerie").classList.remove("on");
+  document.getElementById("wVorschau").textContent="";
+  document.getElementById("wToggleWrap").style.display="block";
   document.getElementById("oL").classList.add("on");
 }
 
 function openEditL(idx){
   const le=K[ai].leistungen[idx];editLIdx=idx;
-  document.getElementById("lTit").textContent="Leistung bearbeiten";document.getElementById("lBtn").textContent="Speichern";document.getElementById("lSub").textContent=K[ai].name;document.getElementById("lD").value=le.datum;
-  const sel=document.getElementById("lA");for(let i=0;i<sel.options.length;i++){if(sel.options[i].value===le.art){sel.selectedIndex=i;break;}}
-  document.getElementById("lVon").value=le.von||"";document.getElementById("lBis").value=le.bis||"";
+  document.getElementById("lTit").textContent="Leistung bearbeiten";
+  document.getElementById("lBtn").textContent="Speichern";
+  document.getElementById("lSub").textContent=K[ai].name;
+  document.getElementById("lD").value=le.datum;
+  const sel=document.getElementById("lA");
+  for(let i=0;i<sel.options.length;i++){if(sel.options[i].value===le.art){sel.selectedIndex=i;break;}}
+  document.getElementById("lVon").value=le.von||"";
+  document.getElementById("lBis").value=le.bis||"";
   const h=Math.floor(le.stunden),m=Math.round((le.stunden-h)*60);
-  document.getElementById("lH").value=h;document.getElementById("lM").value=m;
-  document.getElementById("lKm").value=le.km||"";document.getElementById("lBem").value=le.bemerkung||"";document.getElementById("lPr").style.display="none";
+  document.getElementById("lH").value=h;
+  document.getElementById("lM").value=m;
+  document.getElementById("lKm").value=le.km||"";
+  document.getElementById("lBem").value=le.bemerkung||"";
+  document.getElementById("lPr").style.display="none";
+  // Wiederholung beim Bearbeiten verstecken
+  document.getElementById("lWiederhole").checked=false;
+  document.getElementById("wSerie").classList.remove("on");
+  document.getElementById("wToggleWrap").style.display="none";
   document.getElementById("oL").classList.add("on");
+}
+
+// ✅ NEU: Wiederholungs-Toggle
+function toggleWiederholung(){
+  const on=document.getElementById("lWiederhole").checked;
+  document.getElementById("wSerie").classList.toggle("on",on);
+  if(on)updateWVorschau();
+}
+
+// ✅ NEU: Vorschau der Wiederholungstermine
+function updateWVorschau(){
+  if(!document.getElementById("lWiederhole").checked)return;
+  const datum=document.getElementById("lD").value;
+  const interval=parseInt(document.getElementById("lInterval").value)||7;
+  const anzahl=parseInt(document.getElementById("lAnzahl").value)||4;
+  if(!datum||interval<1||anzahl<1)return;
+  let dates=[];
+  for(let i=0;i<anzahl;i++){
+    const d=new Date(datum);
+    d.setDate(d.getDate()+i*interval);
+    dates.push(d.getDate()+"."+(d.getMonth()+1)+"."+d.getFullYear());
+  }
+  document.getElementById("wVorschau").textContent="📅 "+dates.join(" · ");
 }
 
 function calcZeit(){
   const von=document.getElementById("lVon").value,bis=document.getElementById("lBis").value;
-  if(von&&bis){const[vh,vm]=von.split(":").map(Number),[bh,bm]=bis.split(":").map(Number);let diff=(bh*60+bm)-(vh*60+vm);if(diff<0)diff+=1440;const h=Math.floor(diff/60),m=diff%60;document.getElementById("lH").value=h;const mOpts=[0,15,30,45];document.getElementById("lM").value=m;}
+  if(von&&bis){const[vh,vm]=von.split(":").map(Number),[bh,bm]=bis.split(":").map(Number);let diff=(bh*60+bm)-(vh*60+vm);if(diff<0)diff+=1440;const h=Math.floor(diff/60),m=diff%60;document.getElementById("lH").value=h;document.getElementById("lM").value=m;}
   updP();
 }
 
@@ -937,23 +1016,67 @@ function saveK(){
   sv();cs("oK");if(editI!==null&&ai!==null)rd();else rl();
 }
 
+// ✅ NEU: saveL mit Wiederholungs-Logik
 function saveL(){
   const k=K[ai];
   const h=parseFloat(document.getElementById("lH").value)||0,m=parseFloat(document.getElementById("lM").value)||0;
   if(h+m===0){alert("Bitte Zeit eintragen.");return;}
-  const sel=document.getElementById("lA");const rate=parseFloat(sel.options[sel.selectedIndex].dataset.rate)||R1;
+  const sel=document.getElementById("lA");
+  const rate=parseFloat(sel.options[sel.selectedIndex].dataset.rate)||R1;
   const st=h+m/60,b=+(st*rate).toFixed(2);
   const von=document.getElementById("lVon").value,bis=document.getElementById("lBis").value;
   const km=parseFloat(document.getElementById("lKm").value)||0;
   const bem=document.getElementById("lBem").value.trim();
+  const baseDatum=document.getElementById("lD").value;
+  const art=document.getElementById("lA").value;
+
   if(editLIdx!==null){
-    let r=gR(k),l=gL(k);const old=K[ai].leistungen[editLIdx];if(old.q==="rest")r+=old.b;else l+=old.b;
-    K[ai].leistungen[editLIdx]={datum:document.getElementById("lD").value,art:document.getElementById("lA").value,stunden:st,b,rate,q:r>=b?"rest":"lfd",von,bis,km,bemerkung:bem};
-  }else{k.leistungen.push({datum:document.getElementById("lD").value,art:document.getElementById("lA").value,stunden:st,b,rate,q:gR(k)>=b?"rest":"lfd",von,bis,km,bemerkung:bem});}
-  sv();cs("oL");if(akTag)renderTag();else rd();editLIdx=null;
+    // Bearbeiten: einzelnen Eintrag ändern, serieId behalten
+    let r=gR(k),l=gL(k);
+    const old=K[ai].leistungen[editLIdx];
+    if(old.q==="rest")r+=old.b;else l+=old.b;
+    K[ai].leistungen[editLIdx]={
+      datum:baseDatum,art,stunden:st,b,rate,
+      q:r>=b?"rest":"lfd",von,bis,km,bemerkung:bem,
+      serieId:old.serieId||null
+    };
+  } else {
+    const wiederhole=document.getElementById("lWiederhole").checked;
+    if(wiederhole){
+      // Serie erstellen
+      const interval=parseInt(document.getElementById("lInterval").value)||7;
+      const anzahl=parseInt(document.getElementById("lAnzahl").value)||1;
+      const serieId="s"+Date.now();
+      for(let i=0;i<anzahl;i++){
+        const d=new Date(baseDatum);
+        d.setDate(d.getDate()+i*interval);
+        const datum=d.toISOString().split("T")[0];
+        k.leistungen.push({datum,art,stunden:st,b,rate,q:gR(k)>=b?"rest":"lfd",von,bis,km,bemerkung:bem,serieId});
+      }
+    } else {
+      // Einzelner Eintrag
+      k.leistungen.push({datum:baseDatum,art,stunden:st,b,rate,q:gR(k)>=b?"rest":"lfd",von,bis,km,bemerkung:bem});
+    }
+  }
+  sv();cs("oL");
+  if(akTag)renderTag();else rd();
+  editLIdx=null;
 }
 
-function delL(idx){if(!confirm("Leistung löschen?"))return;K[ai].leistungen.splice(idx,1);sv();rd();}
+// ✅ Serie löschen aus Listenansicht
+function delL(idx){
+  const le=K[ai].leistungen[idx];
+  if(le.serieId){
+    const serieAnzahl=K[ai].leistungen.filter(l=>l.serieId===le.serieId).length;
+    if(serieAnzahl>1){
+      const w=confirm("🔁 Diese Leistung ist Teil einer Serie ("+serieAnzahl+" Einträge).\n\nOK = Ganze Serie löschen\nAbbrechen = Nur diesen Termin");
+      if(w){K[ai].leistungen=K[ai].leistungen.filter(l=>l.serieId!==le.serieId);}
+      else{K[ai].leistungen.splice(idx,1);}
+    }else{K[ai].leistungen.splice(idx,1);}
+  }else{if(!confirm("Leistung löschen?"))return;K[ai].leistungen.splice(idx,1);}
+  sv();rd();
+}
+
 function dk(e,i){e.stopPropagation();if(!confirm('"'+K[i].name+'" wirklich löschen?'))return;K.splice(i,1);sv();rl();}
 
 function exportBackup(){
@@ -972,18 +1095,8 @@ function checkOB(){
   const ok=document.getElementById("cb1").checked&&document.getElementById("cb2").checked&&document.getElementById("cb3").checked&&document.getElementById("cb4").checked;
   document.getElementById("obBtn").disabled=!ok;
 }
-
-function acceptOB(){
-  localStorage.setItem("ob_accepted","1");
-  document.getElementById("onboard").style.display="none";
-}
-
-function checkOnboarding(){
-  if(!localStorage.getItem("ob_accepted")){
-    document.getElementById("onboard").style.display="flex";
-  }
-}
-
+function acceptOB(){localStorage.setItem("ob_accepted","1");document.getElementById("onboard").style.display="none";}
+function checkOnboarding(){if(!localStorage.getItem("ob_accepted")){document.getElementById("onboard").style.display="flex";}}
 
 function openMenu(){
   document.getElementById("menuKCount").textContent=K.length+" Klient"+(K.length!==1?"en":"")+" · "+new Date().getFullYear();
