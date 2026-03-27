@@ -368,11 +368,19 @@ body{font-family:-apple-system,'Helvetica Neue',Arial,sans-serif;background:var(
 .wkal-now-line::before{content:'';width:8px;height:8px;background:#e04040;border-radius:50%;position:absolute;left:-4px;top:-3px}
 .wkal-now-label{position:absolute;right:3px;top:-8px;font-size:.58rem;font-weight:700;color:#e04040;background:#fff;padding:1px 4px;border-radius:4px;border:1px solid #f0a0a0}
 
+/* Feiertage im Kalender */
+.wkal-header-day.feiertag-block{background:rgba(180,180,180,.12)}
+.wkal-header-day.feiertag-block .wkd-name{color:#b0a090}
+.wkal-feiertag-label{font-size:.52rem;font-weight:700;color:#c04040;line-height:1;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;text-align:center}
+.wkal-day-col.feiertag-block{background:repeating-linear-gradient(135deg,transparent,transparent 4px,rgba(200,180,160,.08) 4px,rgba(200,180,160,.08) 8px)}
+.wkal-day-col.feiertag-block::after{content:'';position:absolute;inset:0;background:rgba(220,200,180,.06);pointer-events:none}
+.wkal-ferien-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#d4a000;margin-left:3px;vertical-align:middle;flex-shrink:0}
 /* Animations */
 @keyframes slideLeft{from{opacity:.2;transform:translateX(30px)}to{opacity:1;transform:translateX(0)}}
 @keyframes slideRight{from{opacity:.2;transform:translateX(-30px)}to{opacity:1;transform:translateX(0)}}
 .wkal-anim-left{animation:slideLeft .25s ease}
 .wkal-anim-right{animation:slideRight .25s ease}
+
 
 /* Tooltip für Tap-Feedback */
 .wkal-tap-hint{position:absolute;background:rgba(232,148,74,.9);color:#fff;border-radius:8px;padding:4px 10px;font-size:.72rem;font-weight:700;pointer-events:none;z-index:10;white-space:nowrap;transform:translateX(-50%);animation:fadeOut 1.5s forwards}
@@ -600,6 +608,11 @@ body{font-family:-apple-system,'Helvetica Neue',Arial,sans-serif;background:var(
       <span style="color:var(--dim)">›</span>
     </div>
     <div class="msect">⚙️ Einstellungen</div>
+    <div class="mitem" onclick="showEinstellungen();closeMenu()">
+      <div class="micon" style="background:var(--pur-bg)">🗺️</div>
+      <div class="minfo"><div class="mtitle">Kalender-Einstellungen</div><div class="msub" id="menuBLSub">Bundesland & Feiertage</div></div>
+      <span style="color:var(--dim)">›</span>
+    </div>
     <div class="mitem" onclick="exportBackup();closeMenu()">
       <div class="micon" style="background:var(--grn-bg)">📤</div>
       <div class="minfo"><div class="mtitle">Backup exportieren</div><div class="msub">Alle Daten sichern</div></div>
@@ -639,6 +652,111 @@ body{font-family:-apple-system,'Helvetica Neue',Arial,sans-serif;background:var(
   </div>
 </div>
 
+<!-- EINSTELLUNGEN VIEW -->
+<div class="view" id="vEinst">
+  <div class="hdr">
+    <button class="hdr-back" onclick="showL()">‹</button>
+    <div class="hdr-title"><h1>Kalender-Einstellungen</h1><p>Feiertage & Schulferien</p></div>
+  </div>
+  <div class="scroll"><div class="pad">
+    <div class="sec">Bundesland</div>
+    <div class="fld">
+      <label>Dein Bundesland</label>
+      <select id="einBL" onchange="saveEinst()" style="width:100%;padding:13px 15px;background:var(--bg);border:1.5px solid var(--brd);border-radius:13px;color:var(--txt);font-family:inherit;font-size:1rem;outline:none;-webkit-appearance:none">
+        <option value="">– kein –</option>
+        <option value="BB">Brandenburg</option>
+        <option value="BE">Berlin</option>
+        <option value="BW">Baden-Württemberg</option>
+        <option value="BY">Bayern</option>
+        <option value="HB">Bremen</option>
+        <option value="HE">Hessen</option>
+        <option value="HH">Hamburg</option>
+        <option value="MV">Mecklenburg-Vorpommern</option>
+        <option value="NI">Niedersachsen</option>
+        <option value="NW">Nordrhein-Westfalen</option>
+        <option value="RP">Rheinland-Pfalz</option>
+        <option value="SH">Schleswig-Holstein</option>
+        <option value="SL">Saarland</option>
+        <option value="SN">Sachsen</option>
+        <option value="ST">Sachsen-Anhalt</option>
+        <option value="TH">Thüringen</option>
+      </select>
+    </div>
+    <div class="sec">Feiertage im Kalender</div>
+    <div style="background:#fff;border:1px solid var(--brd);border-radius:16px;overflow:hidden;margin-bottom:14px">
+      <label style="display:flex;align-items:center;gap:12px;padding:14px 16px;cursor:pointer;border-bottom:1px solid var(--brd)">
+        <input type="radio" name="fjMode" value="block" id="fjBlock" onchange="saveEinst()" style="accent-color:var(--acc);width:18px;height:18px">
+        <div>
+          <div style="font-size:.9rem;font-weight:700;color:var(--txt)">Spalte durchgestrichen</div>
+          <div style="font-size:.75rem;color:var(--muted)">Feiertags-Spalte grau markiert + Name oben</div>
+        </div>
+      </label>
+      <label style="display:flex;align-items:center;gap:12px;padding:14px 16px;cursor:pointer">
+        <input type="radio" name="fjMode" value="label" id="fjLabel" onchange="saveEinst()" style="accent-color:var(--acc);width:18px;height:18px">
+        <div>
+          <div style="font-size:.9rem;font-weight:700;color:var(--txt)">Kleines Label</div>
+          <div style="font-size:.75rem;color:var(--muted)">Nur kleines Feiertags-Badge oben in der Spalte</div>
+        </div>
+      </label>
+    </div>
+    <div class="sec">Schulferien</div>
+    <label style="display:flex;align-items:center;gap:12px;padding:14px 16px;background:#fff;border:1px solid var(--brd);border-radius:16px;cursor:pointer;margin-bottom:14px">
+      <input type="checkbox" id="einFerien" onchange="saveEinst()" style="accent-color:var(--acc);width:20px;height:20px;flex-shrink:0">
+      <div>
+        <div style="font-size:.9rem;font-weight:700;color:var(--txt)">Schulferien anzeigen</div>
+        <div style="font-size:.75rem;color:var(--muted)">Gelber Punkt 🟡 neben dem Datum in der Kopfzeile</div>
+      </div>
+    </label>
+    <div class="alert-box alert-info" style="margin-bottom:14px">ℹ️ Feiertage und Schulferien werden für <strong>2025 & 2026</strong> angezeigt. Änderungen werden sofort im Kalender übernommen.</div>
+  </div></div>
+</div>
+
+<!-- TERMIN-AKTIONS-OVERLAY -->
+<div class="overlay" id="oTA" onclick="cs('oTA')">
+  <div class="sheet" onclick="event.stopPropagation()" style="padding-bottom:calc(var(--safe-b)+16px)">
+    <div class="shandle"></div>
+    <div class="stit" id="taTitle">Termin</div>
+    <div class="ssub" id="taSub">–</div>
+    <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:8px">
+      <button onclick="taEditDiesen()" style="display:flex;align-items:center;gap:12px;padding:14px 16px;background:var(--acc-bg);border:1.5px solid var(--acc-brd);border-radius:14px;cursor:pointer;width:100%;text-align:left">
+        <span style="font-size:1.3rem">✏️</span>
+        <div><div style="font-size:.95rem;font-weight:700;color:var(--acc-dark)">Nur diesen Termin ändern</div><div style="font-size:.75rem;color:var(--muted)">Datum/Uhrzeit nur für dieses eine Vorkommen</div></div>
+      </button>
+      <button onclick="taEditAlle()" id="taEditAlleBtn" style="display:flex;align-items:center;gap:12px;padding:14px 16px;background:var(--blue-bg);border:1.5px solid var(--blue-brd);border-radius:14px;cursor:pointer;width:100%;text-align:left">
+        <span style="font-size:1.3rem">🔄</span>
+        <div><div style="font-size:.95rem;font-weight:700;color:var(--blue)">Alle Termine dieser Reihe ändern</div><div style="font-size:.75rem;color:var(--muted)">Ändert das Original + alle Wiederholungen</div></div>
+      </button>
+      <button onclick="taVerschieben()" style="display:flex;align-items:center;gap:12px;padding:14px 16px;background:var(--grn-bg);border:1.5px solid var(--grn-brd);border-radius:14px;cursor:pointer;width:100%;text-align:left">
+        <span style="font-size:1.3rem">📅</span>
+        <div><div style="font-size:.95rem;font-weight:700;color:var(--grn)">Diesen Termin verschieben</div><div style="font-size:.75rem;color:var(--muted)">Neues Datum & Uhrzeit wählen</div></div>
+      </button>
+      <button onclick="taLoeschen()" style="display:flex;align-items:center;gap:12px;padding:14px 16px;background:var(--red-bg);border:1.5px solid var(--red-brd);border-radius:14px;cursor:pointer;width:100%;text-align:left">
+        <span style="font-size:1.3rem">🗑️</span>
+        <div id="taDelLabel"><div style="font-size:.95rem;font-weight:700;color:var(--red)">Termin löschen</div><div style="font-size:.75rem;color:var(--muted)">Nur dieses Vorkommen entfernen</div></div>
+      </button>
+    </div>
+    <button class="bc" onclick="cs('oTA')" style="width:100%;padding:13px;border-radius:13px;border:1px solid var(--brd);font-size:.95rem;font-weight:700;cursor:pointer;margin-top:4px">Abbrechen</button>
+  </div>
+</div>
+
+<!-- MODAL: Verschieben -->
+<div class="overlay" id="oTV" onclick="cs('oTV')">
+  <div class="sheet" onclick="event.stopPropagation()">
+    <div class="shandle"></div>
+    <div class="stit">Termin verschieben</div>
+    <div class="ssub" id="tvSub">–</div>
+    <div class="fld"><label>Neues Datum</label><input id="tvDat" type="date"></div>
+    <div class="frow">
+      <div class="fld"><label>Von</label><input id="tvVon" type="time" step="300"></div>
+      <div class="fld"><label>Bis</label><input id="tvBis" type="time" step="300"></div>
+    </div>
+    <div class="sact">
+      <button class="bc" onclick="cs('oTV')">Abbrechen</button>
+      <button class="bs" onclick="saveVerschieben()">Verschieben</button>
+    </div>
+  </div>
+</div>
+
 <!-- STATS VIEW -->
 <div class="view" id="vStats">
   <div class="hdr">
@@ -659,6 +777,266 @@ const WT=["Mo","Di","Mi","Do","Fr","Sa","So"];
 let K=JSON.parse(localStorage.getItem("kv9")||"[]");
 if(!K.length){const o=localStorage.getItem("kv8")||localStorage.getItem("kv7");if(o)K=JSON.parse(o);}
 let ai=null,am=new Date().getMonth(),aj=new Date().getFullYear(),at=0,editI=null,editLIdx=null,viewFotoIdx=null,akTag=null,akBuchstabe=null;
+
+// ── EINSTELLUNGEN ──
+let EINST=JSON.parse(localStorage.getItem("einst")||'{"bl":"","fjMode":"block","ferien":true}');
+function svEinst(){localStorage.setItem("einst",JSON.stringify(EINST));}
+
+function showEinstellungen(){
+  ["vL","vD","vStats","vGKal","vTag"].forEach(id=>document.getElementById(id).classList.remove("on"));
+  document.getElementById("vEinst").classList.add("on");
+  document.getElementById("einBL").value=EINST.bl||"";
+  document.getElementById(EINST.fjMode==="label"?"fjLabel":"fjBlock").checked=true;
+  document.getElementById("einFerien").checked=!!EINST.ferien;
+  const sub=EINST.bl?document.getElementById("einBL").options[document.getElementById("einBL").selectedIndex].text:"Bundesland & Feiertage";
+  document.getElementById("menuBLSub").textContent=sub;
+}
+
+function saveEinst(){
+  EINST.bl=document.getElementById("einBL").value;
+  EINST.fjMode=document.getElementById("fjLabel").checked?"label":"block";
+  EINST.ferien=document.getElementById("einFerien").checked;
+  svEinst();
+  const sub=EINST.bl?document.getElementById("einBL").options[document.getElementById("einBL").selectedIndex].text:"Bundesland & Feiertage";
+  document.getElementById("menuBLSub").textContent=sub;
+}
+
+// ── FEIERTAGE – ALGORITHMISCH (Gaußsche Osterformel, läuft für jedes Jahr) ──
+
+// Ostersonntag berechnen (Gaußsche Formel)
+function getOstern(jahr){
+  const a=jahr%19,b=Math.floor(jahr/100),c=jahr%100;
+  const d=Math.floor(b/4),e=b%4,f=Math.floor((b+8)/25);
+  const g=Math.floor((b-f+1)/3),h=(19*a+b-d-g+15)%30;
+  const i=Math.floor(c/4),k=c%4,l=(32+2*e+2*i-h-k)%7;
+  const m=Math.floor((a+11*h+22*l)/451);
+  const monat=Math.floor((h+l-7*m+114)/31);
+  const tag=((h+l-7*m+114)%31)+1;
+  return new Date(jahr,monat-1,tag);
+}
+
+function addTage(d,n){const r=new Date(d);r.setDate(r.getDate()+n);return r;}
+function datStr(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");}
+
+// Buß- und Bettag: Mittwoch vor dem 23. November
+function getBussUndBettag(jahr){
+  const nov23=new Date(jahr,10,23);
+  const dow=nov23.getDay(); // 0=So
+  const diff=dow===3?0:(dow<3?dow+4:dow-3); // Tage zurück zum letzten Mittwoch
+  return addTage(nov23,-diff);
+}
+
+function getFeiertage(bl,jahr){
+  if(!jahr)jahr=new Date().getFullYear();
+  const o=getOstern(jahr);
+  const ft={};
+  // National
+  ft[datStr(new Date(jahr,0,1))]="Neujahr";
+  ft[datStr(addTage(o,-2))]="Karfreitag";
+  ft[datStr(addTage(o,1))]="Ostermontag";
+  ft[datStr(new Date(jahr,4,1))]="Tag der Arbeit";
+  ft[datStr(addTage(o,39))]="Christi Himmelfahrt";
+  ft[datStr(addTage(o,50))]="Pfingstmontag";
+  ft[datStr(new Date(jahr,9,3))]="Tag der Deutschen Einheit";
+  ft[datStr(new Date(jahr,11,25))]="1. Weihnachtstag";
+  ft[datStr(new Date(jahr,11,26))]="2. Weihnachtstag";
+  // Bundesland-spezifisch
+  const fronl=datStr(addTage(o,60));
+  if(["BY","BW","NW","RP","SL","HE"].includes(bl)) ft[fronl]="Fronleichnam";
+  if(["BY","BW","ST"].includes(bl)) ft[datStr(new Date(jahr,0,6))]="Heilige Drei Könige";
+  if(["BY","BW","NW","RP","SL"].includes(bl)) ft[datStr(new Date(jahr,10,1))]="Allerheiligen";
+  if(["BY","SL"].includes(bl)) ft[datStr(new Date(jahr,7,15))]="Mariä Himmelfahrt";
+  if(["BB","MV","SH","HH","NI","HB","TH","SN","ST"].includes(bl)) ft[datStr(new Date(jahr,9,31))]="Reformationstag";
+  if(["BE","MV","BB"].includes(bl)) ft[datStr(new Date(jahr,2,8))]="Internationaler Frauentag";
+  if(["TH"].includes(bl)) ft[datStr(new Date(jahr,8,20))]="Weltkindertag";
+  if(["SN","TH"].includes(bl)) ft[datStr(getBussUndBettag(jahr))]="Buß- und Bettag";
+  return ft;
+}
+
+function isFeiertag(datumStr,bl){
+  if(!bl)return null;
+  const jahr=parseInt(datumStr.substring(0,4));
+  const ft=getFeiertage(bl,jahr);
+  return ft[datumStr]||null;
+}
+
+// ── SCHULFERIEN – Offizielle Daten von KMK/kalenderpedia.de ──
+// Quellen: kalenderpedia.de (abgerufen 27.03.2026), KMK-Ferienkalender
+// Format: [von, bis] (YYYY-MM-DD, erster und letzter Ferientag)
+// Einzelne Tage (Brückentage, Pfingstmontag etc.) sind mit gleichem Von/Bis eingetragen
+const FERIEN_BL={
+  // Baden-Württemberg – Quelle: KMK/kalenderpedia
+  BW:[
+    ["2025-04-14","2025-04-26"],["2025-06-10","2025-06-20"],
+    ["2025-07-31","2025-09-13"],["2025-10-27","2025-10-31"],
+    ["2025-12-22","2026-01-05"],
+    ["2026-03-30","2026-04-11"],["2026-05-26","2026-06-05"],
+    ["2026-07-30","2026-09-12"],["2026-10-26","2026-10-31"],
+    ["2026-12-23","2027-01-09"]
+  ],
+  // Bayern – Quelle: KMK/kalenderpedia
+  BY:[
+    ["2025-03-03","2025-03-07"],["2025-04-14","2025-04-25"],
+    ["2025-06-10","2025-06-20"],["2025-08-01","2025-09-15"],
+    ["2025-11-03","2025-11-07"],["2025-11-19","2025-11-19"],
+    ["2025-12-22","2026-01-05"],
+    ["2026-02-16","2026-02-20"],["2026-03-30","2026-04-10"],
+    ["2026-05-26","2026-06-05"],["2026-08-03","2026-09-14"],
+    ["2026-11-02","2026-11-06"],["2026-11-18","2026-11-18"],
+    ["2026-12-24","2027-01-08"]
+  ],
+  // Berlin – Quelle: KMK/kalenderpedia
+  BE:[
+    ["2025-02-03","2025-02-08"],["2025-04-14","2025-04-25"],
+    ["2025-05-02","2025-05-02"],["2025-05-30","2025-05-30"],["2025-06-10","2025-06-10"],
+    ["2025-07-24","2025-09-06"],["2025-10-20","2025-11-01"],
+    ["2025-12-22","2026-01-02"],
+    ["2026-02-02","2026-02-07"],["2026-03-30","2026-04-10"],
+    ["2026-05-15","2026-05-15"],["2026-05-26","2026-05-26"],
+    ["2026-07-09","2026-08-22"],["2026-10-19","2026-10-31"],
+    ["2026-12-23","2027-01-02"]
+  ],
+  // Brandenburg – Quelle: KMK/kalenderpedia
+  BB:[
+    ["2025-02-03","2025-02-08"],["2025-04-14","2025-04-25"],
+    ["2025-05-02","2025-05-02"],["2025-05-30","2025-05-30"],["2025-06-10","2025-06-10"],
+    ["2025-07-24","2025-09-06"],["2025-10-20","2025-11-01"],
+    ["2025-12-22","2026-01-02"],
+    ["2026-02-02","2026-02-07"],["2026-03-30","2026-04-10"],
+    ["2026-05-15","2026-05-15"],["2026-05-26","2026-05-26"],
+    ["2026-07-09","2026-08-22"],["2026-10-19","2026-10-30"],
+    ["2026-12-23","2027-01-02"]
+  ],
+  // Bremen – Quelle: KMK/kalenderpedia
+  HB:[
+    ["2025-02-03","2025-02-04"],["2025-04-07","2025-04-19"],
+    ["2025-04-30","2025-04-30"],["2025-05-02","2025-05-02"],["2025-05-30","2025-05-30"],["2025-06-10","2025-06-10"],
+    ["2025-07-03","2025-08-13"],["2025-10-13","2025-10-25"],
+    ["2025-12-22","2026-01-05"],
+    ["2026-02-02","2026-02-03"],["2026-03-23","2026-04-07"],
+    ["2026-05-15","2026-05-15"],["2026-05-26","2026-05-26"],
+    ["2026-07-02","2026-08-12"],["2026-10-12","2026-10-24"],
+    ["2026-12-23","2027-01-09"]
+  ],
+  // Hamburg – Quelle: KMK/kalenderpedia
+  HH:[
+    ["2025-01-31","2025-01-31"],["2025-03-10","2025-03-21"],
+    ["2025-05-02","2025-05-02"],["2025-05-26","2025-05-30"],
+    ["2025-07-24","2025-09-03"],["2025-10-20","2025-10-31"],
+    ["2025-12-17","2026-01-02"],
+    ["2026-01-30","2026-01-30"],["2026-03-02","2026-03-13"],
+    ["2026-05-11","2026-05-15"],
+    ["2026-07-09","2026-08-19"],["2026-10-19","2026-10-30"],
+    ["2026-12-21","2027-01-01"]
+  ],
+  // Hessen – Quelle: KMK/kalenderpedia
+  HE:[
+    ["2025-04-07","2025-04-21"],
+    ["2025-07-07","2025-08-15"],["2025-10-06","2025-10-18"],
+    ["2025-12-22","2026-01-10"],
+    ["2026-03-30","2026-04-10"],
+    ["2026-06-29","2026-08-07"],["2026-10-05","2026-10-17"],
+    ["2026-12-23","2027-01-12"]
+  ],
+  // Mecklenburg-Vorpommern – Quelle: KMK/kalenderpedia
+  MV:[
+    ["2025-02-03","2025-02-14"],["2025-04-14","2025-04-23"],
+    ["2025-05-30","2025-05-30"],["2025-06-06","2025-06-10"],
+    ["2025-07-28","2025-09-06"],
+    ["2025-10-02","2025-10-02"],["2025-10-20","2025-10-24"],["2025-11-03","2025-11-03"],
+    ["2025-12-20","2026-01-03"],
+    ["2026-02-09","2026-02-20"],["2026-03-30","2026-04-08"],
+    ["2026-05-15","2026-05-15"],["2026-05-22","2026-05-26"],
+    ["2026-07-13","2026-08-22"],["2026-10-15","2026-10-24"],
+    ["2026-12-21","2027-01-02"]
+  ],
+  // Niedersachsen – Quelle: KMK/kalenderpedia
+  NI:[
+    ["2025-02-03","2025-02-04"],["2025-04-07","2025-04-19"],
+    ["2025-04-30","2025-04-30"],["2025-05-02","2025-05-02"],["2025-05-30","2025-05-30"],["2025-06-10","2025-06-10"],
+    ["2025-07-03","2025-08-13"],["2025-10-13","2025-10-25"],
+    ["2025-12-22","2026-01-05"],
+    ["2026-02-02","2026-02-03"],["2026-03-23","2026-04-07"],
+    ["2026-05-15","2026-05-15"],["2026-05-26","2026-05-26"],
+    ["2026-07-02","2026-08-12"],["2026-10-12","2026-10-24"],
+    ["2026-12-23","2027-01-09"]
+  ],
+  // Nordrhein-Westfalen – Quelle: KMK/kalenderpedia
+  NW:[
+    ["2025-04-14","2025-04-26"],["2025-06-10","2025-06-10"],
+    ["2025-07-14","2025-08-26"],["2025-10-13","2025-10-25"],
+    ["2025-12-22","2026-01-06"],
+    ["2026-03-30","2026-04-11"],["2026-05-26","2026-05-26"],
+    ["2026-07-20","2026-09-01"],["2026-10-17","2026-10-31"],
+    ["2026-12-23","2027-01-06"]
+  ],
+  // Rheinland-Pfalz – Quelle: KMK/kalenderpedia
+  RP:[
+    ["2025-04-14","2025-04-25"],
+    ["2025-07-07","2025-08-15"],["2025-10-13","2025-10-24"],
+    ["2025-12-22","2026-01-07"],
+    ["2026-03-30","2026-04-10"],
+    ["2026-06-29","2026-08-07"],["2026-10-05","2026-10-16"],
+    ["2026-12-23","2027-01-08"]
+  ],
+  // Saarland – Quelle: KMK/kalenderpedia
+  SL:[
+    ["2025-02-24","2025-03-04"],["2025-04-14","2025-04-25"],
+    ["2025-07-07","2025-08-14"],["2025-10-13","2025-10-24"],
+    ["2025-12-22","2026-01-02"],
+    ["2026-02-16","2026-02-20"],["2026-04-07","2026-04-17"],
+    ["2026-06-29","2026-08-07"],["2026-10-05","2026-10-16"],
+    ["2026-12-21","2026-12-31"]
+  ],
+  // Sachsen – Quelle: KMK/kalenderpedia (offizielle Termine SMK)
+  SN:[
+    ["2025-02-17","2025-03-01"],["2025-04-18","2025-04-25"],
+    ["2025-05-30","2025-05-30"],
+    ["2025-06-28","2025-08-08"],["2025-10-06","2025-10-18"],
+    ["2025-12-22","2026-01-02"],
+    ["2026-02-09","2026-02-21"],["2026-04-03","2026-04-10"],
+    ["2026-05-15","2026-05-15"],
+    ["2026-07-04","2026-08-14"],["2026-10-12","2026-10-24"],
+    ["2026-12-23","2027-01-02"]
+  ],
+  // Sachsen-Anhalt – Quelle: KMK/kalenderpedia
+  ST:[
+    ["2025-01-27","2025-01-31"],["2025-04-07","2025-04-19"],
+    ["2025-05-30","2025-05-30"],
+    ["2025-06-28","2025-08-08"],["2025-10-13","2025-10-25"],
+    ["2025-12-22","2026-01-05"],
+    ["2026-01-31","2026-02-06"],["2026-03-30","2026-04-04"],
+    ["2026-05-26","2026-05-29"],
+    ["2026-07-04","2026-08-14"],["2026-10-19","2026-10-30"],
+    ["2026-12-21","2027-01-02"]
+  ],
+  // Schleswig-Holstein – Quelle: KMK/kalenderpedia
+  SH:[
+    ["2025-04-11","2025-04-25"],["2025-05-30","2025-05-30"],
+    ["2025-07-28","2025-09-06"],["2025-10-20","2025-10-30"],
+    ["2025-12-19","2026-01-06"],
+    ["2026-03-26","2026-04-10"],["2026-05-15","2026-05-15"],
+    ["2026-07-04","2026-08-15"],["2026-10-12","2026-10-24"],
+    ["2026-12-21","2027-01-06"]
+  ],
+  // Thüringen – Quelle: KMK/kalenderpedia
+  TH:[
+    ["2025-02-03","2025-02-08"],["2025-04-07","2025-04-19"],
+    ["2025-05-30","2025-05-30"],
+    ["2025-06-28","2025-08-08"],["2025-10-06","2025-10-18"],
+    ["2025-12-22","2026-01-03"],
+    ["2026-02-16","2026-02-21"],["2026-04-07","2026-04-17"],
+    ["2026-05-15","2026-05-15"],
+    ["2026-07-04","2026-08-14"],["2026-10-12","2026-10-24"],
+    ["2026-12-23","2027-01-02"]
+  ]
+};
+
+function isSchulferien(datumStr,bl){
+  if(!bl||!FERIEN_BL[bl])return false;
+  const d=new Date(datumStr);
+  return FERIEN_BL[bl].some(([von,bis])=>d>=new Date(von)&&d<=new Date(bis));
+}
 
 function sv(){localStorage.setItem("kv9",JSON.stringify(K));}
 function fm(n){return Number(n).toLocaleString("de-DE",{minimumFractionDigits:2,maximumFractionDigits:2});}
@@ -713,7 +1091,7 @@ function progressRing(k,color){
 function getInitial(name){return name.trim()[0].toUpperCase();}
 
 // ── LISTE ──
-function showL(){["vD","vTag","vStats","vGKal"].forEach(id=>document.getElementById(id).classList.remove("on"));document.getElementById("vL").classList.add("on");ai=null;rl();}
+function showL(){["vD","vTag","vStats","vGKal","vEinst"].forEach(id=>document.getElementById(id).classList.remove("on"));document.getElementById("vL").classList.add("on");ai=null;rl();}
 
 function renderABC(){
   const bar=document.getElementById("abcBar");if(!bar)return;
@@ -1201,7 +1579,7 @@ function updTerminSub(){
   }
 }
 
-function _openTerminModal(klientIdx, terminIdx=null, datumStr=null, vonStr=null){
+function _openTerminModal(klientIdx, terminIdx=null, datumStr=null, vonStr=null, nurDiesen=false){
   // Klienten-Dropdown befüllen
   const sel=document.getElementById("tKlient");
   sel.innerHTML=K.map((k,i)=>`<option value="${i}" ${i===klientIdx?'selected':''}>${k.name}</option>`).join("");
@@ -1245,6 +1623,8 @@ function _openTerminModal(klientIdx, terminIdx=null, datumStr=null, vonStr=null)
     delete document.getElementById("oT").dataset.editIdx;
     document.getElementById("oT").dataset.klientIdx=aktKIdx!==null?aktKIdx:"";
   }
+  document.getElementById("oT").dataset.nurDiesen=nurDiesen?"1":"0";
+  document.getElementById("oT").dataset.origDatum=datumStr||"";
   document.getElementById("oT").classList.add("on");
 }
 
@@ -1253,13 +1633,16 @@ function openEditTermin(idx){openTerminModalDetail(idx);}
 function saveTermin(){
   const kIdx=parseInt(document.getElementById("oT").dataset.klientIdx);
   if(isNaN(kIdx)||kIdx<0||kIdx>=K.length){alert("Bitte Klienten auswählen.");return;}
-  // Klienten-Dropdown ggf. überschreibt klientIdx
   const selKIdx=parseInt(document.getElementById("tKlient").value);
   const finalKIdx=isNaN(selKIdx)?kIdx:selKIdx;
-
   const k=K[finalKIdx];
   if(!k.termine)k.termine=[];
-  const t={
+
+  const nurDiesen=document.getElementById("oT").dataset.nurDiesen==="1";
+  const origDatum=document.getElementById("oT").dataset.origDatum;
+  const editIdx=document.getElementById("oT").dataset.editIdx;
+
+  const neuerWert={
     bez:document.getElementById("tBez").value.trim()||"Termin",
     datum:document.getElementById("tDat").value,
     von:document.getElementById("tVon").value,
@@ -1268,11 +1651,25 @@ function saveTermin(){
     wdhBis:document.getElementById("tWdhBisDat").value,
     bem:document.getElementById("tBem").value.trim()
   };
-  const editIdx=document.getElementById("oT").dataset.editIdx;
-  if(editIdx!==undefined)k.termine[parseInt(editIdx)]=t;
-  else k.termine.push(t);
+
+  if(nurDiesen&&editIdx!==undefined&&origDatum){
+    // Ausnahme für dieses Datum speichern
+    const t=k.termine[parseInt(editIdx)];
+    if(!t.exceptions)t.exceptions={};
+    t.exceptions[origDatum]={
+      bez:neuerWert.bez,
+      datum:neuerWert.datum,
+      von:neuerWert.von,
+      bis:neuerWert.bis,
+      bem:neuerWert.bem
+    };
+  } else if(editIdx!==undefined){
+    k.termine[parseInt(editIdx)]={...k.termine[parseInt(editIdx)],...neuerWert};
+  } else {
+    k.termine.push(neuerWert);
+  }
+
   sv();cs("oT");
-  // Refresh je nach Kontext
   if(document.getElementById("vGKal").classList.contains("on"))renderGKal();
   else if(ai!==null&&document.getElementById("vD").classList.contains("on"))rTermine();
 }
@@ -1329,6 +1726,12 @@ function gkalNaechWoche(){
 }
 
 function terminPasstZuTag(t,datum){
+  // Ausnahmen prüfen: dieses Datum wurde überschrieben oder gelöscht
+  if(t.exceptions){
+    const ex=t.exceptions[datum];
+    if(ex==="deleted")return false;
+    if(ex)return true; // hat Ausnahme → wird separat gerendert
+  }
   if(t.datum===datum)return true;
   if(!t.wdh||t.wdh==="keine")return false;
   const start=new Date(t.datum),check=new Date(datum);
@@ -1339,6 +1742,14 @@ function terminPasstZuTag(t,datum){
   if(t.wdh==="2wochen")return diff%14===0;
   if(t.wdh==="monatlich")return check.getDate()===start.getDate();
   return false;
+}
+
+// Gibt das tatsächliche Termin-Objekt für diesen Tag zurück (mit Ausnahme falls vorhanden)
+function getTerminFuerTag(t,datum){
+  if(t.exceptions&&t.exceptions[datum]&&t.exceptions[datum]!=="deleted"){
+    return {...t,...t.exceptions[datum]};
+  }
+  return t;
 }
 
 function zeitZuMin(z){if(!z)return 0;const[h,m]=z.split(":").map(Number);return h*60+m;}
@@ -1399,16 +1810,20 @@ function renderGKal(animDir){
     return arr.sort((a,b)=>zeitZuMin(a.von)-zeitZuMin(b.von));
   });
 
-  // Header
+  // Header mit Feiertagen & Ferien
   const wt=["Mo","Di","Mi","Do","Fr"];
+  const bl=EINST.bl||"";
   let hdr='<div class="wkal-header-time"></div>';
   tage.forEach((d,i)=>{
     const ds=d.toISOString().split("T")[0];
     const isH=ds===heuteStr;
     const hasEv=tagTermine[i].length>0;
-    hdr+=`<div class="wkal-header-day ${isH?"today":""} ${hasEv?"has-events":""}" onclick="gkalTapHeader('${ds}')">
+    const ft=isFeiertag(ds,bl);
+    const ferien=EINST.ferien&&isSchulferien(ds,bl);
+    hdr+=`<div class="wkal-header-day ${isH?"today":""} ${hasEv?"has-events":""} ${ft&&EINST.fjMode==="block"?"feiertag-block":""}" onclick="gkalTapHeader('${ds}')">
       <div class="wkd-name">${wt[i]}</div>
-      <div class="wkd-num">${d.getDate()}</div>
+      <div class="wkd-num" style="display:flex;align-items:center;justify-content:center;gap:2px">${d.getDate()}${ferien?'<span class="wkal-ferien-dot"></span>':""}</div>
+      ${ft?`<div class="wkal-feiertag-label">${ft}</div>`:""}
     </div>`;
   });
   document.getElementById("gkalHeader").innerHTML=hdr;
@@ -1478,7 +1893,7 @@ function renderGKal(animDir){
         const showTime=height>22;
         eventsHtml+=`<div class="wkal-event"
           style="top:${top}px;height:${height}px;background:${c.bg};border-left-color:${c.border};color:${c.text}"
-          onclick="openEditTerminGKal(${t.kIdx},${t.tIdx},event)">
+          onclick="openEditTerminGKal(${t.kIdx},${t.tIdx},'${ds}',event)">
           <div class="wkal-event-klient">${kName}</div>
           ${showBez?`<div class="wkal-event-bez">${t.bez}</div>`:""}
           ${showTime?`<div class="wkal-event-time">${t.von}–${t.bis}</div>`:""}
@@ -1496,7 +1911,7 @@ function renderGKal(animDir){
         }
       }
 
-      dayCols+=`<div class="wkal-day-col" style="height:${totalH}px">${slotsHtml}${eventsHtml}${nowLine}</div>`;
+      dayCols+=`<div class="wkal-day-col ${isFeiertag(ds,bl)&&EINST.fjMode==="block"?"feiertag-block":""}" style="height:${totalH}px">${slotsHtml}${eventsHtml}${nowLine}</div>`;
     });
 
     const grid=document.getElementById("gkalGrid");
@@ -1528,10 +1943,116 @@ function gkalTapHeader(datumStr){
 }
 
 // Termin bearbeiten aus Kalender
-function openEditTerminGKal(kIdx,tIdx,event){
+function openEditTerminGKal(kIdx,tIdx,datumStr,event){
   if(event)event.stopPropagation();
   ai=kIdx;
-  _openTerminModal(kIdx, tIdx);
+  const t=K[kIdx].termine[tIdx];
+  const istWdh=t.wdh&&t.wdh!=="keine";
+  const tFuerTag=getTerminFuerTag(t,datumStr);
+
+  // Aktions-Overlay befüllen
+  document.getElementById("taTitle").textContent=tFuerTag.bez||"Termin";
+  const d=new Date(datumStr);
+  document.getElementById("taSub").textContent=`${d.getDate()}.${d.getMonth()+1}.${d.getFullYear()} · ${tFuerTag.von||""}–${tFuerTag.bis||""} · ${K[kIdx].name.split(",")[0]}`;
+
+  // "Alle ändern" nur bei Wiederholung anzeigen
+  document.getElementById("taEditAlleBtn").style.display=istWdh?"flex":"none";
+
+  // Löschen-Label anpassen
+  document.getElementById("taDelLabel").innerHTML=istWdh
+    ?`<div style="font-size:.95rem;font-weight:700;color:var(--red)">Dieses Vorkommen löschen</div><div style="font-size:.75rem;color:var(--muted)">Nur dieser Termin wird entfernt</div>`
+    :`<div style="font-size:.95rem;font-weight:700;color:var(--red)">Termin löschen</div><div style="font-size:.75rem;color:var(--muted)">Termin wird endgültig gelöscht</div>`;
+
+  // State für Aktionen merken
+  document.getElementById("oTA").dataset.kIdx=kIdx;
+  document.getElementById("oTA").dataset.tIdx=tIdx;
+  document.getElementById("oTA").dataset.datum=datumStr;
+  document.getElementById("oTA").dataset.wdh=istWdh?"1":"0";
+
+  document.getElementById("oTA").classList.add("on");
+}
+
+// Nur diesen Termin ändern
+function taEditDiesen(){
+  cs("oTA");
+  const kIdx=parseInt(document.getElementById("oTA").dataset.kIdx);
+  const tIdx=parseInt(document.getElementById("oTA").dataset.tIdx);
+  const datum=document.getElementById("oTA").dataset.datum;
+  const istWdh=document.getElementById("oTA").dataset.wdh==="1";
+  if(istWdh){
+    // Ausnahme-Bearbeitung: öffne Modal mit diesem Datum
+    _openTerminModal(kIdx,tIdx,datum,null,true);
+  } else {
+    _openTerminModal(kIdx,tIdx);
+  }
+}
+
+// Alle Termine der Reihe ändern
+function taEditAlle(){
+  cs("oTA");
+  const kIdx=parseInt(document.getElementById("oTA").dataset.kIdx);
+  const tIdx=parseInt(document.getElementById("oTA").dataset.tIdx);
+  _openTerminModal(kIdx,tIdx);
+}
+
+// Verschieben
+function taVerschieben(){
+  cs("oTA");
+  const kIdx=parseInt(document.getElementById("oTA").dataset.kIdx);
+  const tIdx=parseInt(document.getElementById("oTA").dataset.tIdx);
+  const datum=document.getElementById("oTA").dataset.datum;
+  const t=K[kIdx].termine[tIdx];
+  const tFuerTag=getTerminFuerTag(t,datum);
+  document.getElementById("tvSub").textContent=(tFuerTag.bez||"Termin")+" · "+K[kIdx].name.split(",")[0];
+  document.getElementById("tvDat").value=datum;
+  document.getElementById("tvVon").value=tFuerTag.von||"09:00";
+  document.getElementById("tvBis").value=tFuerTag.bis||"11:00";
+  document.getElementById("oTV").dataset.kIdx=kIdx;
+  document.getElementById("oTV").dataset.tIdx=tIdx;
+  document.getElementById("oTV").dataset.altDatum=datum;
+  document.getElementById("oTV").classList.add("on");
+}
+
+function saveVerschieben(){
+  const kIdx=parseInt(document.getElementById("oTV").dataset.kIdx);
+  const tIdx=parseInt(document.getElementById("oTV").dataset.tIdx);
+  const altDatum=document.getElementById("oTV").dataset.altDatum;
+  const neuesDatum=document.getElementById("tvDat").value;
+  const von=document.getElementById("tvVon").value;
+  const bis=document.getElementById("tvBis").value;
+  const t=K[kIdx].termine[tIdx];
+  const istWdh=t.wdh&&t.wdh!=="keine";
+  if(istWdh){
+    // Ausnahme speichern: altes Datum als gelöscht + neues Datum als Exception
+    if(!t.exceptions)t.exceptions={};
+    t.exceptions[altDatum]="deleted";
+    // Neues Datum als Einzel-Ausnahme anlegen (am einfachsten als neuer Termin)
+    if(!K[kIdx].termine)K[kIdx].termine=[];
+    const orig=getTerminFuerTag(t,altDatum);
+    K[kIdx].termine.push({...orig,datum:neuesDatum,von,bis,wdh:"keine",wdhBis:"",exceptions:undefined});
+  } else {
+    t.datum=neuesDatum;t.von=von;t.bis=bis;
+  }
+  sv();cs("oTV");renderGKal();
+}
+
+// Löschen aus Aktionsmenü
+function taLoeschen(){
+  cs("oTA");
+  const kIdx=parseInt(document.getElementById("oTA").dataset.kIdx);
+  const tIdx=parseInt(document.getElementById("oTA").dataset.tIdx);
+  const datum=document.getElementById("oTA").dataset.datum;
+  const istWdh=document.getElementById("oTA").dataset.wdh==="1";
+  if(istWdh){
+    if(!confirm("Nur dieses Vorkommen löschen?"))return;
+    const t=K[kIdx].termine[tIdx];
+    if(!t.exceptions)t.exceptions={};
+    t.exceptions[datum]="deleted";
+  } else {
+    if(!confirm("Termin löschen?"))return;
+    K[kIdx].termine.splice(tIdx,1);
+  }
+  sv();renderGKal();
 }
 
 // Swipe
@@ -1588,6 +2109,13 @@ function checkJahreswechsel(){
 if("serviceWorker"in navigator)navigator.serviceWorker.register("./sw.js").catch(()=>{});
 checkOnboarding();
 checkJahreswechsel();
+// Einstellungen-Sub im Menü initialisieren
+if(EINST.bl){
+  const sel=document.getElementById("einBL");
+  sel.value=EINST.bl;
+  const opt=sel.options[sel.selectedIndex];
+  if(opt)document.getElementById("menuBLSub").textContent=opt.text;
+}
 rl();
 </script>
 </body>
