@@ -372,8 +372,8 @@ body{font-family:-apple-system,'Helvetica Neue',Arial,sans-serif;background:var(
 .wkal-header-day.feiertag-block{background:rgba(180,180,180,.12)}
 .wkal-header-day.feiertag-block .wkd-name{color:#b0a090}
 .wkal-feiertag-label{font-size:.52rem;font-weight:700;color:#c04040;line-height:1;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;text-align:center}
-.wkal-day-col.feiertag-block{background:repeating-linear-gradient(135deg,transparent,transparent 4px,rgba(200,180,160,.08) 4px,rgba(200,180,160,.08) 8px)}
-.wkal-day-col.feiertag-block::after{content:'';position:absolute;inset:0;background:rgba(220,200,180,.06);pointer-events:none}
+.wkal-day-col.feiertag-block{background:repeating-linear-gradient(135deg,transparent,transparent 5px,rgba(180,150,120,.13) 5px,rgba(180,150,120,.13) 10px)}
+.wkal-day-col.feiertag-block::after{content:'';position:absolute;inset:0;background:rgba(200,170,140,.08);pointer-events:none}
 .wkal-ferien-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#d4a000;margin-left:3px;vertical-align:middle;flex-shrink:0}
 /* Animations */
 @keyframes slideLeft{from{opacity:.2;transform:translateX(30px)}to{opacity:1;transform:translateX(0)}}
@@ -1258,7 +1258,7 @@ function vorJahr(){aj--;rCal();}
 function naechJahr(){if(aj<new Date().getFullYear())aj++;rCal();}
 
 function openTag(tag){
-  akTag=tag?`${aj}-${String(am+1).padStart(2,"0")}-${String(tag).padStart(2,"0")}`:new Date().toISOString().split("T")[0];
+  akTag=tag?`${aj}-${String(am+1).padStart(2,"0")}-${String(tag).padStart(2,"0")}`:datStr(new Date());
   document.getElementById("vD").classList.remove("on");
   document.getElementById("vTag").classList.add("on");
   renderTag();
@@ -1529,7 +1529,7 @@ function druckeEinwilligung(){
 // ── TERMINE ──
 function rTermine(){
   const k=K[ai];
-  const heute=new Date().toISOString().split("T")[0];
+  const heute=datStr(new Date());
   const alle=(k.termine||[]).slice().sort((a,b)=>a.datum.localeCompare(b.datum)||a.von.localeCompare(b.von));
   const future=alle.filter(t=>t.datum>=heute);
   const past=alle.filter(t=>t.datum<heute);
@@ -1606,7 +1606,7 @@ function _openTerminModal(klientIdx, terminIdx=null, datumStr=null, vonStr=null,
     const aktKIdx=klientIdx!==null?klientIdx:(K.length>0?0:null);
     document.getElementById("tSub").textContent=aktKIdx!==null?K[aktKIdx].name:"";
     document.getElementById("tBez").value="";
-    document.getElementById("tDat").value=datumStr||new Date().toISOString().split("T")[0];
+    document.getElementById("tDat").value=datumStr||datStr(new Date());
     document.getElementById("tVon").value=vonStr||"09:00";
     // Auto-Bis: +2h
     if(vonStr){
@@ -1786,7 +1786,7 @@ function renderGKal(animDir){
   for(let i=0;i<5;i++){const d=new Date(mo);d.setDate(mo.getDate()+i);tage.push(d);}
 
   const heute=new Date();
-  const heuteStr=heute.toISOString().split("T")[0];
+  const heuteStr=datStr(heute);
 
   // Nav
   const vonD=tage[0],bisD=tage[4];
@@ -1798,7 +1798,7 @@ function renderGKal(animDir){
 
   // Termine pro Tag sammeln
   const tagTermine=tage.map(d=>{
-    const ds=d.toISOString().split("T")[0];
+    const ds=datStr(d);
     const arr=[];
     K.forEach((k,ki)=>{
       (k.termine||[]).forEach((t,ti)=>{
@@ -1815,7 +1815,7 @@ function renderGKal(animDir){
   const bl=EINST.bl||"";
   let hdr='<div class="wkal-header-time"></div>';
   tage.forEach((d,i)=>{
-    const ds=d.toISOString().split("T")[0];
+    const ds=datStr(d);
     const isH=ds===heuteStr;
     const hasEv=tagTermine[i].length>0;
     const ft=isFeiertag(ds,bl);
@@ -1862,7 +1862,7 @@ function renderGKal(animDir){
 
     let dayCols='';
     tage.forEach((d,di)=>{
-      const ds=d.toISOString().split("T")[0];
+      const ds=datStr(d);
       // Slots
       let slotsHtml='';
       for(let s=0;s<slots;s++){
