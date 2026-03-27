@@ -375,6 +375,8 @@ body{font-family:-apple-system,'Helvetica Neue',Arial,sans-serif;background:var(
 .wkal-day-col.feiertag-block{background:repeating-linear-gradient(135deg,transparent,transparent 5px,rgba(180,150,120,.13) 5px,rgba(180,150,120,.13) 10px)}
 .wkal-day-col.feiertag-block::after{content:'';position:absolute;inset:0;background:rgba(200,170,140,.08);pointer-events:none}
 .wkal-ferien-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#d4a000;margin-left:3px;vertical-align:middle;flex-shrink:0}
+.wkal-bday-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#7848c8;margin-left:3px;vertical-align:middle;flex-shrink:0}
+.wkal-bday-label{font-size:.52rem;font-weight:700;color:#7848c8;line-height:1;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;text-align:center}
 /* Animations */
 @keyframes slideLeft{from{opacity:.2;transform:translateX(30px)}to{opacity:1;transform:translateX(0)}}
 @keyframes slideRight{from{opacity:.2;transform:translateX(-30px)}to{opacity:1;transform:translateX(0)}}
@@ -608,6 +610,13 @@ body{font-family:-apple-system,'Helvetica Neue',Arial,sans-serif;background:var(
       <span style="color:var(--dim)">›</span>
     </div>
     <div class="msect">⚙️ Einstellungen</div>
+    <div class="mitem" onclick="toggleDarkMode()">
+      <div class="micon" id="dmIcon" style="background:var(--pur-bg)">🌙</div>
+      <div class="minfo"><div class="mtitle" id="dmTitle">Dark Mode</div><div class="msub" id="dmSub">Dunkles Design aktivieren</div></div>
+      <div id="dmToggle" style="width:44px;height:26px;border-radius:13px;background:var(--brd);position:relative;transition:background .2s;flex-shrink:0">
+        <div id="dmKnob" style="width:22px;height:22px;border-radius:50%;background:#fff;position:absolute;top:2px;left:2px;transition:left .2s;box-shadow:0 1px 4px rgba(0,0,0,.3)"></div>
+      </div>
+    </div>
     <div class="mitem" onclick="showEinstellungen();closeMenu()">
       <div class="micon" style="background:var(--pur-bg)">🗺️</div>
       <div class="minfo"><div class="mtitle">Kalender-Einstellungen</div><div class="msub" id="menuBLSub">Bundesland & Feiertage</div></div>
@@ -1038,7 +1047,35 @@ function isSchulferien(datumStr,bl){
   return FERIEN_BL[bl].some(([von,bis])=>d>=new Date(von)&&d<=new Date(bis));
 }
 
-function sv(){localStorage.setItem("kv9",JSON.stringify(K));}
+// ── DARK MODE ──
+function applyDarkMode(dark){
+  document.body.classList.toggle("dark",dark);
+  const icon=document.getElementById("dmIcon");
+  const title=document.getElementById("dmTitle");
+  const sub=document.getElementById("dmSub");
+  const toggle=document.getElementById("dmToggle");
+  const knob=document.getElementById("dmKnob");
+  if(icon)icon.textContent=dark?"☀️":"🌙";
+  if(title)title.textContent=dark?"Light Mode":"Dark Mode";
+  if(sub)sub.textContent=dark?"Helles Design aktivieren":"Dunkles Design aktivieren";
+  if(toggle)toggle.style.background=dark?"var(--acc)":"var(--brd)";
+  if(knob)knob.style.left=dark?"20px":"2px";
+}
+function toggleDarkMode(){
+  const dark=!document.body.classList.contains("dark");
+  localStorage.setItem("darkMode",dark?"1":"0");
+  applyDarkMode(dark);
+}
+function initDarkMode(){
+  // Gespeicherte Einstellung, sonst System-Preference
+  const saved=localStorage.getItem("darkMode");
+  const dark=saved!==null?saved==="1":window.matchMedia("(prefers-color-scheme: dark)").matches;
+  applyDarkMode(dark);
+  // System-Theme-Änderungen mitverfolgen (nur wenn keine manuelle Einstellung)
+  window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change",e=>{
+    if(localStorage.getItem("darkMode")===null)applyDarkMode(e.matches);
+  });
+}
 function fm(n){return Number(n).toLocaleString("de-DE",{minimumFractionDigits:2,maximumFractionDigits:2});}
 function fd(d){if(!d)return"–";const p=d.split("-");return p[2]+"."+p[1]+"."+p[0];}
 function fmo(s){if(!s)return"–";const p=s.split("-");return MN[parseInt(p[1])-1]+" "+p[0];}
@@ -1820,10 +1857,18 @@ function renderGKal(animDir){
     const hasEv=tagTermine[i].length>0;
     const ft=isFeiertag(ds,bl);
     const ferien=EINST.ferien&&isSchulferien(ds,bl);
+    // Geburtstage prüfen
+    const bdayKlienten=K.filter(k=>{
+      if(!k.geburt)return false;
+      const gb=k.geburt.split("-");
+      return gb[1]===ds.substring(5,7)&&gb[2]===ds.substring(8,10);
+    });
+    const bdayText=bdayKlienten.map(k=>k.name.split(",")[0]).join(", ");
     hdr+=`<div class="wkal-header-day ${isH?"today":""} ${hasEv?"has-events":""} ${ft&&EINST.fjMode==="block"?"feiertag-block":""}" onclick="gkalTapHeader('${ds}')">
       <div class="wkd-name">${wt[i]}</div>
-      <div class="wkd-num" style="display:flex;align-items:center;justify-content:center;gap:2px">${d.getDate()}${ferien?'<span class="wkal-ferien-dot"></span>':""}</div>
+      <div class="wkd-num" style="display:flex;align-items:center;justify-content:center;gap:2px">${d.getDate()}${ferien?'<span class="wkal-ferien-dot"></span>':""}${bdayKlienten.length?'<span class="wkal-bday-dot"></span>':""}</div>
       ${ft?`<div class="wkal-feiertag-label">${ft}</div>`:""}
+      ${bdayText?`<div class="wkal-bday-label">🎂 ${bdayText}</div>`:""}
     </div>`;
   });
   document.getElementById("gkalHeader").innerHTML=hdr;
@@ -2107,6 +2152,7 @@ function checkJahreswechsel(){
 }
 
 if("serviceWorker"in navigator)navigator.serviceWorker.register("./sw.js").catch(()=>{});
+initDarkMode();
 checkOnboarding();
 checkJahreswechsel();
 // Einstellungen-Sub im Menü initialisieren
