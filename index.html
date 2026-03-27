@@ -252,6 +252,7 @@ body{font-family:-apple-system,'Helvetica Neue',Arial,sans-serif;background:var(
 .bs{background:var(--acc);color:#fff;box-shadow:0 3px 12px rgba(232,148,74,.4)}
 .sec{font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--dim);margin:18px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--brd)}
 .sec:first-child{margin-top:0}
+
 /* ONBOARDING */
 .onboard{position:fixed;inset:0;background:var(--bg);z-index:999;display:flex;flex-direction:column;overflow-y:auto;padding:calc(var(--safe-t)+20px) 24px calc(var(--safe-b)+24px)}
 .ob-logo{width:80px;height:80px;background:linear-gradient(135deg,var(--acc),var(--acc-dark));border-radius:24px;display:flex;align-items:center;justify-content:center;font-size:2.5rem;margin:20px auto 24px;box-shadow:0 4px 20px rgba(232,148,74,.4)}
@@ -268,6 +269,7 @@ body{font-family:-apple-system,'Helvetica Neue',Arial,sans-serif;background:var(
 .ob-btn{background:var(--acc);color:#fff;border:none;border-radius:14px;padding:16px;font-size:1rem;font-weight:800;cursor:pointer;width:100%;margin-top:20px;box-shadow:0 3px 12px rgba(232,148,74,.4)}
 .ob-btn:disabled{background:var(--dim);box-shadow:none;cursor:not-allowed}
 
+/* MENÜ */
 .menu-btn{width:40px;height:40px;background:rgba(255,255,255,.25);border:none;border-radius:11px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:1.2rem;color:#fff;flex-shrink:0}
 .menu-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:300;display:none;backdrop-filter:blur(4px)}
 .menu-overlay.on{display:block}
@@ -291,6 +293,7 @@ body{font-family:-apple-system,'Helvetica Neue',Arial,sans-serif;background:var(
 .stat-val{font-size:1.35rem;font-weight:800;color:var(--acc-dark);margin-bottom:3px}
 .stat-lbl{font-size:.68rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.05em}
 
+/* TERMINE */
 .termine-item{background:#fff;border:1px solid var(--brd);border-radius:14px;padding:14px;margin-bottom:10px;box-shadow:0 1px 4px rgba(0,0,0,.05)}
 .termine-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px}
 .termine-title{font-size:.95rem;font-weight:700;color:var(--txt)}
@@ -301,54 +304,79 @@ body{font-family:-apple-system,'Helvetica Neue',Arial,sans-serif;background:var(
 .wbadge{display:inline-block;background:var(--pur-bg);border:1px solid var(--pur-brd);color:var(--pur);border-radius:8px;padding:2px 10px;font-size:.72rem;font-weight:700;margin-top:6px}
 .add-termin-btn{display:flex;align-items:center;justify-content:center;gap:8px;background:var(--acc);color:#fff;border:none;border-radius:14px;padding:14px;font-size:.9rem;font-weight:700;cursor:pointer;width:100%;margin-bottom:14px;box-shadow:0 3px 12px rgba(232,148,74,.4)}
 
-.gkal-slot{display:flex;min-height:40px;border-bottom:1px solid var(--brd);position:relative}
-.gkal-time{width:52px;flex-shrink:0;font-size:.72rem;font-weight:700;color:var(--muted);padding:4px 8px 0;border-right:1px solid var(--brd)}
-.gkal-events{flex:1;position:relative;min-height:40px}
-.gkal-event{position:absolute;left:4px;right:4px;border-radius:8px;padding:4px 8px;font-size:.75rem;font-weight:700;color:#fff;overflow:hidden;cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,.2);z-index:1}
-.gkal-event-name{font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.gkal-event-time{font-size:.68rem;opacity:.9}
-.legende-item{display:inline-flex;align-items:center;gap:6px;margin-right:12px;font-size:.78rem;font-weight:600;color:var(--txt)}
-.legende-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0}
+/* ═══ NEUER WOCHENKALENDER ═══ */
+/* Spiral oben */
+.wkal-spiral{display:flex;justify-content:center;gap:18px;padding:7px 0 5px;background:#f5f0e8;border-bottom:2px solid #e0d4b8;flex-shrink:0;position:relative}
+.wkal-spiral::before{content:'';position:absolute;bottom:-1px;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,#d4b870,transparent)}
+.wkal-spiral-ring{width:14px;height:14px;border-radius:50%;border:2.5px solid #a8844a;background:radial-gradient(circle at 35% 35%,#f0e0a0,#c8a050);box-shadow:0 1px 3px rgba(0,0,0,.25),inset 0 1px 2px rgba(255,255,255,.4)}
 
-/* WOCHENKALENDER - Kalender-Buch Style */
-.wkal-page{background:#fff;border-radius:0;overflow:hidden;box-shadow:0 2px 20px rgba(0,0,0,.15)}
-.wkal-spiral{display:flex;justify-content:center;gap:10px;padding:8px 0;background:#f5f0e8;flex-shrink:0}
-.wkal-spiral-ring{width:16px;height:16px;border-radius:50%;border:3px solid #c4a870;background:#e8d8a0;box-shadow:0 1px 3px rgba(0,0,0,.2)}
-.wkal-nav{display:flex;align-items:center;justify-content:space-between;padding:10px 18px 6px;background:#fff;flex-shrink:0}
-.wkal-nav-btn{background:none;border:none;cursor:pointer;font-size:1.1rem;color:#888;padding:4px 8px;border-radius:8px}
+/* Navigation */
+.wkal-nav{display:flex;align-items:center;justify-content:space-between;padding:8px 14px 6px;background:#fff;border-bottom:1px solid #ece4d8;flex-shrink:0}
+.wkal-nav-btn{background:none;border:1px solid #e0d4c4;border-radius:9px;cursor:pointer;font-size:1rem;color:#888;padding:5px 12px;font-weight:700;transition:background .1s}
 .wkal-nav-btn:active{background:var(--bg)}
-.wkal-nav-title{font-size:.95rem;font-weight:700;color:#333;letter-spacing:.02em}
-.wkal-header{display:grid;grid-template-columns:36px repeat(5,1fr);background:#fff;border-bottom:1.5px solid #e0d8cc;flex-shrink:0}
-.wkal-header-time{border-right:1px solid #e8e0d4}
-.wkal-header-day{text-align:center;padding:6px 2px;border-left:1px solid #e8e0d4}
-.wkal-header-day .wkd-name{font-size:.65rem;font-weight:600;text-transform:uppercase;color:#aaa;letter-spacing:.08em}
-.wkal-header-day .wkd-num{font-size:1rem;font-weight:700;color:#333;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:3px auto 0}
-.wkal-header-day.today .wkd-num{background:var(--acc);color:#fff}
-.wkal-body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;position:relative;background:#fff}
-.wkal-grid{display:grid;grid-template-columns:36px repeat(5,1fr);position:relative}
-.wkal-time-col{border-right:1px solid #e8e0d4}
-.wkal-time-slot{height:28px;border-bottom:1px solid transparent;display:flex;align-items:flex-start;justify-content:flex-end;padding-right:5px}
-.wkal-time-slot.hour{border-bottom:1px solid #e8e0d4}
-.wkal-time-slot.half{border-bottom:1px dashed #f0e8dc}
-.wkal-time-label{font-size:.6rem;font-weight:600;color:#bbb;margin-top:-7px;font-family:Georgia,serif}
-.wkal-day-col{border-left:1px solid #e8e0d4;position:relative;min-height:100%}
-.wkal-day-slot{height:28px}
-.wkal-day-slot.hour{border-bottom:1px solid #e8e0d4}
-.wkal-day-slot.half{border-bottom:1px dashed #f0e8dc}
-.wkal-event{position:absolute;left:1px;right:1px;border-radius:5px;padding:3px 6px;cursor:pointer;overflow:hidden;border-left:3px solid;box-shadow:0 1px 3px rgba(0,0,0,.1)}
-.wkal-event:active{opacity:.8;transform:scale(.98)}
-.wkal-event-title{font-size:.7rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.4}
-.wkal-event-time{font-size:.6rem;font-weight:500;line-height:1.3;opacity:.85}
-.wkal-legend{display:flex;flex-wrap:wrap;gap:8px;padding:6px 16px;background:#faf8f4;border-bottom:1px solid #e8e0d4;flex-shrink:0}
-.wkal-legend-item{display:flex;align-items:center;gap:5px;font-size:.72rem;font-weight:600;color:#555}
-.wkal-legend-dot{width:9px;height:9px;border-radius:50%}
-.wkal-now-line{position:absolute;left:0;right:0;height:1.5px;background:#e04040;z-index:5;pointer-events:none}
-.wkal-now-line::before{content:'';width:7px;height:7px;background:#e04040;border-radius:50%;position:absolute;left:-3px;top:-3px}
-/* Page flip animation */
-.wkal-flip{animation:pageFlip .3s ease}
-@keyframes pageFlip{from{opacity:.3;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
-.wkal-flip-back{animation:pageFlipBack .3s ease}
-@keyframes pageFlipBack{from{opacity:.3;transform:translateX(-20px)}to{opacity:1;transform:translateX(0)}}
+.wkal-nav-kw{font-size:.72rem;color:var(--muted);font-weight:600;letter-spacing:.04em}
+.wkal-nav-date{font-size:.92rem;font-weight:700;color:#333;font-family:Georgia,serif;text-align:center;flex:1}
+
+/* Legende */
+.wkal-legend{display:flex;flex-wrap:wrap;gap:6px 12px;padding:5px 14px;background:#faf8f4;border-bottom:1px solid #ece4d8;flex-shrink:0;min-height:0}
+.wkal-legend:empty{display:none}
+.wkal-legend-item{display:flex;align-items:center;gap:5px;font-size:.7rem;font-weight:700;color:#555}
+.wkal-legend-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+
+/* Spalten-Header */
+.wkal-header{display:grid;grid-template-columns:34px repeat(5,1fr);background:#fff;border-bottom:2px solid #e0d4c4;flex-shrink:0}
+.wkal-header-time{border-right:1px solid #ece4d8;background:#faf8f4}
+.wkal-header-day{text-align:center;padding:5px 2px 6px;border-left:1px solid #ece4d8;cursor:pointer;transition:background .1s;position:relative}
+.wkal-header-day:active{background:var(--acc-bg)}
+.wkal-header-day .wkd-name{font-size:.6rem;font-weight:700;text-transform:uppercase;color:#aaa;letter-spacing:.06em;line-height:1}
+.wkal-header-day .wkd-num{font-size:.95rem;font-weight:800;color:#333;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:3px auto 0;transition:all .15s}
+.wkal-header-day.today .wkd-num{background:var(--acc);color:#fff;box-shadow:0 2px 8px rgba(232,148,74,.4)}
+.wkal-header-day.has-events::after{content:'';width:5px;height:5px;background:var(--acc);border-radius:50%;position:absolute;bottom:3px;left:50%;transform:translateX(-50%)}
+
+/* Scroll-Body */
+.wkal-body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;position:relative;background:#fdfcfa}
+.wkal-body::-webkit-scrollbar{display:none}
+
+/* Grid */
+.wkal-grid{display:grid;grid-template-columns:34px repeat(5,1fr);position:relative}
+
+/* Zeitspalte */
+.wkal-time-col{border-right:1px solid #ece4d8;background:#faf8f4;position:relative;z-index:1}
+.wkal-time-slot{display:flex;align-items:flex-start;justify-content:flex-end;padding-right:5px;position:relative}
+.wkal-time-slot.hour{border-bottom:1px solid #ddd6cc}
+.wkal-time-slot.qtr{border-bottom:1px dashed #ece4d8}
+.wkal-time-label{font-size:.58rem;font-weight:600;color:#b0a090;line-height:1;font-family:Georgia,serif;margin-top:-7px;white-space:nowrap}
+
+/* Tag-Spalten */
+.wkal-day-col{border-left:1px solid #ece4d8;position:relative}
+.wkal-day-slot{position:relative}
+.wkal-day-slot.hour{border-bottom:1px solid #ddd6cc}
+.wkal-day-slot.qtr{border-bottom:1px dashed #ece4d8}
+/* Tap-Ziel zum Termin erstellen */
+.wkal-day-slot.tap-zone{cursor:pointer}
+.wkal-day-slot.tap-zone:active{background:rgba(232,148,74,.12)}
+
+/* Events */
+.wkal-event{position:absolute;left:2px;right:2px;border-radius:6px;padding:3px 6px;cursor:pointer;overflow:hidden;border-left:3px solid;box-shadow:0 1px 4px rgba(0,0,0,.12);z-index:2;transition:transform .1s,box-shadow .1s}
+.wkal-event:active{transform:scale(.97);box-shadow:0 2px 8px rgba(0,0,0,.2)}
+.wkal-event-klient{font-size:.68rem;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.3}
+.wkal-event-bez{font-size:.62rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;opacity:.85;line-height:1.2}
+.wkal-event-time{font-size:.58rem;font-weight:600;opacity:.8;line-height:1.2}
+
+/* Jetzt-Linie */
+.wkal-now-line{position:absolute;left:0;right:0;height:2px;background:#e04040;z-index:5;pointer-events:none}
+.wkal-now-line::before{content:'';width:8px;height:8px;background:#e04040;border-radius:50%;position:absolute;left:-4px;top:-3px}
+.wkal-now-label{position:absolute;right:3px;top:-8px;font-size:.58rem;font-weight:700;color:#e04040;background:#fff;padding:1px 4px;border-radius:4px;border:1px solid #f0a0a0}
+
+/* Animations */
+@keyframes slideLeft{from{opacity:.2;transform:translateX(30px)}to{opacity:1;transform:translateX(0)}}
+@keyframes slideRight{from{opacity:.2;transform:translateX(-30px)}to{opacity:1;transform:translateX(0)}}
+.wkal-anim-left{animation:slideLeft .25s ease}
+.wkal-anim-right{animation:slideRight .25s ease}
+
+/* Tooltip für Tap-Feedback */
+.wkal-tap-hint{position:absolute;background:rgba(232,148,74,.9);color:#fff;border-radius:8px;padding:4px 10px;font-size:.72rem;font-weight:700;pointer-events:none;z-index:10;white-space:nowrap;transform:translateX(-50%);animation:fadeOut 1.5s forwards}
+@keyframes fadeOut{0%{opacity:1}70%{opacity:1}100%{opacity:0}}
 </style>
 </head>
 <body>
@@ -358,7 +386,7 @@ body{font-family:-apple-system,'Helvetica Neue',Arial,sans-serif;background:var(
   <div class="hdr">
     <button class="menu-btn" onclick="openMenu()">☰</button>
     <div class="hdr-title"><h1>Alltagshilfe Budget</h1><p id="kCnt">–</p></div>
-    <button class="hdr-btn" onclick="showGKal()" style="background:rgba(255,255,255,.25);color:#fff;margin-right:6px;padding:10px 12px">📅</button>
+    <button onclick="showGKal()" style="background:rgba(255,255,255,.25);color:#fff;border:none;border-radius:12px;padding:10px 12px;font-size:.9rem;font-weight:800;cursor:pointer;flex-shrink:0;margin-right:6px">📅</button>
     <button class="hdr-btn" onclick="openKM(null)">+ Neu</button>
   </div>
   <div class="search-bar"><div class="search-wrap"><input id="sQ" type="text" placeholder="Klient suchen…" oninput="rl()"></div></div>
@@ -496,14 +524,15 @@ body{font-family:-apple-system,'Helvetica Neue',Arial,sans-serif;background:var(
   <button class="ob-btn" id="obBtn" onclick="acceptOB()" disabled>Zustimmen & App starten</button>
 </div>
 
-
-
 <!-- MODAL: Termin -->
 <div class="overlay" id="oT" onclick="cs('oT')">
   <div class="sheet" onclick="event.stopPropagation()">
     <div class="shandle"></div>
     <div class="stit" id="tTit">Termin eintragen</div>
     <div class="ssub" id="tSub">–</div>
+    <div class="fld"><label>Klient</label>
+      <select id="tKlient" onchange="updTerminSub()"></select>
+    </div>
     <div class="fld"><label>Beschreibung</label><input id="tBez" type="text" placeholder="z.B. Hausbesuch, Betreuung…"></div>
     <div class="fld"><label>Datum</label><input id="tDat" type="date"></div>
     <div class="frow">
@@ -511,7 +540,7 @@ body{font-family:-apple-system,'Helvetica Neue',Arial,sans-serif;background:var(
       <div class="fld"><label>Bis</label><input id="tBis" type="time" step="300" value="11:00"></div>
     </div>
     <div class="fld"><label>Wiederholung</label>
-      <select id="tWdh">
+      <select id="tWdh" onchange="document.getElementById('tWdhBis').style.display=this.value!=='keine'?'block':'none'">
         <option value="keine">Keine Wiederholung</option>
         <option value="woechentlich">Wöchentlich</option>
         <option value="2wochen">Alle 2 Wochen</option>
@@ -524,23 +553,28 @@ body{font-family:-apple-system,'Helvetica Neue',Arial,sans-serif;background:var(
   </div>
 </div>
 
-
 <!-- GESAMTKALENDER -->
 <div class="view" id="vGKal">
   <div class="hdr">
     <button class="hdr-back" onclick="showL()">‹</button>
     <div class="hdr-title"><h1>Terminkalender</h1><p id="gkalWocheTitel">–</p></div>
     <button onclick="gkalHeute()" style="background:rgba(255,255,255,.25);border:none;border-radius:10px;padding:8px 12px;color:#fff;font-size:.82rem;font-weight:700;cursor:pointer">Heute</button>
+    <button onclick="openTerminModalGlobal()" style="background:#fff;color:var(--acc-dark);border:none;border-radius:10px;padding:8px 12px;font-size:.82rem;font-weight:700;cursor:pointer;margin-left:6px">+ Termin</button>
   </div>
   <div class="wkal-spiral" id="gkalSpiral"></div>
   <div class="wkal-nav">
     <button class="wkal-nav-btn" onclick="gkalVorWoche()">‹</button>
-    <div id="gkalNavTitle" style="font-size:.9rem;font-weight:700;color:#333;font-family:Georgia,serif">–</div>
+    <div style="flex:1;text-align:center">
+      <div class="wkal-nav-date" id="gkalNavTitle">–</div>
+      <div class="wkal-nav-kw" id="gkalNavKW">–</div>
+    </div>
     <button class="wkal-nav-btn" onclick="gkalNaechWoche()">›</button>
   </div>
   <div class="wkal-legend" id="gkalLegende"></div>
   <div class="wkal-header" id="gkalHeader"></div>
-  <div class="wkal-body" id="gkalBody" ontouchstart="gkalTouchStart(event)" ontouchend="gkalTouchEnd(event)">
+  <div class="wkal-body" id="gkalBody"
+    ontouchstart="gkalTouchStart(event)"
+    ontouchend="gkalTouchEnd(event)">
     <div class="wkal-grid" id="gkalGrid"></div>
   </div>
 </div>
@@ -635,14 +669,11 @@ function istRestVerfallen(k){const j=new Date();return j>new Date(j.getFullYear(
 function restTageBisVerfall(){const j=new Date(),v=new Date(j.getFullYear(),5,30);if(j>v)return 0;return Math.ceil((v-j)/(1000*60*60*24));}
 
 function recalcQ(k){
-  // Recalculate q for all Leistungen dynamically
-  // Restbudget first, then laufend
   const verfallen=istRestVerfallen(k);
   let restVerfuegbar=verfallen?0:k.restBudget;
   const j=new Date(),s=new Date((k.budgetStart||k.erstelltAm.substring(0,7))+"-01");
   const m=(j.getFullYear()-s.getFullYear())*12+(j.getMonth()-s.getMonth());
   let lfdVerfuegbar=Math.max(1,m+1)*MO-(k.lfdV||0);
-  // Sort by date
   const sorted=[...(k.leistungen||[])].sort((a,b)=>new Date(a.datum)-new Date(b.datum));
   sorted.forEach(l=>{
     if(restVerfuegbar>=l.b){l.q="rest";restVerfuegbar-=l.b;}
@@ -704,8 +735,6 @@ function rl(){
   g.innerHTML=fl.map(k=>{
     const ri=K.indexOf(k);
     const r=gR(k),l=gL(k),tot=r+l;
-    const maxBudget=Math.max(k.restBudget+12*MO,1);
-    const pct=Math.min(100,Math.round(tot/maxBudget*100));
     let alerts='';
     if(tot<50)alerts+=`<div class="alert-box alert-danger">🚨 Budget fast aufgebraucht! Noch ${fm(tot)} €</div>`;
     else if(tot<150)alerts+=`<div class="alert-box alert-warn">⚠️ Budget wird knapp – noch ${fm(tot)} €</div>`;
@@ -722,14 +751,8 @@ function rl(){
           ${progressRing(k,'rgba(255,255,255,.9)')}
         </div>
         <div class="kcard-budgets">
-          <div class="kcard-budget-pill">
-            <div class="kcard-bl">Restbudget</div>
-            <div class="kcard-bv">${fm(r)} €</div>
-          </div>
-          <div class="kcard-budget-pill">
-            <div class="kcard-bl">Laufend</div>
-            <div class="kcard-bv">${fm(l)} €</div>
-          </div>
+          <div class="kcard-budget-pill"><div class="kcard-bl">Restbudget</div><div class="kcard-bv">${fm(r)} €</div></div>
+          <div class="kcard-budget-pill"><div class="kcard-bl">Laufend</div><div class="kcard-bv">${fm(l)} €</div></div>
         </div>
         <div class="kcard-stunden">⏱ ${fm(tot/R1)} Std (42,45€) · ${fm(tot/R2)} Std (38,11€)</div>
       </div>
@@ -769,7 +792,6 @@ function lHTML(le,idx){
 
 function rU(){
   const k=K[ai],r=gR(k),l=gL(k),tot=r+l;
-  const maxB=Math.max(k.restBudget+12*MO,1),pct=Math.min(100,Math.round(tot/maxB*100));
   let warn='';
   if(tot<50)warn+=`<div class="alert-box alert-danger" style="margin-bottom:12px">🚨 Budget fast aufgebraucht!</div>`;
   else if(tot<150)warn+=`<div class="alert-box alert-warn" style="margin-bottom:12px">⚠️ Budget wird knapp</div>`;
@@ -809,18 +831,11 @@ function rU(){
 
 function saveNotiz(){K[ai].notiz=document.getElementById("notizTA").value;sv();alert("Notiz gespeichert ✓");}
 function handleFoto(e){
-  const file=e.target.files[0];
-  if(!file){console.log("Keine Datei");return;}
-  if(!file.type.startsWith("image/")){alert("Bitte ein Bild auswählen.");return;}
+  const file=e.target.files[0];if(!file)return;
+  if(!file.type.startsWith("image/"))return;
   const reader=new FileReader();
-  reader.onload=ev=>{
-    if(!K[ai].fotos)K[ai].fotos=[];
-    K[ai].fotos.push(ev.target.result);
-    sv();rU();
-  };
-  reader.onerror=()=>alert("Fehler beim Laden des Bildes.");
-  reader.readAsDataURL(file);
-  e.target.value="";
+  reader.onload=ev=>{if(!K[ai].fotos)K[ai].fotos=[];K[ai].fotos.push(ev.target.result);sv();rU();};
+  reader.readAsDataURL(file);e.target.value="";
 }
 function openFoto(i){viewFotoIdx=i;document.getElementById("fViewerImg").src=K[ai].fotos[i];document.getElementById("fViewer").classList.add("on");}
 function closeFoto(){document.getElementById("fViewer").classList.remove("on");viewFotoIdx=null;}
@@ -968,89 +983,7 @@ function exportLN(){
     if(tL.length){tL.forEach((l,i)=>{const uhr=l.von&&l.bis?`${l.von}–${l.bis}`:"";rows+=`<tr><td style="text-align:center;font-weight:${i===0?700:400}">${i===0?t:""}</td><td>${uhr}</td><td style="text-align:center">${l.km||""}</td><td style="text-align:center">${l.stunden.toFixed(2)}</td><td>${l.art.includes("Haushalt")?"Haushaltsnahe Dienstleistung":"Betreuung/Komb. Dienstleistung"}${l.bemerkung?" – "+l.bemerkung:""}</td><td></td></tr>`;});}
     else rows+=`<tr><td style="text-align:center">${t}</td><td></td><td></td><td></td><td></td><td></td></tr>`;
   }
-  const html=`<!DOCTYPE html><html lang="de"><head><meta charset="UTF-8"><title>Leistungsnachweis ${MN[parseInt(mm)-1]} ${jj}</title><style>*{box-sizing:border-box}body{font-family:Arial,sans-serif;font-size:10px;color:#000;margin:0;padding:0}.page{width:210mm;min-height:297mm;padding:12mm}h2{font-size:12px;font-weight:bold;margin:0 0 6px}.info{margin-bottom:8px;line-height:1.6;font-size:10px}table{width:100%;border-collapse:collapse;table-layout:fixed}th{border:1px solid #000;padding:3px 4px;font-size:9px;font-weight:700;text-align:center;background:#f0f0f0}td{border:1px solid #000;padding:2px 4px;font-size:9px;height:16px;vertical-align:middle}.footer{margin-top:8px;font-size:10px;font-weight:bold}.sig{display:flex;justify-content:space-between;margin-top:20mm}.sig-line{width:30%;border-top:1px solid #000;text-align:center;padding-top:3px;font-size:9px}.print-btn{position:fixed;bottom:20px;right:20px;background:#e8944a;color:#fff;border:none;border-radius:10px;padding:12px 24px;font-size:14px;font-weight:bold;cursor:pointer}@media print{.print-btn{display:none}@page{size:A4 portrait;margin:0}}
-.menu-btn{width:40px;height:40px;background:rgba(255,255,255,.25);border:none;border-radius:11px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:1.2rem;color:#fff;flex-shrink:0}
-.menu-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:300;display:none;backdrop-filter:blur(4px)}
-.menu-overlay.on{display:block}
-.menu-drawer{position:fixed;top:0;right:-320px;width:300px;height:100%;background:#fff;z-index:301;transition:right .25s ease;box-shadow:-4px 0 24px rgba(0,0,0,.15);display:flex;flex-direction:column}
-.menu-drawer.on{right:0}
-.menu-hdr{background:linear-gradient(135deg,var(--acc),var(--acc-dark));padding:calc(var(--safe-t)+20px) 20px 20px;color:#fff;position:relative}
-.menu-hdr h2{font-size:1.1rem;font-weight:800;margin-bottom:3px}
-.menu-hdr p{font-size:.78rem;opacity:.85}
-.menu-close{position:absolute;top:calc(var(--safe-t)+12px);right:12px;width:34px;height:34px;background:rgba(255,255,255,.2);border:none;border-radius:50%;color:#fff;font-size:1rem;cursor:pointer}
-.menu-body{flex:1;overflow-y:auto;padding:16px}
-.msect{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--dim);margin:16px 0 8px;padding-bottom:5px;border-bottom:1px solid var(--brd)}
-.msect:first-child{margin-top:0}
-.mitem{display:flex;align-items:center;gap:12px;padding:12px 13px;border-radius:12px;background:var(--bg);border:1px solid var(--brd);margin-bottom:7px;cursor:pointer;text-decoration:none;color:var(--txt)}
-.mitem:active{opacity:.7}
-.micon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0}
-.minfo{flex:1}
-.mtitle{font-size:.9rem;font-weight:700}
-.msub{font-size:.72rem;color:var(--muted);margin-top:2px}
-.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
-.stat-card{background:#fff;border:1px solid var(--brd);border-radius:14px;padding:14px;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,.05)}
-.stat-val{font-size:1.35rem;font-weight:800;color:var(--acc-dark);margin-bottom:3px}
-.stat-lbl{font-size:.68rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.05em}
-
-.termine-item{background:#fff;border:1px solid var(--brd);border-radius:14px;padding:14px;margin-bottom:10px;box-shadow:0 1px 4px rgba(0,0,0,.05)}
-.termine-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px}
-.termine-title{font-size:.95rem;font-weight:700;color:var(--txt)}
-.termine-info{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px}
-.tp{background:var(--bg);border-radius:8px;padding:7px 10px;border:1px solid var(--brd)}
-.tp .tpl{font-size:.65rem;font-weight:700;text-transform:uppercase;color:var(--dim);margin-bottom:2px}
-.tp .tpv{font-size:.88rem;font-weight:700;color:var(--txt)}
-.wbadge{display:inline-block;background:var(--pur-bg);border:1px solid var(--pur-brd);color:var(--pur);border-radius:8px;padding:2px 10px;font-size:.72rem;font-weight:700;margin-top:6px}
-.add-termin-btn{display:flex;align-items:center;justify-content:center;gap:8px;background:var(--acc);color:#fff;border:none;border-radius:14px;padding:14px;font-size:.9rem;font-weight:700;cursor:pointer;width:100%;margin-bottom:14px;box-shadow:0 3px 12px rgba(232,148,74,.4)}
-
-.gkal-slot{display:flex;min-height:40px;border-bottom:1px solid var(--brd);position:relative}
-.gkal-time{width:52px;flex-shrink:0;font-size:.72rem;font-weight:700;color:var(--muted);padding:4px 8px 0;border-right:1px solid var(--brd)}
-.gkal-events{flex:1;position:relative;min-height:40px}
-.gkal-event{position:absolute;left:4px;right:4px;border-radius:8px;padding:4px 8px;font-size:.75rem;font-weight:700;color:#fff;overflow:hidden;cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,.2);z-index:1}
-.gkal-event-name{font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.gkal-event-time{font-size:.68rem;opacity:.9}
-.legende-item{display:inline-flex;align-items:center;gap:6px;margin-right:12px;font-size:.78rem;font-weight:600;color:var(--txt)}
-.legende-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0}
-
-/* WOCHENKALENDER - Kalender-Buch Style */
-.wkal-page{background:#fff;border-radius:0;overflow:hidden;box-shadow:0 2px 20px rgba(0,0,0,.15)}
-.wkal-spiral{display:flex;justify-content:center;gap:10px;padding:8px 0;background:#f5f0e8;flex-shrink:0}
-.wkal-spiral-ring{width:16px;height:16px;border-radius:50%;border:3px solid #c4a870;background:#e8d8a0;box-shadow:0 1px 3px rgba(0,0,0,.2)}
-.wkal-nav{display:flex;align-items:center;justify-content:space-between;padding:10px 18px 6px;background:#fff;flex-shrink:0}
-.wkal-nav-btn{background:none;border:none;cursor:pointer;font-size:1.1rem;color:#888;padding:4px 8px;border-radius:8px}
-.wkal-nav-btn:active{background:var(--bg)}
-.wkal-nav-title{font-size:.95rem;font-weight:700;color:#333;letter-spacing:.02em}
-.wkal-header{display:grid;grid-template-columns:36px repeat(5,1fr);background:#fff;border-bottom:1.5px solid #e0d8cc;flex-shrink:0}
-.wkal-header-time{border-right:1px solid #e8e0d4}
-.wkal-header-day{text-align:center;padding:6px 2px;border-left:1px solid #e8e0d4}
-.wkal-header-day .wkd-name{font-size:.65rem;font-weight:600;text-transform:uppercase;color:#aaa;letter-spacing:.08em}
-.wkal-header-day .wkd-num{font-size:1rem;font-weight:700;color:#333;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:3px auto 0}
-.wkal-header-day.today .wkd-num{background:var(--acc);color:#fff}
-.wkal-body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;position:relative;background:#fff}
-.wkal-grid{display:grid;grid-template-columns:36px repeat(5,1fr);position:relative}
-.wkal-time-col{border-right:1px solid #e8e0d4}
-.wkal-time-slot{height:28px;border-bottom:1px solid transparent;display:flex;align-items:flex-start;justify-content:flex-end;padding-right:5px}
-.wkal-time-slot.hour{border-bottom:1px solid #e8e0d4}
-.wkal-time-slot.half{border-bottom:1px dashed #f0e8dc}
-.wkal-time-label{font-size:.6rem;font-weight:600;color:#bbb;margin-top:-7px;font-family:Georgia,serif}
-.wkal-day-col{border-left:1px solid #e8e0d4;position:relative;min-height:100%}
-.wkal-day-slot{height:28px}
-.wkal-day-slot.hour{border-bottom:1px solid #e8e0d4}
-.wkal-day-slot.half{border-bottom:1px dashed #f0e8dc}
-.wkal-event{position:absolute;left:1px;right:1px;border-radius:5px;padding:3px 6px;cursor:pointer;overflow:hidden;border-left:3px solid;box-shadow:0 1px 3px rgba(0,0,0,.1)}
-.wkal-event:active{opacity:.8;transform:scale(.98)}
-.wkal-event-title{font-size:.7rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.4}
-.wkal-event-time{font-size:.6rem;font-weight:500;line-height:1.3;opacity:.85}
-.wkal-legend{display:flex;flex-wrap:wrap;gap:8px;padding:6px 16px;background:#faf8f4;border-bottom:1px solid #e8e0d4;flex-shrink:0}
-.wkal-legend-item{display:flex;align-items:center;gap:5px;font-size:.72rem;font-weight:600;color:#555}
-.wkal-legend-dot{width:9px;height:9px;border-radius:50%}
-.wkal-now-line{position:absolute;left:0;right:0;height:1.5px;background:#e04040;z-index:5;pointer-events:none}
-.wkal-now-line::before{content:'';width:7px;height:7px;background:#e04040;border-radius:50%;position:absolute;left:-3px;top:-3px}
-/* Page flip animation */
-.wkal-flip{animation:pageFlip .3s ease}
-@keyframes pageFlip{from{opacity:.3;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
-.wkal-flip-back{animation:pageFlipBack .3s ease}
-@keyframes pageFlipBack{from{opacity:.3;transform:translateX(-20px)}to{opacity:1;transform:translateX(0)}}
-</style></head><body><div class="page"><h2>Leistungsnachweis ${MN[parseInt(mm)-1]} ${jj}</h2><div class="info"><strong>Versicherte Person:</strong> ${k.name}${k.geburt?", geb. am "+fd(k.geburt):""}<br>${k.adresse?`<strong>Adresse:</strong> ${k.adresse}<br>`:""} ${k.kk?`<strong>Krankenkasse:</strong> ${k.kk}${k.vnr?", Vers.-Nr.: "+k.vnr:""}<br>`:""} ${k.pflege?`<strong>Pflegegrad:</strong> ${k.pflege}`:""}</div><table><thead><tr><th style="width:22px">Tag</th><th style="width:68px">Uhrzeit</th><th style="width:44px">Strecke(km)</th><th style="width:44px">Dauer(h)</th><th>Art der Leistung / Bemerkung</th><th style="width:60px">Unterschrift</th></tr></thead><tbody>${rows}</tbody></table><div class="footer">Gesamtstunden: ${gesStd.toFixed(2)} h</div><div class="sig"><div class="sig-line">Ort, Datum</div><div class="sig-line">Mitarbeiterin</div><div class="sig-line">Kundin/Kunde</div></div></div><button class="print-btn" onclick="window.print()">🖨️ Drucken</button></body></html>`;
+  const html=`<!DOCTYPE html><html lang="de"><head><meta charset="UTF-8"><title>Leistungsnachweis</title><style>*{box-sizing:border-box}body{font-family:Arial,sans-serif;font-size:10px;color:#000;margin:0;padding:0}.page{width:210mm;min-height:297mm;padding:12mm}h2{font-size:12px;font-weight:bold;margin:0 0 6px}.info{margin-bottom:8px;line-height:1.6;font-size:10px}table{width:100%;border-collapse:collapse;table-layout:fixed}th{border:1px solid #000;padding:3px 4px;font-size:9px;font-weight:700;text-align:center;background:#f0f0f0}td{border:1px solid #000;padding:2px 4px;font-size:9px;height:16px;vertical-align:middle}.footer{margin-top:8px;font-size:10px;font-weight:bold}.sig{display:flex;justify-content:space-between;margin-top:20mm}.sig-line{width:30%;border-top:1px solid #000;text-align:center;padding-top:3px;font-size:9px}.print-btn{position:fixed;bottom:20px;right:20px;background:#e8944a;color:#fff;border:none;border-radius:10px;padding:12px 24px;font-size:14px;font-weight:bold;cursor:pointer}@media print{.print-btn{display:none}@page{size:A4 portrait;margin:0}}</style></head><body><div class="page"><h2>Leistungsnachweis ${MN[parseInt(mm)-1]} ${jj}</h2><div class="info"><strong>Versicherte Person:</strong> ${k.name}${k.geburt?", geb. am "+fd(k.geburt):""}${k.adresse?"<br><strong>Adresse:</strong> "+k.adresse:""}${k.kk?"<br><strong>Krankenkasse:</strong> "+k.kk+(k.vnr?", Vers.-Nr.: "+k.vnr:""):""}${k.pflege?"<br><strong>Pflegegrad:</strong> "+k.pflege:""}</div><table><thead><tr><th style="width:22px">Tag</th><th style="width:68px">Uhrzeit</th><th style="width:44px">Strecke(km)</th><th style="width:44px">Dauer(h)</th><th>Art der Leistung / Bemerkung</th><th style="width:60px">Unterschrift</th></tr></thead><tbody>${rows}</tbody></table><div class="footer">Gesamtstunden: ${gesStd.toFixed(2)} h</div><div class="sig"><div class="sig-line">Ort, Datum</div><div class="sig-line">Mitarbeiterin</div><div class="sig-line">Kundin/Kunde</div></div></div><button class="print-btn" onclick="window.print()">🖨️ Drucken</button></body></html>`;
   const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([html],{type:"text/html;charset=utf-8"}));a.download=`Leistungsnachweis_${k.name.replace(/[^a-zA-Z0-9]/g,"_")}_${jj}_${mm}.html`;a.click();
 }
 
@@ -1062,7 +995,7 @@ function exportL(){
 }
 
 function openKM(e,i=null){
-  if(e)e.stopPropagation();editI=i;
+  if(e&&e.stopPropagation)e.stopPropagation();editI=i;
   document.getElementById("kmTit").textContent=i!==null?"Klient bearbeiten":"Neuen Klienten anlegen";
   document.getElementById("kmBtn").textContent=i!==null?"Speichern":"Anlegen";
   const k=i!==null?K[i]:{};
@@ -1089,7 +1022,7 @@ function openEditL(idx){
 
 function calcZeit(){
   const von=document.getElementById("lVon").value,bis=document.getElementById("lBis").value;
-  if(von&&bis){const[vh,vm]=von.split(":").map(Number),[bh,bm]=bis.split(":").map(Number);let diff=(bh*60+bm)-(vh*60+vm);if(diff<0)diff+=1440;const h=Math.floor(diff/60),m=diff%60;document.getElementById("lH").value=h;const mOpts=[0,15,30,45];document.getElementById("lM").value=m;}
+  if(von&&bis){const[vh,vm]=von.split(":").map(Number),[bh,bm]=bis.split(":").map(Number);let diff=(bh*60+bm)-(vh*60+vm);if(diff<0)diff+=1440;const h=Math.floor(diff/60),m=diff%60;document.getElementById("lH").value=h;document.getElementById("lM").value=m;}
   updP();
 }
 
@@ -1160,18 +1093,8 @@ function checkOB(){
   const ok=document.getElementById("cb1").checked&&document.getElementById("cb2").checked&&document.getElementById("cb3").checked&&document.getElementById("cb4").checked;
   document.getElementById("obBtn").disabled=!ok;
 }
-
-function acceptOB(){
-  localStorage.setItem("ob_accepted","1");
-  document.getElementById("onboard").style.display="none";
-}
-
-function checkOnboarding(){
-  if(!localStorage.getItem("ob_accepted")){
-    document.getElementById("onboard").style.display="flex";
-  }
-}
-
+function acceptOB(){localStorage.setItem("ob_accepted","1");document.getElementById("onboard").style.display="none";}
+function checkOnboarding(){if(!localStorage.getItem("ob_accepted"))document.getElementById("onboard").style.display="flex";}
 
 function openMenu(){
   document.getElementById("menuKCount").textContent=K.length+" Klient"+(K.length!==1?"en":"")+" · "+new Date().getFullYear();
@@ -1216,133 +1139,14 @@ function druckeLeererNachweis(){
   const tage=new Date(heute.getFullYear(),heute.getMonth()+1,0).getDate();
   let rows="";
   for(let t=1;t<=tage;t++) rows+=`<tr><td style="text-align:center">${t}</td><td></td><td></td><td></td><td></td><td></td></tr>`;
-  const html=`<!DOCTYPE html><html lang="de"><head><meta charset="UTF-8"><title>Leistungsnachweis Vorlage</title><style>body{font-family:Arial;font-size:10px;margin:0}.page{padding:12mm}h2{font-size:12px;margin:0 0 8px}.info{margin-bottom:10px;line-height:2;font-size:10px;border:1px solid #ccc;padding:8px}table{width:100%;border-collapse:collapse}th{border:1px solid #000;padding:3px;font-size:9px;text-align:center;background:#f0f0f0}td{border:1px solid #000;padding:2px 4px;height:16px;font-size:9px}.footer{margin-top:8px}.sig{display:flex;justify-content:space-between;margin-top:20mm}.sig-line{width:30%;border-top:1px solid #000;text-align:center;padding-top:3px;font-size:9px}.print-btn{position:fixed;bottom:20px;right:20px;background:#e8944a;color:#fff;border:none;border-radius:10px;padding:12px 24px;font-size:14px;font-weight:bold;cursor:pointer}@media print{.print-btn{display:none}@page{size:A4;margin:0}}
-.termine-item{background:#fff;border:1px solid var(--brd);border-radius:14px;padding:14px;margin-bottom:10px;box-shadow:0 1px 4px rgba(0,0,0,.05)}
-.termine-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px}
-.termine-title{font-size:.95rem;font-weight:700;color:var(--txt)}
-.termine-info{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px}
-.tp{background:var(--bg);border-radius:8px;padding:7px 10px;border:1px solid var(--brd)}
-.tp .tpl{font-size:.65rem;font-weight:700;text-transform:uppercase;color:var(--dim);margin-bottom:2px}
-.tp .tpv{font-size:.88rem;font-weight:700;color:var(--txt)}
-.wbadge{display:inline-block;background:var(--pur-bg);border:1px solid var(--pur-brd);color:var(--pur);border-radius:8px;padding:2px 10px;font-size:.72rem;font-weight:700;margin-top:6px}
-.add-termin-btn{display:flex;align-items:center;justify-content:center;gap:8px;background:var(--acc);color:#fff;border:none;border-radius:14px;padding:14px;font-size:.9rem;font-weight:700;cursor:pointer;width:100%;margin-bottom:14px;box-shadow:0 3px 12px rgba(232,148,74,.4)}
-
-.gkal-slot{display:flex;min-height:40px;border-bottom:1px solid var(--brd);position:relative}
-.gkal-time{width:52px;flex-shrink:0;font-size:.72rem;font-weight:700;color:var(--muted);padding:4px 8px 0;border-right:1px solid var(--brd)}
-.gkal-events{flex:1;position:relative;min-height:40px}
-.gkal-event{position:absolute;left:4px;right:4px;border-radius:8px;padding:4px 8px;font-size:.75rem;font-weight:700;color:#fff;overflow:hidden;cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,.2);z-index:1}
-.gkal-event-name{font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.gkal-event-time{font-size:.68rem;opacity:.9}
-.legende-item{display:inline-flex;align-items:center;gap:6px;margin-right:12px;font-size:.78rem;font-weight:600;color:var(--txt)}
-.legende-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0}
-
-/* WOCHENKALENDER - Kalender-Buch Style */
-.wkal-page{background:#fff;border-radius:0;overflow:hidden;box-shadow:0 2px 20px rgba(0,0,0,.15)}
-.wkal-spiral{display:flex;justify-content:center;gap:10px;padding:8px 0;background:#f5f0e8;flex-shrink:0}
-.wkal-spiral-ring{width:16px;height:16px;border-radius:50%;border:3px solid #c4a870;background:#e8d8a0;box-shadow:0 1px 3px rgba(0,0,0,.2)}
-.wkal-nav{display:flex;align-items:center;justify-content:space-between;padding:10px 18px 6px;background:#fff;flex-shrink:0}
-.wkal-nav-btn{background:none;border:none;cursor:pointer;font-size:1.1rem;color:#888;padding:4px 8px;border-radius:8px}
-.wkal-nav-btn:active{background:var(--bg)}
-.wkal-nav-title{font-size:.95rem;font-weight:700;color:#333;letter-spacing:.02em}
-.wkal-header{display:grid;grid-template-columns:36px repeat(5,1fr);background:#fff;border-bottom:1.5px solid #e0d8cc;flex-shrink:0}
-.wkal-header-time{border-right:1px solid #e8e0d4}
-.wkal-header-day{text-align:center;padding:6px 2px;border-left:1px solid #e8e0d4}
-.wkal-header-day .wkd-name{font-size:.65rem;font-weight:600;text-transform:uppercase;color:#aaa;letter-spacing:.08em}
-.wkal-header-day .wkd-num{font-size:1rem;font-weight:700;color:#333;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:3px auto 0}
-.wkal-header-day.today .wkd-num{background:var(--acc);color:#fff}
-.wkal-body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;position:relative;background:#fff}
-.wkal-grid{display:grid;grid-template-columns:36px repeat(5,1fr);position:relative}
-.wkal-time-col{border-right:1px solid #e8e0d4}
-.wkal-time-slot{height:28px;border-bottom:1px solid transparent;display:flex;align-items:flex-start;justify-content:flex-end;padding-right:5px}
-.wkal-time-slot.hour{border-bottom:1px solid #e8e0d4}
-.wkal-time-slot.half{border-bottom:1px dashed #f0e8dc}
-.wkal-time-label{font-size:.6rem;font-weight:600;color:#bbb;margin-top:-7px;font-family:Georgia,serif}
-.wkal-day-col{border-left:1px solid #e8e0d4;position:relative;min-height:100%}
-.wkal-day-slot{height:28px}
-.wkal-day-slot.hour{border-bottom:1px solid #e8e0d4}
-.wkal-day-slot.half{border-bottom:1px dashed #f0e8dc}
-.wkal-event{position:absolute;left:1px;right:1px;border-radius:5px;padding:3px 6px;cursor:pointer;overflow:hidden;border-left:3px solid;box-shadow:0 1px 3px rgba(0,0,0,.1)}
-.wkal-event:active{opacity:.8;transform:scale(.98)}
-.wkal-event-title{font-size:.7rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.4}
-.wkal-event-time{font-size:.6rem;font-weight:500;line-height:1.3;opacity:.85}
-.wkal-legend{display:flex;flex-wrap:wrap;gap:8px;padding:6px 16px;background:#faf8f4;border-bottom:1px solid #e8e0d4;flex-shrink:0}
-.wkal-legend-item{display:flex;align-items:center;gap:5px;font-size:.72rem;font-weight:600;color:#555}
-.wkal-legend-dot{width:9px;height:9px;border-radius:50%}
-.wkal-now-line{position:absolute;left:0;right:0;height:1.5px;background:#e04040;z-index:5;pointer-events:none}
-.wkal-now-line::before{content:'';width:7px;height:7px;background:#e04040;border-radius:50%;position:absolute;left:-3px;top:-3px}
-/* Page flip animation */
-.wkal-flip{animation:pageFlip .3s ease}
-@keyframes pageFlip{from{opacity:.3;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
-.wkal-flip-back{animation:pageFlipBack .3s ease}
-@keyframes pageFlipBack{from{opacity:.3;transform:translateX(-20px)}to{opacity:1;transform:translateX(0)}}
-</style></head><body><div class="page"><h2>Leistungsnachweis ${MN[heute.getMonth()]} ${heute.getFullYear()}</h2><div class="info">Versicherte Person: _______________________________&nbsp;&nbsp;&nbsp;&nbsp;geb. am: _______________<br>Adresse: _______________________________&nbsp;&nbsp;&nbsp;&nbsp;Pflegegrad: ___<br>Krankenkasse: _______________________________&nbsp;&nbsp;&nbsp;&nbsp;Vers.-Nr.: _______________</div><table><thead><tr><th style="width:22px">Tag</th><th style="width:68px">Uhrzeit</th><th style="width:44px">km</th><th style="width:44px">Std</th><th>Art der Leistung</th><th style="width:60px">Unterschrift</th></tr></thead><tbody>${rows}</tbody></table><div class="footer">Gesamtstunden: _______</div><div class="sig"><div class="sig-line">Ort, Datum</div><div class="sig-line">Mitarbeiterin</div><div class="sig-line">Kundin/Kunde</div></div></div><button class="print-btn" onclick="window.print()">🖨️ Drucken</button></body></html>`;
+  const html=`<!DOCTYPE html><html lang="de"><head><meta charset="UTF-8"><title>Leistungsnachweis Vorlage</title><style>body{font-family:Arial;font-size:10px;margin:0}.page{padding:12mm}h2{font-size:12px;margin:0 0 8px}.info{margin-bottom:10px;line-height:2;font-size:10px;border:1px solid #ccc;padding:8px}table{width:100%;border-collapse:collapse}th{border:1px solid #000;padding:3px;font-size:9px;text-align:center;background:#f0f0f0}td{border:1px solid #000;padding:2px 4px;height:16px;font-size:9px}.footer{margin-top:8px}.sig{display:flex;justify-content:space-between;margin-top:20mm}.sig-line{width:30%;border-top:1px solid #000;text-align:center;padding-top:3px;font-size:9px}.print-btn{position:fixed;bottom:20px;right:20px;background:#e8944a;color:#fff;border:none;border-radius:10px;padding:12px 24px;font-size:14px;font-weight:bold;cursor:pointer}@media print{.print-btn{display:none}@page{size:A4;margin:0}}</style></head><body><div class="page"><h2>Leistungsnachweis ${MN[heute.getMonth()]} ${heute.getFullYear()}</h2><div class="info">Versicherte Person: _______________________________&nbsp;&nbsp;&nbsp;&nbsp;geb. am: _______________<br>Adresse: _______________________________&nbsp;&nbsp;&nbsp;&nbsp;Pflegegrad: ___<br>Krankenkasse: _______________________________&nbsp;&nbsp;&nbsp;&nbsp;Vers.-Nr.: _______________</div><table><thead><tr><th style="width:22px">Tag</th><th style="width:68px">Uhrzeit</th><th style="width:44px">km</th><th style="width:44px">Std</th><th>Art der Leistung</th><th style="width:60px">Unterschrift</th></tr></thead><tbody>${rows}</tbody></table><div class="footer">Gesamtstunden: _______</div><div class="sig"><div class="sig-line">Ort, Datum</div><div class="sig-line">Mitarbeiterin</div><div class="sig-line">Kundin/Kunde</div></div></div><button class="print-btn" onclick="window.print()">🖨️ Drucken</button></body></html>`;
   const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([html],{type:"text/html;charset=utf-8"}));a.download=`Leistungsnachweis_Vorlage_${heute.getMonth()+1}_${heute.getFullYear()}.html`;a.click();
 }
 
 function druckeEinwilligung(){
-  const html=`<!DOCTYPE html><html lang="de"><head><meta charset="UTF-8"><title>Einwilligungsformular</title><style>body{font-family:Arial;font-size:12px;max-width:700px;margin:20px auto;padding:20px;line-height:1.7}h1{font-size:16px;color:#e8944a;border-bottom:2px solid #e8944a;padding-bottom:8px}h2{font-size:13px;margin-top:18px}ul{margin:6px 0;padding-left:20px}.box{background:#fef3e8;border-left:4px solid #e8944a;padding:12px;margin:14px 0}.sig-area{margin-top:30px}.sig-row{display:flex;gap:20px;margin-top:24px}.sig-line{flex:1;border-top:1px solid #000;padding-top:4px;font-size:11px;text-align:center}.print-btn{position:fixed;bottom:20px;right:20px;background:#e8944a;color:#fff;border:none;border-radius:10px;padding:12px 24px;font-size:14px;font-weight:bold;cursor:pointer}@media print{.print-btn{display:none}}
-.termine-item{background:#fff;border:1px solid var(--brd);border-radius:14px;padding:14px;margin-bottom:10px;box-shadow:0 1px 4px rgba(0,0,0,.05)}
-.termine-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px}
-.termine-title{font-size:.95rem;font-weight:700;color:var(--txt)}
-.termine-info{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px}
-.tp{background:var(--bg);border-radius:8px;padding:7px 10px;border:1px solid var(--brd)}
-.tp .tpl{font-size:.65rem;font-weight:700;text-transform:uppercase;color:var(--dim);margin-bottom:2px}
-.tp .tpv{font-size:.88rem;font-weight:700;color:var(--txt)}
-.wbadge{display:inline-block;background:var(--pur-bg);border:1px solid var(--pur-brd);color:var(--pur);border-radius:8px;padding:2px 10px;font-size:.72rem;font-weight:700;margin-top:6px}
-.add-termin-btn{display:flex;align-items:center;justify-content:center;gap:8px;background:var(--acc);color:#fff;border:none;border-radius:14px;padding:14px;font-size:.9rem;font-weight:700;cursor:pointer;width:100%;margin-bottom:14px;box-shadow:0 3px 12px rgba(232,148,74,.4)}
-
-.gkal-slot{display:flex;min-height:40px;border-bottom:1px solid var(--brd);position:relative}
-.gkal-time{width:52px;flex-shrink:0;font-size:.72rem;font-weight:700;color:var(--muted);padding:4px 8px 0;border-right:1px solid var(--brd)}
-.gkal-events{flex:1;position:relative;min-height:40px}
-.gkal-event{position:absolute;left:4px;right:4px;border-radius:8px;padding:4px 8px;font-size:.75rem;font-weight:700;color:#fff;overflow:hidden;cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,.2);z-index:1}
-.gkal-event-name{font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.gkal-event-time{font-size:.68rem;opacity:.9}
-.legende-item{display:inline-flex;align-items:center;gap:6px;margin-right:12px;font-size:.78rem;font-weight:600;color:var(--txt)}
-.legende-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0}
-
-/* WOCHENKALENDER - Kalender-Buch Style */
-.wkal-page{background:#fff;border-radius:0;overflow:hidden;box-shadow:0 2px 20px rgba(0,0,0,.15)}
-.wkal-spiral{display:flex;justify-content:center;gap:10px;padding:8px 0;background:#f5f0e8;flex-shrink:0}
-.wkal-spiral-ring{width:16px;height:16px;border-radius:50%;border:3px solid #c4a870;background:#e8d8a0;box-shadow:0 1px 3px rgba(0,0,0,.2)}
-.wkal-nav{display:flex;align-items:center;justify-content:space-between;padding:10px 18px 6px;background:#fff;flex-shrink:0}
-.wkal-nav-btn{background:none;border:none;cursor:pointer;font-size:1.1rem;color:#888;padding:4px 8px;border-radius:8px}
-.wkal-nav-btn:active{background:var(--bg)}
-.wkal-nav-title{font-size:.95rem;font-weight:700;color:#333;letter-spacing:.02em}
-.wkal-header{display:grid;grid-template-columns:36px repeat(5,1fr);background:#fff;border-bottom:1.5px solid #e0d8cc;flex-shrink:0}
-.wkal-header-time{border-right:1px solid #e8e0d4}
-.wkal-header-day{text-align:center;padding:6px 2px;border-left:1px solid #e8e0d4}
-.wkal-header-day .wkd-name{font-size:.65rem;font-weight:600;text-transform:uppercase;color:#aaa;letter-spacing:.08em}
-.wkal-header-day .wkd-num{font-size:1rem;font-weight:700;color:#333;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:3px auto 0}
-.wkal-header-day.today .wkd-num{background:var(--acc);color:#fff}
-.wkal-body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;position:relative;background:#fff}
-.wkal-grid{display:grid;grid-template-columns:36px repeat(5,1fr);position:relative}
-.wkal-time-col{border-right:1px solid #e8e0d4}
-.wkal-time-slot{height:28px;border-bottom:1px solid transparent;display:flex;align-items:flex-start;justify-content:flex-end;padding-right:5px}
-.wkal-time-slot.hour{border-bottom:1px solid #e8e0d4}
-.wkal-time-slot.half{border-bottom:1px dashed #f0e8dc}
-.wkal-time-label{font-size:.6rem;font-weight:600;color:#bbb;margin-top:-7px;font-family:Georgia,serif}
-.wkal-day-col{border-left:1px solid #e8e0d4;position:relative;min-height:100%}
-.wkal-day-slot{height:28px}
-.wkal-day-slot.hour{border-bottom:1px solid #e8e0d4}
-.wkal-day-slot.half{border-bottom:1px dashed #f0e8dc}
-.wkal-event{position:absolute;left:1px;right:1px;border-radius:5px;padding:3px 6px;cursor:pointer;overflow:hidden;border-left:3px solid;box-shadow:0 1px 3px rgba(0,0,0,.1)}
-.wkal-event:active{opacity:.8;transform:scale(.98)}
-.wkal-event-title{font-size:.7rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.4}
-.wkal-event-time{font-size:.6rem;font-weight:500;line-height:1.3;opacity:.85}
-.wkal-legend{display:flex;flex-wrap:wrap;gap:8px;padding:6px 16px;background:#faf8f4;border-bottom:1px solid #e8e0d4;flex-shrink:0}
-.wkal-legend-item{display:flex;align-items:center;gap:5px;font-size:.72rem;font-weight:600;color:#555}
-.wkal-legend-dot{width:9px;height:9px;border-radius:50%}
-.wkal-now-line{position:absolute;left:0;right:0;height:1.5px;background:#e04040;z-index:5;pointer-events:none}
-.wkal-now-line::before{content:'';width:7px;height:7px;background:#e04040;border-radius:50%;position:absolute;left:-3px;top:-3px}
-/* Page flip animation */
-.wkal-flip{animation:pageFlip .3s ease}
-@keyframes pageFlip{from{opacity:.3;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
-.wkal-flip-back{animation:pageFlipBack .3s ease}
-@keyframes pageFlipBack{from{opacity:.3;transform:translateX(-20px)}to{opacity:1;transform:translateX(0)}}
-</style></head><body><h1>Einwilligung zur Datenspeicherung</h1><h2>Was wird gespeichert?</h2><ul><li>Name, Geburtsdatum, Adresse, Pflegegrad</li><li>Krankenkasse und Versichertennummer</li><li>Leistungen (Datum, Uhrzeit, Dauer, Art)</li><li>Notizen und Fotos von Dokumenten</li></ul><h2>Wo werden die Daten gespeichert?</h2><p>Ausschließlich lokal auf dem <strong>passwortgeschützten Mobilgerät</strong> der Alltagsbegleiterin. Keine Weitergabe an Dritte.</p><div class="box"><strong>Einwilligung:</strong> Ich bin damit einverstanden, dass meine Daten auf dem Mobilgerät meiner Alltagsbegleiterin gespeichert werden. Ich kann diese Einwilligung jederzeit widerrufen.</div><div class="sig-area"><p>Name der betreuten Person: _________________________________</p><p style="margin-top:8px">Name der Alltagsbegleiterin: _________________________________</p><div class="sig-row"><div class="sig-line">Ort, Datum</div><div class="sig-line">Unterschrift Klient/in</div><div class="sig-line">Unterschrift Alltagsbegleiterin</div></div></div><button class="print-btn" onclick="window.print()">🖨️ Drucken</button></body></html>`;
+  const html=`<!DOCTYPE html><html lang="de"><head><meta charset="UTF-8"><title>Einwilligungsformular</title><style>body{font-family:Arial;font-size:12px;max-width:700px;margin:20px auto;padding:20px;line-height:1.7}h1{font-size:16px;color:#e8944a;border-bottom:2px solid #e8944a;padding-bottom:8px}h2{font-size:13px;margin-top:18px}ul{margin:6px 0;padding-left:20px}.box{background:#fef3e8;border-left:4px solid #e8944a;padding:12px;margin:14px 0}.sig-area{margin-top:30px}.sig-row{display:flex;gap:20px;margin-top:24px}.sig-line{flex:1;border-top:1px solid #000;padding-top:4px;font-size:11px;text-align:center}.print-btn{position:fixed;bottom:20px;right:20px;background:#e8944a;color:#fff;border:none;border-radius:10px;padding:12px 24px;font-size:14px;font-weight:bold;cursor:pointer}@media print{.print-btn{display:none}}</style></head><body><h1>Einwilligung zur Datenspeicherung</h1><h2>Was wird gespeichert?</h2><ul><li>Name, Geburtsdatum, Adresse, Pflegegrad</li><li>Krankenkasse und Versichertennummer</li><li>Leistungen (Datum, Uhrzeit, Dauer, Art)</li><li>Notizen und Fotos von Dokumenten</li></ul><h2>Wo werden die Daten gespeichert?</h2><p>Ausschließlich lokal auf dem <strong>passwortgeschützten Mobilgerät</strong> der Alltagsbegleiterin. Keine Weitergabe an Dritte.</p><div class="box"><strong>Einwilligung:</strong> Ich bin damit einverstanden, dass meine Daten auf dem Mobilgerät meiner Alltagsbegleiterin gespeichert werden. Ich kann diese Einwilligung jederzeit widerrufen.</div><div class="sig-area"><p>Name der betreuten Person: _________________________________</p><p style="margin-top:8px">Name der Alltagsbegleiterin: _________________________________</p><div class="sig-row"><div class="sig-line">Ort, Datum</div><div class="sig-line">Unterschrift Klient/in</div><div class="sig-line">Unterschrift Alltagsbegleiterin</div></div></div><button class="print-btn" onclick="window.print()">🖨️ Drucken</button></body></html>`;
   const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([html],{type:"text/html;charset=utf-8"}));a.download="Einwilligungsformular_Datenschutz.html";a.click();
 }
-
 
 // ── TERMINE ──
 function rTermine(){
@@ -1373,24 +1177,43 @@ function rTermine(){
       </div>
     </div>`;
   }).join("");
-
   document.getElementById("dC").innerHTML=`
-    <button class="add-termin-btn" onclick="openTerminModal()">+ Termin hinzufügen</button>
+    <button class="add-termin-btn" onclick="openTerminModalDetail()">+ Termin hinzufügen</button>
     <div class="sec">Bevorstehende Termine (${future.length})</div>
     ${future.length?tHTML(future):'<div style="text-align:center;padding:20px;color:var(--dim)">Keine bevorstehenden Termine.</div>'}
     ${past.length?`<div class="sec">Vergangene Termine (${past.length})</div>${tHTML(past)}`:""}`;
 }
 
-function openTerminModal(idx=null){
-  const k=K[ai];
-  document.getElementById("tTit").textContent=idx!==null?"Termin bearbeiten":"Termin eintragen";
-  document.getElementById("tBtn").textContent=idx!==null?"Speichern":"Eintragen";
-  document.getElementById("tSub").textContent=k.name;
-  document.getElementById("tWdh").onchange=()=>{
-    document.getElementById("tWdhBis").style.display=document.getElementById("tWdh").value!=="keine"?"block":"none";
-  };
-  if(idx!==null){
-    const t=k.termine[idx];
+// Termin-Modal: aus Detail-Ansicht (für bestimmten Klienten)
+function openTerminModalDetail(idx=null){
+  _openTerminModal(ai, idx);
+}
+// Termin-Modal: global (mit Klienten-Auswahl + optionales Datum/Uhrzeit)
+function openTerminModalGlobal(datumStr=null, vonStr=null){
+  _openTerminModal(null, null, datumStr, vonStr);
+}
+
+function updTerminSub(){
+  const sel=document.getElementById("tKlient");
+  const kIdx=parseInt(sel.value);
+  if(!isNaN(kIdx)&&K[kIdx]){
+    document.getElementById("tSub").textContent=K[kIdx].name;
+  }
+}
+
+function _openTerminModal(klientIdx, terminIdx=null, datumStr=null, vonStr=null){
+  // Klienten-Dropdown befüllen
+  const sel=document.getElementById("tKlient");
+  sel.innerHTML=K.map((k,i)=>`<option value="${i}" ${i===klientIdx?'selected':''}>${k.name}</option>`).join("");
+  // Sichtbarkeit: wenn aus Detail-Ansicht, Dropdown verstecken
+  sel.parentElement.style.display=(klientIdx!==null&&K.length<=1)?'none':'block';
+
+  document.getElementById("tTit").textContent=terminIdx!==null?"Termin bearbeiten":"Termin eintragen";
+  document.getElementById("tBtn").textContent=terminIdx!==null?"Speichern":"Eintragen";
+
+  if(terminIdx!==null && klientIdx!==null){
+    const t=K[klientIdx].termine[terminIdx];
+    document.getElementById("tSub").textContent=K[klientIdx].name;
     document.getElementById("tBez").value=t.bez||"";
     document.getElementById("tDat").value=t.datum||"";
     document.getElementById("tVon").value=t.von||"09:00";
@@ -1399,25 +1222,42 @@ function openTerminModal(idx=null){
     document.getElementById("tWdhBisDat").value=t.wdhBis||"";
     document.getElementById("tBem").value=t.bem||"";
     document.getElementById("tWdhBis").style.display=t.wdh&&t.wdh!=="keine"?"block":"none";
-    document.getElementById("oT").dataset.editIdx=idx;
+    document.getElementById("oT").dataset.editIdx=terminIdx;
+    document.getElementById("oT").dataset.klientIdx=klientIdx;
   } else {
+    const aktKIdx=klientIdx!==null?klientIdx:(K.length>0?0:null);
+    document.getElementById("tSub").textContent=aktKIdx!==null?K[aktKIdx].name:"";
     document.getElementById("tBez").value="";
-    document.getElementById("tDat").value=new Date().toISOString().split("T")[0];
-    document.getElementById("tVon").value="09:00";
-    document.getElementById("tBis").value="11:00";
+    document.getElementById("tDat").value=datumStr||new Date().toISOString().split("T")[0];
+    document.getElementById("tVon").value=vonStr||"09:00";
+    // Auto-Bis: +2h
+    if(vonStr){
+      const[h,m]=vonStr.split(":").map(Number);
+      const bisH=h+2,bisM=m;
+      document.getElementById("tBis").value=String(Math.min(bisH,23)).padStart(2,"0")+":"+String(bisM).padStart(2,"0");
+    } else {
+      document.getElementById("tBis").value="11:00";
+    }
     document.getElementById("tWdh").value="keine";
     document.getElementById("tWdhBisDat").value="";
     document.getElementById("tBem").value="";
     document.getElementById("tWdhBis").style.display="none";
     delete document.getElementById("oT").dataset.editIdx;
+    document.getElementById("oT").dataset.klientIdx=aktKIdx!==null?aktKIdx:"";
   }
   document.getElementById("oT").classList.add("on");
 }
 
-function openEditTermin(idx){openTerminModal(idx);}
+function openEditTermin(idx){openTerminModalDetail(idx);}
 
 function saveTermin(){
-  const k=K[ai];
+  const kIdx=parseInt(document.getElementById("oT").dataset.klientIdx);
+  if(isNaN(kIdx)||kIdx<0||kIdx>=K.length){alert("Bitte Klienten auswählen.");return;}
+  // Klienten-Dropdown ggf. überschreibt klientIdx
+  const selKIdx=parseInt(document.getElementById("tKlient").value);
+  const finalKIdx=isNaN(selKIdx)?kIdx:selKIdx;
+
+  const k=K[finalKIdx];
   if(!k.termine)k.termine=[];
   const t={
     bez:document.getElementById("tBez").value.trim()||"Termin",
@@ -1431,7 +1271,10 @@ function saveTermin(){
   const editIdx=document.getElementById("oT").dataset.editIdx;
   if(editIdx!==undefined)k.termine[parseInt(editIdx)]=t;
   else k.termine.push(t);
-  sv();cs("oT");rTermine();
+  sv();cs("oT");
+  // Refresh je nach Kontext
+  if(document.getElementById("vGKal").classList.contains("on"))renderGKal();
+  else if(ai!==null&&document.getElementById("vD").classList.contains("on"))rTermine();
 }
 
 function delTermin(idx){
@@ -1439,12 +1282,22 @@ function delTermin(idx){
   K[ai].termine.splice(idx,1);sv();rTermine();
 }
 
-
-// KLIENTEN PASTELFARBEN
-const KPASTEL=[{"bg": "rgba(232,148,74,.15)", "border": "#e8944a", "text": "#7a3800"}, {"bg": "rgba(42,170,106,.15)", "border": "#2aaa6a", "text": "#0e4a28"}, {"bg": "rgba(40,120,200,.15)", "border": "#2878c8", "text": "#0e3878"}, {"bg": "rgba(120,72,200,.15)", "border": "#7848c8", "text": "#2e0e78"}, {"bg": "rgba(224,64,64,.15)", "border": "#e04040", "text": "#780e0e"}, {"bg": "rgba(212,160,0,.15)", "border": "#d4a000", "text": "#604800"}, {"bg": "rgba(24,168,152,.15)", "border": "#18a898", "text": "#0a4840"}, {"bg": "rgba(180,80,160,.15)", "border": "#b450a0", "text": "#580a48"}, {"bg": "rgba(80,160,80,.15)", "border": "#50a050", "text": "#0a480a"}, {"bg": "rgba(160,120,80,.15)", "border": "#a07850", "text": "#482808"}]
+// ── KLIENTEN PASTELFARBEN ──
+const KPASTEL=[
+  {bg:"rgba(232,148,74,.13)",border:"#e8944a",text:"#7a3800"},
+  {bg:"rgba(42,170,106,.13)",border:"#2aaa6a",text:"#0e4a28"},
+  {bg:"rgba(40,120,200,.13)",border:"#2878c8",text:"#0e3878"},
+  {bg:"rgba(120,72,200,.13)",border:"#7848c8",text:"#2e0e78"},
+  {bg:"rgba(224,64,64,.13)",border:"#e04040",text:"#780e0e"},
+  {bg:"rgba(212,160,0,.13)",border:"#d4a000",text:"#604800"},
+  {bg:"rgba(24,168,152,.13)",border:"#18a898",text:"#0a4840"},
+  {bg:"rgba(180,80,160,.13)",border:"#b450a0",text:"#580a48"},
+  {bg:"rgba(80,160,80,.13)",border:"#50a050",text:"#0a480a"},
+  {bg:"rgba(160,120,80,.13)",border:"#a07850",text:"#482808"}
+];
 function getKF(idx){return KPASTEL[idx%KPASTEL.length];}
 
-// Aktuelle Woche (Mo-Fr)
+// ── GESAMTKALENDER ──
 let gkalWoche=new Date();
 
 function getMontag(d){
@@ -1465,17 +1318,14 @@ function showGKal(){
 }
 
 function gkalHeute(){gkalWoche=new Date();renderGKal();}
+
 function gkalVorWoche(){
   gkalWoche.setDate(gkalWoche.getDate()-7);
-  renderGKal();
-  const g=document.getElementById("gkalGrid");
-  if(g){g.classList.remove("wkal-flip","wkal-flip-back");void g.offsetWidth;g.classList.add("wkal-flip-back");}
+  renderGKal("right");
 }
 function gkalNaechWoche(){
   gkalWoche.setDate(gkalWoche.getDate()+7);
-  renderGKal();
-  const g=document.getElementById("gkalGrid");
-  if(g){g.classList.remove("wkal-flip","wkal-flip-back");void g.offsetWidth;g.classList.add("wkal-flip");}
+  renderGKal("left");
 }
 
 function terminPasstZuTag(t,datum){
@@ -1493,53 +1343,49 @@ function terminPasstZuTag(t,datum){
 
 function zeitZuMin(z){if(!z)return 0;const[h,m]=z.split(":").map(Number);return h*60+m;}
 
-function renderGKal(){
-  // Spiral rings
+// Kalender-Konfiguration: 7:30–17:00 komplett sichtbar ohne Scrollen
+// Höhe wird dynamisch berechnet
+const GKAL_START=7*60+30; // 7:30
+const GKAL_END=17*60;     // 17:00
+const GKAL_SPAN=GKAL_END-GKAL_START; // 570 Minuten
+
+function getKalHeight(){
+  // Verfügbare Höhe = Viewport - alle fixen Elemente
+  const vGKal=document.getElementById("vGKal");
+  if(!vGKal)return 500;
+  const hdr=vGKal.querySelector(".hdr");
+  const spiral=document.getElementById("gkalSpiral");
+  const nav=vGKal.querySelector(".wkal-nav");
+  const legend=document.getElementById("gkalLegende");
+  const header=document.getElementById("gkalHeader");
+  const safeB=parseInt(getComputedStyle(document.documentElement).getPropertyValue("--safe-b"))||0;
+  let fixed=0;
+  [hdr,spiral,nav,legend,header].forEach(el=>{if(el)fixed+=el.getBoundingClientRect().height;});
+  const avail=window.innerHeight-fixed-safeB-4;
+  return Math.max(avail, 300);
+}
+
+function renderGKal(animDir){
+  // Spiral
   const spiralEl=document.getElementById("gkalSpiral");
   if(spiralEl)spiralEl.innerHTML=Array.from({length:14},()=>'<div class="wkal-spiral-ring"></div>').join("");
-  
+
   const mo=getMontag(gkalWoche);
   const tage=[];
   for(let i=0;i<5;i++){const d=new Date(mo);d.setDate(mo.getDate()+i);tage.push(d);}
-  
+
   const heute=new Date();
   const heuteStr=heute.toISOString().split("T")[0];
-  
-  // Nav title
+
+  // Nav
   const vonD=tage[0],bisD=tage[4];
-  document.getElementById("gkalNavTitle").textContent=
-    vonD.getDate()+". – "+bisD.getDate()+". "+MN[bisD.getMonth()]+" "+bisD.getFullYear();
-  document.getElementById("gkalWocheTitel").textContent=
-    "KW "+getKW(mo);
+  const vonDStr=vonD.getDate()+"."+(vonD.getMonth()+1)+".";
+  const bisDStr=bisD.getDate()+"."+(bisD.getMonth()+1)+"."+bisD.getFullYear();
+  document.getElementById("gkalNavTitle").textContent=vonDStr+" – "+bisDStr;
+  document.getElementById("gkalNavKW").textContent="KW "+getKW(mo);
+  document.getElementById("gkalWocheTitel").textContent="KW "+getKW(mo)+" · "+bisD.getFullYear();
 
-  // Header
-  const wt=["Mo","Di","Mi","Do","Fr"];
-  let hdr='<div class="wkal-header-time"></div>';
-  tage.forEach((d,i)=>{
-    const ds=d.toISOString().split("T")[0];
-    const isH=ds===heuteStr;
-    hdr+=`<div class="wkal-header-day ${isH?"today":""}">
-      <div class="wkd-name">${wt[i]}</div>
-      <div class="wkd-num">${d.getDate()}</div>
-    </div>`;
-  });
-  document.getElementById("gkalHeader").innerHTML=hdr;
-
-  // Legende
-  const legende=document.getElementById("gkalLegende");
-  legende.innerHTML=K.map((k,ki)=>{
-    const c=getKF(ki);
-    return `<div class="wkal-legend-item"><div class="wkal-legend-dot" style="background:${c.border}"></div>${k.name.split(",")[0]}</div>`;
-  }).join("");
-
-  // Grid: 7:30 bis 17:00, 5min slots
-  const START=7*60+30;
-  const END=17*60;
-  const SLOT_MIN=5;
-  const SLOT_H=14; // px per slot
-  const PX_PER_MIN=SLOT_H/SLOT_MIN;
-
-  // Termine sammeln pro Tag
+  // Termine pro Tag sammeln
   const tagTermine=tage.map(d=>{
     const ds=d.toISOString().split("T")[0];
     const arr=[];
@@ -1553,68 +1399,142 @@ function renderGKal(){
     return arr.sort((a,b)=>zeitZuMin(a.von)-zeitZuMin(b.von));
   });
 
-  // Time column
-  let timeCol='';
-  for(let min=START;min<=END;min+=SLOT_MIN){
-    const isH=min%60===0,isHalf=min%30===0&&min%60!==0;
-    const label=isH?String(Math.floor(min/60)).padStart(2,"0")+":00":"";
-    timeCol+=`<div class="wkal-time-slot ${isH?"hour":isHalf?"half":""}">${label?`<span class="wkal-time-label">${label}</span>`:""}</div>`;
+  // Header
+  const wt=["Mo","Di","Mi","Do","Fr"];
+  let hdr='<div class="wkal-header-time"></div>';
+  tage.forEach((d,i)=>{
+    const ds=d.toISOString().split("T")[0];
+    const isH=ds===heuteStr;
+    const hasEv=tagTermine[i].length>0;
+    hdr+=`<div class="wkal-header-day ${isH?"today":""} ${hasEv?"has-events":""}" onclick="gkalTapHeader('${ds}')">
+      <div class="wkd-name">${wt[i]}</div>
+      <div class="wkd-num">${d.getDate()}</div>
+    </div>`;
+  });
+  document.getElementById("gkalHeader").innerHTML=hdr;
+
+  // Legende
+  const legende=document.getElementById("gkalLegende");
+  if(K.length>0){
+    legende.innerHTML=K.map((k,ki)=>{
+      const c=getKF(ki);
+      return `<div class="wkal-legend-item"><div class="wkal-legend-dot" style="background:${c.border}"></div>${k.name.split(",")[0]}</div>`;
+    }).join("");
+  } else {
+    legende.innerHTML="";
   }
 
-  // Day columns
-  const totalH=(END-START)/SLOT_MIN*SLOT_H;
-  let dayCols='';
-  tage.forEach((d,di)=>{
-    const slots=(END-START)/SLOT_MIN;
-    let slotsHtml='';
+  // Höhe berechnen (nach Header-Render, damit getBoundingClientRect korrekt ist)
+  requestAnimationFrame(()=>{
+    const availH=getKalHeight();
+    const pxPerMin=availH/GKAL_SPAN;
+    const totalH=availH;
+
+    // Grid bauen
+    let timeCol='';
+    // Stunden: 7:30, 8:00, 9:00 ... 17:00
+    // 15-min-Slots für Taktung sichtbar
+    const STEP=15; // 15min Raster
+    const slots=GKAL_SPAN/STEP;
     for(let s=0;s<slots;s++){
-      const min=START+s*SLOT_MIN;
-      const isH=min%60===0,isHalf=min%30===0&&min%60!==0;
-      slotsHtml+=`<div class="wkal-day-slot ${isH?"hour":isHalf?"half":""}"></div>`;
+      const min=GKAL_START+s*STEP;
+      const isHour=min%60===0;
+      const isHalf=min%30===0&&!isHour;
+      const label=isHour?String(Math.floor(min/60)).padStart(2,"0")+":00":(isHalf?(String(Math.floor(min/60)).padStart(2,"0")+":30"):"");
+      const h=pxPerMin*STEP;
+      timeCol+=`<div class="wkal-time-slot ${isHour?"hour":isHalf?"qtr":""}" style="height:${h}px">${label?`<span class="wkal-time-label">${label}</span>`:""}</div>`;
     }
-    
-    // Events
-    let eventsHtml='';
-    tagTermine[di].forEach(t=>{
-      const vonMin=zeitZuMin(t.von||"09:00");
-      const bisMin=zeitZuMin(t.bis||"10:00");
-      const top=(vonMin-START)*PX_PER_MIN;
-      const height=Math.max((bisMin-vonMin)*PX_PER_MIN,22);
-      const c=t.farbe;
-      eventsHtml+=`<div class="wkal-event" 
-        style="top:${top}px;height:${height}px;background:${c.bg};border-left-color:${c.border};color:${c.text}"
-        onclick="openEditTerminGKal(${t.kIdx},${t.tIdx})">
-        <div class="wkal-event-title">${t.kName.split(",")[0]}</div>
-        <div class="wkal-event-time">${t.von}–${t.bis}</div>
-        ${height>40?`<div style="font-size:.62rem;opacity:.8;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${t.bez||""}</div>`:""}</div>`;
+
+    let dayCols='';
+    tage.forEach((d,di)=>{
+      const ds=d.toISOString().split("T")[0];
+      // Slots
+      let slotsHtml='';
+      for(let s=0;s<slots;s++){
+        const min=GKAL_START+s*STEP;
+        const isHour=min%60===0,isHalf=min%30===0&&!isHour;
+        const h=pxPerMin*STEP;
+        const slotMin=min;
+        // Von-Zeit für neuen Termin: auf 15min gerundet
+        const vonHH=String(Math.floor(slotMin/60)).padStart(2,"0");
+        const vonMM=String(slotMin%60).padStart(2,"0");
+        const vonVal=vonHH+":"+vonMM;
+        slotsHtml+=`<div class="wkal-day-slot ${isHour?"hour":isHalf?"qtr":""} tap-zone" style="height:${h}px" onclick="gkalTapSlot('${ds}','${vonVal}',event)"></div>`;
+      }
+
+      // Events positionieren
+      let eventsHtml='';
+      tagTermine[di].forEach(t=>{
+        const vonMin=zeitZuMin(t.von||"09:00");
+        const bisMin=zeitZuMin(t.bis||"10:00");
+        const clampedVon=Math.max(vonMin,GKAL_START);
+        const clampedBis=Math.min(bisMin,GKAL_END);
+        if(clampedBis<=clampedVon)return;
+        const top=(clampedVon-GKAL_START)*pxPerMin;
+        const height=Math.max((clampedBis-clampedVon)*pxPerMin,18);
+        const c=t.farbe;
+        const kName=t.kName.split(",")[0];
+        const showBez=height>32&&t.bez&&t.bez!=="Termin";
+        const showTime=height>22;
+        eventsHtml+=`<div class="wkal-event"
+          style="top:${top}px;height:${height}px;background:${c.bg};border-left-color:${c.border};color:${c.text}"
+          onclick="openEditTerminGKal(${t.kIdx},${t.tIdx},event)">
+          <div class="wkal-event-klient">${kName}</div>
+          ${showBez?`<div class="wkal-event-bez">${t.bez}</div>`:""}
+          ${showTime?`<div class="wkal-event-time">${t.von}–${t.bis}</div>`:""}
+        </div>`;
+      });
+
+      // Jetzt-Linie
+      let nowLine="";
+      if(ds===heuteStr){
+        const nowMin=heute.getHours()*60+heute.getMinutes();
+        if(nowMin>=GKAL_START&&nowMin<=GKAL_END){
+          const top=(nowMin-GKAL_START)*pxPerMin;
+          const nowLabel=String(heute.getHours()).padStart(2,"0")+":"+String(heute.getMinutes()).padStart(2,"0");
+          nowLine=`<div class="wkal-now-line" style="top:${top}px"><span class="wkal-now-label">${nowLabel}</span></div>`;
+        }
+      }
+
+      dayCols+=`<div class="wkal-day-col" style="height:${totalH}px">${slotsHtml}${eventsHtml}${nowLine}</div>`;
     });
 
-    // Heute-Linie
-    const ds=d.toISOString().split("T")[0];
-    let nowLine="";
-    if(ds===heuteStr){
-      const nowMin=heute.getHours()*60+heute.getMinutes();
-      if(nowMin>=START&&nowMin<=END){
-        const top=(nowMin-START)*PX_PER_MIN;
-        nowLine=`<div class="wkal-now-line" style="top:${top}px"></div>`;
-      }
+    const grid=document.getElementById("gkalGrid");
+    grid.innerHTML=`<div class="wkal-time-col">${timeCol}</div>${dayCols}`;
+
+    // Animation
+    if(animDir){
+      grid.classList.remove("wkal-anim-left","wkal-anim-right");
+      void grid.offsetWidth;
+      grid.classList.add(animDir==="left"?"wkal-anim-left":"wkal-anim-right");
     }
 
-    dayCols+=`<div class="wkal-day-col" style="height:${totalH}px">${slotsHtml}${eventsHtml}${nowLine}</div>`;
-  });
-
-  document.getElementById("gkalGrid").innerHTML=
-    `<div class="wkal-time-col">${timeCol}</div>${dayCols}`;
-
-  // Scroll zu Arbeitsbeginn
-  setTimeout(()=>{
+    // Body-Höhe fixieren (kein Scrollen nötig, aber falls Gerät zu klein ist, scrollt es)
     const body=document.getElementById("gkalBody");
-    body.scrollTop=(8*60-START)*PX_PER_MIN;
-  },50);
+    body.style.height=totalH+"px";
+    body.style.overflowY="hidden"; // kein Scrollen – alles sichtbar
+  });
 }
 
+// Tippen auf freien Slot → Termin anlegen
+function gkalTapSlot(datumStr, vonStr, event){
+  event.stopPropagation();
+  openTerminModalGlobal(datumStr, vonStr);
+}
 
-// Swipe für Kalender
+// Tippen auf Spalten-Header → Termin für diesen Tag anlegen
+function gkalTapHeader(datumStr){
+  openTerminModalGlobal(datumStr, null);
+}
+
+// Termin bearbeiten aus Kalender
+function openEditTerminGKal(kIdx,tIdx,event){
+  if(event)event.stopPropagation();
+  ai=kIdx;
+  _openTerminModal(kIdx, tIdx);
+}
+
+// Swipe
 let gkalTouchX=0;
 function gkalTouchStart(e){gkalTouchX=e.touches[0].clientX;}
 function gkalTouchEnd(e){
@@ -1633,12 +1553,14 @@ function getKW(d){
   return 1+Math.round(((date.getTime()-week1.getTime())/86400000-3+(week1.getDay()+6)%7)/7);
 }
 
-function openEditTerminGKal(kIdx,tIdx){
-  ai=kIdx;
-  openEditTermin(tIdx);
-}
-
-
+// Fenster-Resize: Kalender neu rendern
+let resizeTimer;
+window.addEventListener("resize",()=>{
+  clearTimeout(resizeTimer);
+  resizeTimer=setTimeout(()=>{
+    if(document.getElementById("vGKal").classList.contains("on"))renderGKal();
+  },200);
+});
 
 function checkJahreswechsel(){
   const aktJahr=new Date().getFullYear();let geaendert=false,namen=[];
