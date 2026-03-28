@@ -27,7 +27,6 @@
 }
 html,body{height:100%;overflow:hidden}
 body{font-family:-apple-system,'Helvetica Neue',Arial,sans-serif;background:var(--bg);color:var(--txt);display:flex;flex-direction:column;font-size:16px;transition:background .3s,color .3s}
-/* ── DARK MODE VARIABLEN ── */
 body.dark{
   --bg:#1c1710;--surf:#252018;--surf2:#2e2820;
   --brd:#3a3228;--brd2:#4a4038;
@@ -411,7 +410,7 @@ body.dark{
     <button class="menu-btn" onclick="openMenu()">☰</button>
     <div class="hdr-title"><h1>Alltagshilfe Budget</h1><p id="kCnt">–</p></div>
     <button onclick="showGKal()" style="background:rgba(255,255,255,.25);color:#fff;border:none;border-radius:12px;padding:10px 12px;font-size:.9rem;font-weight:800;cursor:pointer;flex-shrink:0;margin-right:6px">📅</button>
-    <button class="hdr-btn" onclick="openKM(null)">+ Neu</button>
+    <button class="hdr-btn" onclick="openKM(null,null)">+ Neu</button>
   </div>
   <div class="search-bar"><div class="search-wrap"><input id="sQ" type="text" placeholder="Klient suchen…" oninput="rl()"></div></div>
   <div class="backup-bar">
@@ -1426,12 +1425,22 @@ function exportL(){
 }
 
 function openKM(e,i=null){
-  if(e&&e.stopPropagation)e.stopPropagation();editI=i;
+  if(e&&e.stopPropagation)e.stopPropagation();
+  editI=i;
   document.getElementById("kmTit").textContent=i!==null?"Klient bearbeiten":"Neuen Klienten anlegen";
   document.getElementById("kmBtn").textContent=i!==null?"Speichern":"Anlegen";
   const k=i!==null?K[i]:{};
-  document.getElementById("fN").value=k.name||"";document.getElementById("fG").value=k.geburt||"";document.getElementById("fP").value=k.pflege||"";document.getElementById("fA").value=k.adresse||"";document.getElementById("fKK").value=k.kk||"";document.getElementById("fVN").value=k.vnr||"";document.getElementById("fR").value=k.restBudget||"";document.getElementById("fSt").value=k.budgetStart||"2026-01";document.getElementById("fV").value=k.lfdV||"0";
-  document.getElementById("oK").classList.add("on");setTimeout(updLP,50);
+  document.getElementById("fN").value=k.name||"";
+  document.getElementById("fG").value=k.geburt||"";
+  document.getElementById("fP").value=k.pflege||"";
+  document.getElementById("fA").value=k.adresse||"";
+  document.getElementById("fKK").value=k.kk||"";
+  document.getElementById("fVN").value=k.vnr||"";
+  document.getElementById("fR").value=k.restBudget||"";
+  document.getElementById("fSt").value=k.budgetStart||"2026-01";
+  document.getElementById("fV").value=k.lfdV||"0";
+  document.getElementById("oK").classList.add("on");
+  setTimeout(updLP,50);
 }
 
 function oLMTag(){
