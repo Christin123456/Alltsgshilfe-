@@ -604,6 +604,19 @@ body.dark{
   </div>
 </div>
 
+<!-- BESTÄTIGUNGS-DIALOG -->
+<div class="overlay" id="oConfirm" onclick="confirmCancel()">
+  <div class="sheet" onclick="event.stopPropagation()" style="padding:24px 18px calc(var(--safe-b)+24px)">
+    <div class="shandle"></div>
+    <div id="confirmText" style="font-size:1.1rem;font-weight:700;color:var(--txt);margin-bottom:8px;text-align:center">Wirklich löschen?</div>
+    <div id="confirmSub" style="font-size:.9rem;color:var(--muted);margin-bottom:24px;text-align:center">–</div>
+    <div style="display:flex;gap:10px">
+      <button class="bc" onclick="confirmCancel()" style="flex:1;padding:14px;border-radius:13px;border:1px solid var(--brd);font-size:1rem;font-weight:700">Abbrechen</button>
+      <button id="confirmOkBtn" style="flex:1;padding:14px;border-radius:13px;border:none;font-size:1rem;font-weight:700;background:var(--red);color:#fff">Löschen</button>
+    </div>
+  </div>
+</div>
+
 <!-- MENU OVERLAY -->
 <div class="menu-overlay" id="mOverlay" onclick="closeMenu()"></div>
 <div class="menu-drawer" id="mDrawer">
@@ -805,6 +818,7 @@ let ai=null,am=new Date().getMonth(),aj=new Date().getFullYear(),at=0,editI=null
 // ── EINSTELLUNGEN ──
 let EINST=JSON.parse(localStorage.getItem("einst")||'{"bl":"","fjMode":"block","ferien":true}');
 function svEinst(){localStorage.setItem("einst",JSON.stringify(EINST));}
+function sv(){localStorage.setItem("kv9",JSON.stringify(K));}
 
 function showEinstellungen(){
   ["vL","vD","vStats","vGKal","vTag"].forEach(id=>document.getElementById(id).classList.remove("on"));
@@ -1271,7 +1285,7 @@ function handleFoto(e){
 }
 function openFoto(i){viewFotoIdx=i;document.getElementById("fViewerImg").src=K[ai].fotos[i];document.getElementById("fViewer").classList.add("on");}
 function closeFoto(){document.getElementById("fViewer").classList.remove("on");viewFotoIdx=null;}
-function delFoto(){if(viewFotoIdx===null)return;if(!confirm("Foto löschen?"))return;K[ai].fotos.splice(viewFotoIdx,1);sv();closeFoto();rU();}
+function delFoto(){if(viewFotoIdx===null)return;showConfirm("Foto löschen?","",()=>{K[ai].fotos.splice(viewFotoIdx,1);sv();closeFoto();rU();});}
 
 function rCal(){
   const k=K[ai],heu=new Date();
@@ -1342,7 +1356,7 @@ function renderTag(){
   h+=`<button class="day-add-btn" onclick="oLMTag()">+ Leistung hinzufügen</button>`;
   document.getElementById("tagC").innerHTML=h;
 }
-function delLTag(idx){if(!confirm("Leistung löschen?"))return;K[ai].leistungen.splice(idx,1);sv();renderTag();}
+function delLTag(idx){showConfirm("Leistung löschen?","",()=>{K[ai].leistungen.splice(idx,1);sv();renderTag();});}
 
 function rAW(){
   const k=K[ai];
@@ -1470,6 +1484,17 @@ function calcZeit(){
 
 function cs(id){document.getElementById(id).classList.remove("on");}
 
+// Eigener Bestätigungs-Dialog statt confirm()
+let _confirmCb=null;
+function showConfirm(text,sub,cb){
+  document.getElementById("confirmText").textContent=text;
+  document.getElementById("confirmSub").textContent=sub||"";
+  _confirmCb=cb;
+  document.getElementById("confirmOkBtn").onclick=()=>{cs("oConfirm");if(_confirmCb)_confirmCb();};
+  document.getElementById("oConfirm").classList.add("on");
+}
+function confirmCancel(){cs("oConfirm");_confirmCb=null;}
+
 function updLP(){
   const sv=document.getElementById("fSt").value;if(!sv)return;
   const s=new Date(sv+"-01"),j=new Date();
@@ -1512,7 +1537,7 @@ function saveK(){
     } else {
       K.push({...data,erstelltAm:new Date().toISOString(),leistungen:[],fotos:[],notiz:"",termine:[]});
     }
-    sv();
+    localStorage.setItem("kv9",JSON.stringify(K));
     document.getElementById("oK").classList.remove("on");
     if(editI!==null&&editI!==undefined&&ai!==null){rd();}else{rl();}
     editI=null;
@@ -1537,8 +1562,13 @@ function saveL(){
   sv();cs("oL");if(akTag)renderTag();else rd();editLIdx=null;
 }
 
-function delL(idx){if(!confirm("Leistung löschen?"))return;K[ai].leistungen.splice(idx,1);sv();rd();}
-function dk(e,i){e.stopPropagation();if(!confirm('"'+K[i].name+'" wirklich löschen?'))return;K.splice(i,1);sv();rl();}
+function delL(idx){showConfirm("Leistung löschen?","",()=>{K[ai].leistungen.splice(idx,1);sv();rd();});}
+function dk(e,i){
+  if(e&&e.stopPropagation)e.stopPropagation();
+  if(i===undefined||i===null||!K[i])return;
+  const name=K[i].name;
+  showConfirm("Klient löschen?",'"'+name+'"',()=>{K.splice(i,1);sv();rl();});
+}
 
 function exportBackup(){
   const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify({version:"kv9",datum:new Date().toISOString(),klienten:K},null,2)],{type:"application/json"}));
@@ -1546,10 +1576,11 @@ function exportBackup(){
 }
 function importBackup(e){
   const file=e.target.files[0];if(!file)return;
-  if(!confirm("Alle aktuellen Daten werden überschrieben. Fortfahren?"))return;
-  const reader=new FileReader();
-  reader.onload=ev=>{try{const data=JSON.parse(ev.target.result);const kl=data.klienten||data;if(Array.isArray(kl)){K=kl;sv();rl();alert("✓ "+K.length+" Klienten importiert!");}else alert("Ungültige Datei.");}catch{alert("Fehler beim Lesen.");}};
-  reader.readAsText(file);e.target.value="";
+  showConfirm("Backup importieren?","Alle aktuellen Daten werden überschrieben.",()=>{
+    const reader=new FileReader();
+    reader.onload=ev=>{try{const data=JSON.parse(ev.target.result);const kl=data.klienten||data;if(Array.isArray(kl)){K=kl;sv();rl();alert("✓ "+K.length+" Klienten importiert!");}else alert("Ungültige Datei.");}catch{alert("Fehler beim Lesen.");}};
+    reader.readAsText(file);e.target.value="";
+  });
 }
 
 function checkOB(){
@@ -1760,8 +1791,7 @@ function saveTermin(){
 }
 
 function delTermin(idx){
-  if(!confirm("Termin löschen?"))return;
-  K[ai].termine.splice(idx,1);sv();rTermine();
+  showConfirm("Termin löschen?","",()=>{K[ai].termine.splice(idx,1);sv();rTermine();});
 }
 
 // ── KLIENTEN PASTELFARBEN ──
@@ -2137,15 +2167,18 @@ function taLoeschen(){
   const datum=document.getElementById("oTA").dataset.datum;
   const istWdh=document.getElementById("oTA").dataset.wdh==="1";
   if(istWdh){
-    if(!confirm("Nur dieses Vorkommen löschen?"))return;
-    const t=K[kIdx].termine[tIdx];
-    if(!t.exceptions)t.exceptions={};
-    t.exceptions[datum]="deleted";
+    showConfirm("Vorkommen löschen?","Nur dieser Termin wird entfernt",()=>{
+      const t=K[kIdx].termine[tIdx];
+      if(!t.exceptions)t.exceptions={};
+      t.exceptions[datum]="deleted";
+      sv();renderGKal();
+    });
   } else {
-    if(!confirm("Termin löschen?"))return;
-    K[kIdx].termine.splice(tIdx,1);
+    showConfirm("Termin löschen?","Termin wird endgültig gelöscht",()=>{
+      K[kIdx].termine.splice(tIdx,1);
+      sv();renderGKal();
+    });
   }
-  sv();renderGKal();
 }
 
 // Swipe
