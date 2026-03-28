@@ -11,6 +11,8 @@
 <title>Alltagshilfe Budget</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+button{cursor:pointer;-webkit-tap-highlight-color:rgba(0,0,0,.1);touch-action:manipulation}
+input,select,textarea{-webkit-tap-highlight-color:rgba(0,0,0,.05);touch-action:manipulation}
 :root{
   --bg:#faf5ee;--surf:#ffffff;--surf2:#f5ede0;
   --brd:#ead8c0;--brd2:#d4bc98;
@@ -1491,11 +1493,32 @@ function updP(){
 }
 
 function saveK(){
-  const name=document.getElementById("fN").value.trim();if(!name){alert("Bitte Name eingeben.");return;}
-  const data={name,geburt:document.getElementById("fG").value||"",pflege:document.getElementById("fP").value||"",adresse:document.getElementById("fA").value||"",kk:document.getElementById("fKK").value||"",vnr:document.getElementById("fVN").value||"",restBudget:parseFloat(document.getElementById("fR").value)||0,lfdV:parseFloat(document.getElementById("fV").value)||0,budgetStart:document.getElementById("fSt").value||new Date().toISOString().substring(0,7)};
-  if(editI!==null)Object.assign(K[editI],data);
-  else K.push({...data,erstelltAm:new Date().toISOString(),leistungen:[],fotos:[],notiz:""});
-  sv();cs("oK");if(editI!==null&&ai!==null)rd();else rl();
+  try{
+    const name=document.getElementById("fN").value.trim();
+    if(!name){alert("Bitte Name eingeben.");return;}
+    const data={
+      name:name,
+      geburt:document.getElementById("fG").value||"",
+      pflege:document.getElementById("fP").value||"",
+      adresse:document.getElementById("fA").value||"",
+      kk:document.getElementById("fKK").value||"",
+      vnr:document.getElementById("fVN").value||"",
+      restBudget:parseFloat(document.getElementById("fR").value)||0,
+      lfdV:parseFloat(document.getElementById("fV").value)||0,
+      budgetStart:document.getElementById("fSt").value||new Date().toISOString().substring(0,7)
+    };
+    if(editI!==null&&editI!==undefined){
+      Object.assign(K[editI],data);
+    } else {
+      K.push({...data,erstelltAm:new Date().toISOString(),leistungen:[],fotos:[],notiz:"",termine:[]});
+    }
+    sv();
+    document.getElementById("oK").classList.remove("on");
+    if(editI!==null&&editI!==undefined&&ai!==null){rd();}else{rl();}
+    editI=null;
+  }catch(err){
+    alert("Fehler: "+err.message);
+  }
 }
 
 function saveL(){
