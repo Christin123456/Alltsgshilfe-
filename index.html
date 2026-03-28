@@ -416,7 +416,7 @@ body.dark{
   </div>
   <div class="search-bar"><div class="search-wrap"><input id="sQ" type="text" placeholder="Klient suchen…" oninput="rl()"></div></div>
   <div class="backup-bar">
-    <button class="bk-btn bk-exp" onclick="exportBackup()">📤 Backup</button>
+    <button class="bk-btn bk-exp" onclick="exportBackupMitTimestamp()">📤 Backup</button>
     <button class="bk-btn bk-imp" onclick="document.getElementById('importInput').click()">📥 Importieren</button>
   </div>
   <div class="abc-bar" id="abcBar"></div>
@@ -650,7 +650,7 @@ body.dark{
       <div class="minfo"><div class="mtitle">Kalender-Einstellungen</div><div class="msub" id="menuBLSub">Bundesland & Feiertage</div></div>
       <span style="color:var(--dim)">›</span>
     </div>
-    <div class="mitem" onclick="exportBackup();closeMenu()">
+    <div class="mitem" onclick="exportBackupMitTimestamp();closeMenu()">
       <div class="micon" style="background:var(--grn-bg)">📤</div>
       <div class="minfo"><div class="mtitle">Backup exportieren</div><div class="msub">Alle Daten sichern</div></div>
       <span style="color:var(--dim)">›</span>
@@ -2273,9 +2273,42 @@ function checkJahreswechsel(){
 }
 
 if("serviceWorker"in navigator)navigator.serviceWorker.register("./sw.js").catch(()=>{});
-initDarkMode();
+// ── BACKUP-ERINNERUNG ──
+function checkBackupErinnerung(){
+  if(K.length===0)return;
+  const letztes=parseInt(localStorage.getItem("letztesBK")||"0");
+  const jetzt=Date.now();
+  const tage7=7*24*60*60*1000;
+  if(jetzt-letztes>tage7){
+    setTimeout(()=>{
+      // Erinnerungs-Banner anzeigen
+      const banner=document.createElement("div");
+      banner.id="bkBanner";
+      banner.style.cssText="position:fixed;bottom:calc(var(--safe-b)+80px);left:16px;right:16px;background:linear-gradient(135deg,#e8944a,#c4622d);color:#fff;border-radius:16px;padding:14px 16px;z-index:400;box-shadow:0 4px 20px rgba(0,0,0,.3);display:flex;align-items:center;gap:12px;animation:sup .3s ease";
+      banner.innerHTML=`
+        <span style="font-size:1.8rem">💾</span>
+        <div style="flex:1">
+          <div style="font-weight:800;font-size:.95rem">Backup erstellen!</div>
+          <div style="font-size:.78rem;opacity:.9">Letzte Sicherung vor mehr als 7 Tagen</div>
+        </div>
+        <button onclick="exportBackup();document.getElementById('bkBanner').remove();localStorage.setItem('letztesBK',Date.now())" style="background:white;color:#c4622d;border:none;border-radius:10px;padding:8px 14px;font-weight:800;font-size:.85rem;cursor:pointer">Jetzt</button>
+        <button onclick="document.getElementById('bkBanner').remove()" style="background:rgba(255,255,255,.25);color:#fff;border:none;border-radius:10px;padding:8px 10px;font-weight:700;cursor:pointer">✕</button>
+      `;
+      document.body.appendChild(banner);
+      // Banner nach 15 Sek automatisch ausblenden
+      setTimeout(()=>{const b=document.getElementById("bkBanner");if(b)b.remove();},15000);
+    },2000);
+  }
+}
+
+// Backup-Timestamp beim Export speichern
+function exportBackupMitTimestamp(){
+  localStorage.setItem("letztesBK",Date.now());
+  exportBackup();
+}
 checkOnboarding();
 checkJahreswechsel();
+checkBackupErinnerung();
 // Einstellungen-Sub im Menü initialisieren
 if(EINST.bl){
   const sel=document.getElementById("einBL");
