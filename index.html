@@ -494,8 +494,8 @@ body.dark{
     <div class="fld"><label>Datum</label><input id="lD" type="date"></div>
     <div class="fld"><label>Art der Leistung</label>
       <select id="lA" onchange="updP()">
-        <option value="Haushaltsnahe Dienstleistung" data-rate="38.11">Haushaltsnahe Dienstleistung – 38,11 €/Std</option>
-        <option value="Betreuung / Kombinierte Dienstleistung" data-rate="42.45">Betreuung / Komb. Dienstleistung – 42,45 €/Std</option>
+        <option value="Haushaltsnahe Dienstleistung" id="optR2">Haushaltsnahe Dienstleistung – 38,11 €/Std</option>
+        <option value="Betreuung / Kombinierte Dienstleistung" id="optR1">Betreuung / Komb. Dienstleistung – 42,45 €/Std</option>
       </select>
     </div>
     <div class="frow">
@@ -745,6 +745,21 @@ body.dark{
       </div>
     </label>
     <div class="alert-box alert-info" style="margin-bottom:14px">ℹ️ Feiertage und Schulferien werden für <strong>2025 & 2026</strong> angezeigt. Änderungen werden sofort im Kalender übernommen.</div>
+    <div class="sec">Stundensätze</div>
+    <div style="background:var(--surf);border:1px solid var(--brd);border-radius:16px;padding:16px;margin-bottom:14px">
+      <div style="font-size:.8rem;color:var(--muted);margin-bottom:14px;line-height:1.5">Die Stundensätze werden für die Berechnung aller Leistungen verwendet. Standardwerte: 42,45 € und 38,11 €</div>
+      <div class="frow">
+        <div class="fld">
+          <label>Betreuung / Komb. (€/Std)</label>
+          <input id="einR1" type="number" step="0.01" min="0" placeholder="42.45" oninput="saveEinst()" style="width:100%;padding:13px 15px;background:var(--bg);border:1.5px solid var(--brd);border-radius:13px;color:var(--txt);font-family:inherit;font-size:1rem;outline:none">
+        </div>
+        <div class="fld">
+          <label>Haushaltsnahe DL (€/Std)</label>
+          <input id="einR2" type="number" step="0.01" min="0" placeholder="38.11" oninput="saveEinst()" style="width:100%;padding:13px 15px;background:var(--bg);border:1.5px solid var(--brd);border-radius:13px;color:var(--txt);font-family:inherit;font-size:1rem;outline:none">
+        </div>
+      </div>
+      <button onclick="resetSaetze()" style="background:var(--bg);border:1px solid var(--brd);border-radius:10px;padding:10px 16px;font-size:.85rem;font-weight:700;color:var(--muted);cursor:pointer;margin-top:4px">↺ Standardwerte zurücksetzen</button>
+    </div>
   </div></div>
 </div>
 
@@ -808,7 +823,8 @@ body.dark{
 <input type="file" id="fotoKamera" accept="image/*" capture="camera" style="display:none" onchange="handleFoto(event)">
 
 <script>
-const MO=131,R1=42.45,R2=38.11;
+const MO=131;
+let R1=42.45, R2=38.11;
 const MN=["Januar","Februar","März","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"];
 const WT=["Mo","Di","Mi","Do","Fr","Sa","So"];
 let K=JSON.parse(localStorage.getItem("kv9")||"[]");
@@ -817,6 +833,9 @@ let ai=null,am=new Date().getMonth(),aj=new Date().getFullYear(),at=0,editI=null
 
 // ── EINSTELLUNGEN ──
 let EINST=JSON.parse(localStorage.getItem("einst")||'{"bl":"","fjMode":"block","ferien":true}');
+// Stundensätze aus Einstellungen laden
+R1=EINST.r1||42.45;
+R2=EINST.r2||38.11;
 function svEinst(){localStorage.setItem("einst",JSON.stringify(EINST));}
 function sv(){localStorage.setItem("kv9",JSON.stringify(K));}
 
@@ -826,6 +845,8 @@ function showEinstellungen(){
   document.getElementById("einBL").value=EINST.bl||"";
   document.getElementById(EINST.fjMode==="label"?"fjLabel":"fjBlock").checked=true;
   document.getElementById("einFerien").checked=!!EINST.ferien;
+  document.getElementById("einR1").value=EINST.r1||"";
+  document.getElementById("einR2").value=EINST.r2||"";
   const sub=EINST.bl?document.getElementById("einBL").options[document.getElementById("einBL").selectedIndex].text:"Bundesland & Feiertage";
   document.getElementById("menuBLSub").textContent=sub;
 }
@@ -834,9 +855,23 @@ function saveEinst(){
   EINST.bl=document.getElementById("einBL").value;
   EINST.fjMode=document.getElementById("fjLabel").checked?"label":"block";
   EINST.ferien=document.getElementById("einFerien").checked;
+  const r1val=parseFloat(document.getElementById("einR1").value);
+  const r2val=parseFloat(document.getElementById("einR2").value);
+  EINST.r1=r1val>0?r1val:null;
+  EINST.r2=r2val>0?r2val:null;
+  R1=EINST.r1||42.45;
+  R2=EINST.r2||38.11;
   svEinst();
   const sub=EINST.bl?document.getElementById("einBL").options[document.getElementById("einBL").selectedIndex].text:"Bundesland & Feiertage";
   document.getElementById("menuBLSub").textContent=sub;
+}
+
+function resetSaetze(){
+  EINST.r1=null;EINST.r2=null;
+  R1=42.45;R2=38.11;
+  document.getElementById("einR1").value="";
+  document.getElementById("einR2").value="";
+  svEinst();
 }
 
 // ── FEIERTAGE – ALGORITHMISCH (Gaußsche Osterformel, läuft für jedes Jahr) ──
@@ -1460,6 +1495,11 @@ function openKM(e,i=null){
 }
 
 function oLMTag(){
+  // Dropdown Labels mit aktuellen Sätzen aktualisieren
+  const o1=document.getElementById("optR1");
+  const o2=document.getElementById("optR2");
+  if(o1)o1.textContent="Betreuung / Komb. Dienstleistung – "+R1.toFixed(2).replace(".",",")+" €/Std";
+  if(o2)o2.textContent="Haushaltsnahe Dienstleistung – "+R2.toFixed(2).replace(".",",")+" €/Std";
   editLIdx=null;
   document.getElementById("lTit").textContent="Leistung eintragen";document.getElementById("lBtn").textContent="Eintragen";document.getElementById("lSub").textContent=K[ai].name;document.getElementById("lD").value=akTag;document.getElementById("lA").selectedIndex=0;document.getElementById("lVon").value="";document.getElementById("lBis").value="";document.getElementById("lH").value="";document.getElementById("lM").value="0";document.getElementById("lKm").value="";document.getElementById("lBem").value="";document.getElementById("lPr").style.display="none";
   document.getElementById("oL").classList.add("on");
@@ -1508,7 +1548,7 @@ function updP(){
   const h=parseFloat(document.getElementById("lH").value)||0,m=parseFloat(document.getElementById("lM").value)||0;
   const total=h+m/60;const pr=document.getElementById("lPr");
   if(total<=0){pr.style.display="none";return;}
-  const sel=document.getElementById("lA");const rate=parseFloat(sel.options[sel.selectedIndex].dataset.rate)||R1;
+  const sel=document.getElementById("lA");const rate=sel.options[sel.selectedIndex].value.includes("Haushalt")?R2:R1;
   const betrag=+(total*rate).toFixed(2);
   let r=gR(K[ai]),l=gL(K[ai]);
   if(editLIdx!==null){const old=K[ai].leistungen[editLIdx];if(old.q==="rest")r+=old.b;else l+=old.b;}
@@ -1550,7 +1590,7 @@ function saveL(){
   const k=K[ai];
   const h=parseFloat(document.getElementById("lH").value)||0,m=parseFloat(document.getElementById("lM").value)||0;
   if(h+m===0){alert("Bitte Zeit eintragen.");return;}
-  const sel=document.getElementById("lA");const rate=parseFloat(sel.options[sel.selectedIndex].dataset.rate)||R1;
+  const sel=document.getElementById("lA");const rate=sel.options[sel.selectedIndex].value.includes("Haushalt")?R2:R1;
   const st=h+m/60,b=+(st*rate).toFixed(2);
   const von=document.getElementById("lVon").value,bis=document.getElementById("lBis").value;
   const km=parseFloat(document.getElementById("lKm").value)||0;
