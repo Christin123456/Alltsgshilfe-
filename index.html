@@ -243,7 +243,7 @@ body.dark{
 /* OVERLAY / SHEET */
 .overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(4px)}
 .overlay.on{display:flex}
-.sheet{background:var(--surf);border-radius:26px 26px 0 0;padding:26px 18px calc(var(--safe-b)+26px);width:100%;max-width:600px;max-height:93vh;overflow-y:auto;animation:sup .22s ease;box-shadow:0 -4px 24px rgba(0,0,0,.15)}
+.sheet{background:var(--surf);border-radius:26px 26px 0 0;padding:26px 18px calc(var(--safe-b)+26px);width:100%;max-width:600px;max-height:93vh;overflow-y:auto;animation:sup .22s ease;box-shadow:0 -4px 24px rgba(0,0,0,.15);position:relative;z-index:201}
 @keyframes sup{from{transform:translateY(100%)}to{transform:translateY(0)}}
 .shandle{width:44px;height:4px;background:var(--brd2);border-radius:2px;margin:0 auto 22px}
 .stit{font-size:1.3rem;font-weight:800;margin-bottom:5px;color:var(--txt)}
