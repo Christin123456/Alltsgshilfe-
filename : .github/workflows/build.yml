@@ -1,1 +1,40 @@
+name: Build AAB
 
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Install Bubblewrap
+        run: npm install -g @bubblewrap/cli
+
+      - name: Write Keystore
+        run: echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > upload-keystore.jks
+
+      - name: Init TWA
+        run: |
+          bubblewrap init --manifest https://christin123456.github.io/Alltsgshilfe-/manifest.json
+
+      - name: Build AAB
+        run: |
+          bubblewrap build \
+            --signingKeyAlias upload \
+            --signingKeyPassword android \
+            --signingStorePassword android
+
+      - name: Upload AAB
+        uses: actions/upload-artifact@v3
+        with:
+          name: alltagshilfe-aab
+          path: ./*.aab
