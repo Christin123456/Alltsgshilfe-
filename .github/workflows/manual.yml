@@ -15,21 +15,15 @@ jobs:
       - name: Write Keystore
         run: echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > upload-keystore.jks
       - name: Init TWA
-        run: |
-          bubblewrap init \
-            --manifest https://christin123456.github.io/Alltsgshilfe-/manifest.json \
-            --skipPwaValidation
+        run: printf "n\n$JAVA_HOME\n" | bubblewrap init --manifest https://christin123456.github.io/Alltsgshilfe-/manifest.json
         env:
-          JAVA_HOME: ${{ env.JAVA_HOME_17_X64 }}
+          JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.18-8/x64
       - name: Build AAB
-        run: |
-          bubblewrap build \
-            --signingKeyAlias upload \
-            --signingKeyPassword android \
-            --signingStorePassword android
+        run: bubblewrap build --signingKeyAlias upload --signingKeyPassword android --signingStorePassword android
         env:
-          JAVA_HOME: ${{ env.JAVA_HOME_17_X64 }}
+          JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.18-8/x64
       - uses: actions/upload-artifact@v4
         with:
           name: alltagshilfe-aab
           path: ./*.aab
+Alles ersetzen, Commit, Run workflow!
