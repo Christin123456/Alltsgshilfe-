@@ -18,7 +18,7 @@ jobs:
         run: bubblewrap init --manifest https://christin123456.github.io/Alltsgshilfe-/manifest.json
       - name: Build AAB
         run: bubblewrap build --signingKeyAlias upload --signingKeyPassword android --signingStorePassword android
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: alltagshilfe-aab
           path: ./*.aab
