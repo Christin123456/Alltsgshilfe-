@@ -15,7 +15,7 @@ jobs:
       - name: Write Keystore
         run: echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > upload-keystore.jks
       - name: Init TWA
-        run: echo "n" | bubblewrap init --manifest https://christin123456.github.io/Alltsgshilfe-/manifest.json
+        run: printf "n\n$JAVA_HOME\n" | bubblewrap init --manifest https://christin123456.github.io/Alltsgshilfe-/manifest.json
       - name: Build AAB
         run: bubblewrap build --signingKeyAlias upload --signingKeyPassword android --signingStorePassword android
       - uses: actions/upload-artifact@v4
