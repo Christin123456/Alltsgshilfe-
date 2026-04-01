@@ -15,9 +15,7 @@ jobs:
       - name: Write Keystore
         run: echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > upload-keystore.jks
       - name: Init TWA
-        run: printf "n\n$JAVA_HOME\n" | bubblewrap init --manifest https://christin123456.github.io/Alltsgshilfe-/manifest.json
-        env:
-          JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.18-8/x64
+        run: printf "n\n/opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.18-8/x64\n\n\n\n\n\n\n\n" | bubblewrap init --manifest https://christin123456.github.io/Alltsgshilfe-/manifest.json
       - name: Build AAB
         run: bubblewrap build --signingKeyAlias upload --signingKeyPassword android --signingStorePassword android
         env:
