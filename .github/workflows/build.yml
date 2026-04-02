@@ -12,24 +12,33 @@ jobs:
           distribution: 'temurin'
       - name: Write Keystore
         run: echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > upload-keystore.jks
-      - name: Install Bubblewrap
-        run: npm install -g @bubblewrap/cli
-      - name: Init TWA
+      - name: Clone TWA template
+        run: git clone https://github.com/GoogleChromeLabs/svgomg-twa twa-app
+      - name: Configure TWA
         run: |
-          bubblewrap init \
-            --manifest "https://christin123456.github.io/Alltsgshilfe-/manifest.json" \
-            --directory twa-app
-        env:
-          BUBBLEWRAP_SKIP_UPDATE_CHECK: "1"
-          BUBBLEWRAP_USE_SHELL: "1"
+          cd twa-app
+          cat > app/build.gradle << 'EOF'
+          apply plugin: 'com.android.application'
+          android {
+            compileSdkVersion 33
+            defaultConfig {
+              applicationId "io.github.christin123456.alltagshilfe"
+              minSdkVersion 19
+              targetSdkVersion 33
+              versionCode 1
+              versionName "1.0"
+            }
+          }
+          EOF
       - name: Build AAB
         run: |
           cd twa-app
-          bubblewrap build \
-            --signingKeyAlias upload \
-            --signingKeyPassword android \
-            --signingStorePassword android
+          ./gradlew bundleRelease \
+            -Pandroid.injected.signing.store.file=../upload-keystore.jks \
+            -Pandroid.injected.signing.store.password=android \
+            -Pandroid.injected.signing.key.alias=upload \
+            -Pandroid.injected.signing.key.password=android
       - uses: actions/upload-artifact@v4
         with:
           name: alltagshilfe-aab
-          path: twa-app/*.aab
+          path: twa-app/app/build/outputs/bundle/release
