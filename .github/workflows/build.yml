@@ -28,4 +28,3 @@ jobs:
         with:
           name: alltagshilfe-aab
           path: ./*.aab
-Der Trick: --yes am Ende von bubblewrap init – das beantwortet alle Fragen automatisch mit den Standardwerten aus dem Manifest!
