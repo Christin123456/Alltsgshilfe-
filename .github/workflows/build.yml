@@ -21,10 +21,11 @@ jobs:
           {"jdkPath":"/opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.18-8/x64","androidSdkPath":"/usr/local/lib/android/sdk"}
           EOF
       - name: Init TWA
-        run: printf "christin123456.github.io\n/Alltsgshilfe-/\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n" | bubblewrap init --manifest https://christin123456.github.io/Alltsgshilfe-/manifest.json
+        run: bubblewrap init --manifest https://christin123456.github.io/Alltsgshilfe-/manifest.json --yes
       - name: Build AAB
         run: bubblewrap build --signingKeyAlias upload --signingKeyPassword android --signingStorePassword android
       - uses: actions/upload-artifact@v4
         with:
           name: alltagshilfe-aab
           path: ./*.aab
+Der Trick: --yes am Ende von bubblewrap init – das beantwortet alle Fragen automatisch mit den Standardwerten aus dem Manifest!
