@@ -21,7 +21,10 @@ jobs:
           {"jdkPath":"/opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.18-8/x64","androidSdkPath":"/usr/local/lib/android/sdk"}
           EOF
       - name: Init TWA
-        run: yes "" | bubblewrap init --manifest https://christin123456.github.io/Alltsgshilfe-/manifest.json
+        run: bubblewrap init --manifest https://christin123456.github.io/Alltsgshilfe-/manifest.json
+        timeout-minutes: 2
+        env:
+          CI: true
       - name: Build AAB
         run: bubblewrap build --signingKeyAlias upload --signingKeyPassword android --signingStorePassword android
       - uses: actions/upload-artifact@v4
